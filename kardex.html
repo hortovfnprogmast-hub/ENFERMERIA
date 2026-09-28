@@ -7,6 +7,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<!-- LIBRERÍAS PARA GENERAR PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -14,21 +16,29 @@
     :root {
         --primary-blue: #263fa4; --light-blue: #eef2ff; --bg-color: #f8fafc;
         --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
-        --danger: #dc2626; --success: #10b981; --warning: #f59e0b;
     }
-    body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-color); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
 
     /* --- LORETO LAYOUT --- */
-    .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
-    .header-left { display: flex; align-items: center; gap: 15px; }
+    .loreto-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
+    .loreto-left { display: flex; align-items: center; gap: 15px; }
     .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-main); }
-    .header-title { margin: 0; font-size: 15px; font-weight: 700; color: var(--primary-blue); }
-    .header-right { display: flex; align-items: center; gap: 12px; }
+    .loreto-title { margin: 0; font-size: 15px; font-weight: 700; color: var(--primary-blue); }
+    .loreto-right { display: flex; align-items: center; gap: 12px; }
     .user-initial { width: 35px; height: 35px; border-radius: 50%; background-color: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
     .main-layout { display: flex; flex: 1; overflow: hidden; }
     .sidebar { width: 260px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; transition: transform 0.3s ease; display: flex; flex-direction: column; }
-    @media (max-width: 768px) { .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; } .sidebar.open { transform: translateX(0); } .header-title { display: none; } }
+    @media (max-width: 768px) { .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; } .sidebar.open { transform: translateX(0); } .loreto-title { display: none; } }
 
     .sidebar-nav { padding: 15px 10px; }
     .sidebar-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
@@ -40,7 +50,6 @@
     .nav-item.active i { color: var(--primary-blue); }
 
     .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-    .container-view { max-width: 1100px; margin: 0 auto; padding-bottom: 80px; }
     .page-header { margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
     .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
     .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
@@ -58,8 +67,13 @@
     .btn-back:hover { background-color: #1a2a6e; }
     .btn-back svg { width: 18px; height: 18px; fill: white; }
 
-    /* --- ESTILOS ORIGINALES DEL KARDEX (INTACTOS) --- */
-    .kardex-document {
+    /* --- ESTILOS ORIGINALES DEL KARDEX (SIN ALTERAR) --- */
+    .kardex-wrapper {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 80px;
+    }
+    .container {
         width: 100%;
         max-width: 1150px;
         background-color: white;
@@ -68,28 +82,92 @@
         font-family: Arial, sans-serif;
         font-size: 11px;
     }
-    .header-kar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .header-left-kar, .header-right-kar { width: 200px; text-align: center; }
-    .header-center-kar { text-align: center; font-weight: bold; font-size: 13px; flex-grow: 1; }
-    .form-info { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 10px; font-size: 12px; }
-    .underline { border-bottom: 2px solid black; font-weight: bold; display: inline-block; text-align: center; }
+    
+    /* ENCABEZADOS Y LOGOS */
+    .container .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .container .header-left, .container .header-right {
+        width: 200px;
+        text-align: center;
+    }
+    .container .header-center {
+        text-align: center;
+        font-weight: bold;
+        font-size: 13px;
+        flex-grow: 1;
+    }
+    .form-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding: 0 10px;
+        font-size: 12px;
+    }
+    .underline {
+        border-bottom: 2px solid black;
+        font-weight: bold;
+        display: inline-block;
+        text-align: center;
+    }
 
-    table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; table-layout: fixed; border: 2px solid black; }
-    table.data-table td { border: 1px solid black; padding: 2px 4px; box-sizing: border-box; font-size: 10px; overflow: hidden; white-space: nowrap; }
+    /* TABLAS SUPERIORES */
+    table.data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 8px;
+        table-layout: fixed;
+        border: 2px solid black;
+    }
+    table.data-table td {
+        border: 1px solid black;
+        padding: 2px 4px;
+        box-sizing: border-box;
+        font-size: 10px;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
     table.data-table td.no-bottom-line { border-bottom: none; }
     table.data-table td.no-top-line { border-top: none; }
 
+    /* COLORES DE CELDAS SUPERIORES */
     .bg-yellow { background-color: #ffff99; }
     .bg-purple { background-color: #b4a7d6; }
     .bg-cyan { background-color: #00ffff; }
     .bg-pink { background-color: #ff99ff; }
 
-    .cal-table { width: 100%; border-collapse: collapse; border: 2px solid black; table-layout: fixed; }
-    .cal-table th, .cal-table td { border: 1px solid black; padding: 0; height: 18px; font-size: 10px; box-sizing: border-box; text-align: center; }
-    .cal-table th { font-weight: bold; background-color: white; }
-    .month-col { width: 7.5%; font-weight: bold; }
+    /* CALENDARIO */
+    .cal-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 2px solid black;
+        table-layout: fixed;
+    }
+    .cal-table th, .cal-table td {
+        border: 1px solid black;
+        padding: 0;
+        height: 18px;
+        font-size: 10px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    .cal-table th {
+        font-weight: bold;
+        background-color: white;
+    }
+    .month-col {
+        width: 7.5%;
+        font-weight: bold;
+    }
     
-    .solid-blue { background-color: #00B0F0; }
+    /* COLOR BASE AZUL MATUTINO */
+    .solid-blue {
+        background-color: #00B0F0;
+    }
     
     .split-cell {
         background-color: white;
@@ -98,34 +176,79 @@
         background-repeat: no-repeat;
     }
 
-    .signatures { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; padding: 0 40px; }
-    .sig-block { width: 30%; font-weight: bold; font-size: 11px; display: flex; flex-direction: column; justify-content: flex-end; }
-    .sig-line { border-top: 1px solid black; margin-top: 5px; padding-top: 5px; font-weight: normal; }
-    .data-text { font-weight: bold; font-size: 11px; display: block; margin-top: 2px; }
+    /* FIRMAS */
+    .signatures {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 60px;
+        text-align: center;
+        padding: 0 40px;
+    }
+    .sig-block {
+        width: 30%;
+        font-weight: bold;
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+    .sig-line {
+        border-top: 1px solid black;
+        margin-top: 5px;
+        padding-top: 5px;
+        font-weight: normal;
+    }
+
+    .data-text {
+        font-weight: bold;
+        font-size: 11px;
+        display: block;
+        margin-top: 2px;
+    }
 
     /* BOTÓN DE DESCARGA PDF */
     .btn-download {
-        position: fixed; bottom: 30px; right: 30px;
-        background-color: #FF0000; color: white; border: none;
-        padding: 12px 20px; font-size: 16px; font-weight: bold;
-        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
-        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        transition: background-color 0.3s; z-index: 1000;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: #FF0000;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s;
+        z-index: 1000;
     }
-    .btn-download:hover { background-color: #cc0000; }
-    .btn-download:disabled { background-color: #aa3333; cursor: not-allowed; }
-    .btn-download svg { width: 18px; height: 18px; fill: white; }
+    .btn-download:hover {
+        background-color: #cc0000;
+    }
+    .btn-download:disabled {
+        background-color: #aa3333;
+        cursor: not-allowed;
+    }
+    .btn-download svg {
+        width: 18px;
+        height: 18px;
+        fill: white;
+    }
 </style>
 </head>
 <body>
 
-<header class="header">
-    <div class="header-left">
+<header class="loreto-header">
+    <div class="loreto-left">
         <button class="menu-btn" id="toggle-menu"><i data-lucide="menu"></i></button>
         <img src="https://i.ibb.co/mC4fV6TG/LOGOTIPO-2.jpg" alt="Logo" style="height: 35px; object-fit: contain;">
-        <h1 class="header-title">Formato Kardex</h1>
+        <h1 class="loreto-title">Formato Kardex</h1>
     </div>
-    <div class="header-right">
+    <div class="loreto-right">
         <div class="user-initial" id="user-initial">U</div>
         <img src="https://i.ibb.co/8Lk54Gkb/LOGOTIPO-1.jpg" alt="User" height="35" style="border-radius:4px;">
     </div>
@@ -135,27 +258,27 @@
     <aside class="sidebar" id="sidebar"></aside>
 
     <main class="content">
-        <div class="container-view">
-            <div class="page-header">
-                <h1>Vista Previa del Kardex</h1>
-                <p>Revisa tu información. Si necesitas hacer un cambio, da clic en "Regresar APP" para volver al formulario.</p>
-            </div>
+        <div class="page-header">
+            <h1>Vista Previa del Kardex</h1>
+            <p>Revisa tu información. Si necesitas hacer un cambio, da clic en "Regresar APP" para volver al formulario.</p>
+        </div>
 
+        <div class="kardex-wrapper">
             <!-- DOCUMENTO KARDEX ORIGINAL -->
-            <div class="kardex-document">
+            <div class="container">
                 <!-- CABECERA INSTITUCIONAL -->
-                <div class="header-kar">
-                    <div class="header-left-kar">
+                <div class="header">
+                    <div class="header-left">
                         <h2 style="color:#800020; margin:0; font-size: 18px; text-align: left; display:flex; align-items:center; gap: 5px;">
                             <span style="font-size:30px;">&#x1F985;</span>
                             <div style="line-height: 1.1;">GOBIERNO DE<br>MÉXICO</div>
                         </h2>
                     </div>
-                    <div class="header-center-kar">
+                    <div class="header-center">
                         DIRECCIÓN DE PRESTACIONES MÉDICAS<br>
                         COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD
                     </div>
-                    <div class="header-right-kar">
+                    <div class="header-right">
                         <h2 style="color:#005c3a; margin:0; font-size: 24px; text-align: right; display:flex; flex-direction:column; align-items:center;">
                             <span style="font-size:35px; line-height:0.8;">&#x1F6A8;</span>
                             IMSS
@@ -176,7 +299,12 @@
                 <!-- TABLA 1: DATOS PERSONALES -->
                 <table class="data-table">
                     <colgroup>
-                        <col style="width: 37.5%;"><col style="width: 13.125%;"><col style="width: 12.25%;"><col style="width: 6.125%;"><col style="width: 9%;"><col style="width: 22%;">
+                        <col style="width: 37.5%;">
+                        <col style="width: 13.125%;">
+                        <col style="width: 12.25%;">
+                        <col style="width: 6.125%;">
+                        <col style="width: 9%;">
+                        <col style="width: 22%;">
                     </colgroup>
                     <tr style="height: 35px;">
                         <td style="text-align: center; vertical-align: top; letter-spacing: 2px; padding-top: 4px;">N O M B R E : <span class="data-text" id="val-nombre" style="letter-spacing: normal;"></span></td>
@@ -430,7 +558,7 @@
             setText('val-plaza', data.plaza);
             setText('val-ano', data.ano);
             
-            // --- LÓGICA DE COLORES SEGÚN EL TURNO (CÓDIGO ORIGINAL RESTAURADO) ---
+            // --- LÓGICA DE COLORES SEGÚN EL TURNO ---
             let shiftColor = '#00B0F0'; // Matutino (Azul)
             let shiftColorEncoded = '%2300B0F0';
             
@@ -515,8 +643,8 @@
         button.innerText = 'Generando PDF...';
         button.disabled = true;
 
-        // Elemento a convertir (Apunta al contenedor original)
-        const element = document.querySelector('.kardex-document');
+        // Elemento a convertir
+        const element = document.querySelector('.container');
 
         // Opciones de html2canvas
         const options = {

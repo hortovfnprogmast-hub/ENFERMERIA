@@ -2,76 +2,16 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Formato Kardex | Loreto Ingeniería</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-
-<!-- LIBRERÍAS PARA GENERAR PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+<title>Formato de Rol Vacacional 2027</title>
 <style>
-    :root {
-        --primary-blue: #263fa4; --light-blue: #eef2ff; --bg-color: #f8fafc;
-        --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
-    }
-
     body {
+        font-family: Arial, sans-serif;
+        font-size: 11px;
         margin: 0;
-        font-family: 'Inter', sans-serif;
-        background-color: var(--bg-color);
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        overflow: hidden;
-    }
-
-    /* --- LORETO LAYOUT --- */
-    .loreto-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
-    .loreto-left { display: flex; align-items: center; gap: 15px; }
-    .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-main); }
-    .loreto-title { margin: 0; font-size: 15px; font-weight: 700; color: var(--primary-blue); }
-    .loreto-right { display: flex; align-items: center; gap: 12px; }
-    .user-initial { width: 35px; height: 35px; border-radius: 50%; background-color: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-
-    .main-layout { display: flex; flex: 1; overflow: hidden; }
-    .sidebar { width: 260px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; transition: transform 0.3s ease; display: flex; flex-direction: column; }
-    @media (max-width: 768px) { .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; } .sidebar.open { transform: translateX(0); } .loreto-title { display: none; } }
-
-    .sidebar-nav { padding: 15px 10px; }
-    .sidebar-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-    .sidebar-section:last-child { border-bottom: none; }
-    .sidebar .section-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 10px 15px; padding-bottom: 0; display: block; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin-bottom: 2px; transition: all 0.2s; }
-    .nav-item:hover { background-color: var(--bg-color); }
-    .nav-item.active { background-color: var(--light-blue); color: var(--primary-blue); font-weight: 700; border-left: 4px solid var(--primary-blue); }
-    .nav-item.active i { color: var(--primary-blue); }
-
-    .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-    .page-header { margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
-    .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
-    .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
-
-    /* BOTÓN REGRESAR APP (Izquierda) */
-    .btn-back {
-        position: fixed; bottom: 30px; left: 30px;
-        background-color: var(--primary-blue); color: white; border: none;
-        padding: 12px 20px; font-size: 16px; font-weight: bold;
-        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
-        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        transition: background-color 0.3s; z-index: 1000;
-        text-decoration: none; font-family: 'Inter', sans-serif;
-    }
-    .btn-back:hover { background-color: #1a2a6e; }
-    .btn-back svg { width: 18px; height: 18px; fill: white; }
-
-    /* --- ESTILOS ORIGINALES DEL KARDEX (SIN ALTERAR) --- */
-    .kardex-wrapper {
+        padding: 20px;
         display: flex;
         justify-content: center;
-        padding-bottom: 80px;
+        background-color: #f0f0f0;
     }
     .container {
         width: 100%;
@@ -79,22 +19,20 @@
         background-color: white;
         padding: 20px;
         box-sizing: border-box;
-        font-family: Arial, sans-serif;
-        font-size: 11px;
     }
     
     /* ENCABEZADOS Y LOGOS */
-    .container .header {
+    .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
     }
-    .container .header-left, .container .header-right {
+    .header-left, .header-right {
         width: 200px;
         text-align: center;
     }
-    .container .header-center {
+    .header-center {
         text-align: center;
         font-weight: bold;
         font-size: 13px;
@@ -164,16 +102,24 @@
         font-weight: bold;
     }
     
-    /* COLOR BASE AZUL MATUTINO */
+    /* COLOR BASE TURNO */
     .solid-blue {
         background-color: #00B0F0;
     }
     
+    /* CELDAS CON TRIÁNGULO (SVG INLINE COMPATIBLE CON PDF) */
     .split-cell {
         background-color: white;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 0,100 100,100' fill='%2300B0F0'/%3E%3C/svg%3E");
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
+        position: relative;
+    }
+    .split-cell svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        pointer-events: none;
     }
 
     /* FIRMAS */
@@ -242,264 +188,229 @@
 </head>
 <body>
 
-<header class="loreto-header">
-    <div class="loreto-left">
-        <button class="menu-btn" id="toggle-menu"><i data-lucide="menu"></i></button>
-        <img src="https://i.ibb.co/mC4fV6TG/LOGOTIPO-2.jpg" alt="Logo" style="height: 35px; object-fit: contain;">
-        <h1 class="loreto-title">Formato Kardex</h1>
-    </div>
-    <div class="loreto-right">
-        <div class="user-initial" id="user-initial">U</div>
-        <img src="https://i.ibb.co/8Lk54Gkb/LOGOTIPO-1.jpg" alt="User" height="35" style="border-radius:4px;">
-    </div>
-</header>
-
-<div class="main-layout">
-    <aside class="sidebar" id="sidebar"></aside>
-
-    <main class="content">
-        <div class="page-header">
-            <h1>Vista Previa del Kardex</h1>
-            <p>Revisa tu información. Si necesitas hacer un cambio, da clic en "Regresar APP" para volver al formulario.</p>
+<div class="container">
+    <!-- CABECERA INSTITUCIONAL -->
+    <div class="header">
+        <div class="header-left">
+            <h2 style="color:#800020; margin:0; font-size: 18px; text-align: left; display:flex; align-items:center; gap: 5px;">
+                <span style="font-size:30px;">&#x1F985;</span>
+                <div style="line-height: 1.1;">GOBIERNO DE<br>MÉXICO</div>
+            </h2>
         </div>
-
-        <div class="kardex-wrapper">
-            <!-- DOCUMENTO KARDEX ORIGINAL -->
-            <div class="container">
-                <!-- CABECERA INSTITUCIONAL -->
-                <div class="header">
-                    <div class="header-left">
-                        <h2 style="color:#800020; margin:0; font-size: 18px; text-align: left; display:flex; align-items:center; gap: 5px;">
-                            <span style="font-size:30px;">&#x1F985;</span>
-                            <div style="line-height: 1.1;">GOBIERNO DE<br>MÉXICO</div>
-                        </h2>
-                    </div>
-                    <div class="header-center">
-                        DIRECCIÓN DE PRESTACIONES MÉDICAS<br>
-                        COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD
-                    </div>
-                    <div class="header-right">
-                        <h2 style="color:#005c3a; margin:0; font-size: 24px; text-align: right; display:flex; flex-direction:column; align-items:center;">
-                            <span style="font-size:35px; line-height:0.8;">&#x1F6A8;</span>
-                            IMSS
-                        </h2>
-                    </div>
-                </div>
-
-                <!-- DATOS DE UNIDAD -->
-                <div class="form-info">
-                    <div>
-                        Delegación: <span class="underline" style="width: 250px;" id="val-delegacion">CDMX. NORTE</span>
-                    </div>
-                    <div>
-                        Unidad de Servicios Médicos: <span class="underline" style="width: 350px;" id="val-unidad">U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."</span>
-                    </div>
-                </div>
-
-                <!-- TABLA 1: DATOS PERSONALES -->
-                <table class="data-table">
-                    <colgroup>
-                        <col style="width: 37.5%;">
-                        <col style="width: 13.125%;">
-                        <col style="width: 12.25%;">
-                        <col style="width: 6.125%;">
-                        <col style="width: 9%;">
-                        <col style="width: 22%;">
-                    </colgroup>
-                    <tr style="height: 35px;">
-                        <td style="text-align: center; vertical-align: top; letter-spacing: 2px; padding-top: 4px;">N O M B R E : <span class="data-text" id="val-nombre" style="letter-spacing: normal;"></span></td>
-                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">CATEGORIA: <span class="data-text" id="val-categoria"></span></td>
-                        <td style="padding: 0;">
-                            <table style="width: 100%; height: 100%; border-collapse: collapse; border: none;">
-                                <tr><td style="border: none; padding: 4px 4px 2px 4px; vertical-align: top; text-align: center; font-size: 10px;">MATRICULA:</td></tr>
-                                <tr><td class="bg-yellow" style="border: none; height: 16px; padding: 0; text-align: center; font-weight: bold;" id="val-matricula"></td></tr>
-                            </table>
-                        </td>
-                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">C.C.: <span class="data-text" id="val-cc"></span></td>
-                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">DESCANSOS: <span class="data-text" id="val-descansos"></span></td>
-                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">CURP: <span class="data-text" id="val-curp" style="font-size: 10px;"></span></td>
-                    </tr>
-                </table>
-
-                <!-- TABLA 2: SERVICIOS Y ROLES -->
-                <table class="data-table">
-                    <colgroup>
-                        <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;">  <col style="width: 9.9%;">   
-                        <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 4.505%;"> 
-                    </colgroup>
-                    <tr style="font-size: 10px; font-weight: normal; text-align: center;">
-                        <td class="no-bottom-line">SERVICIO 1:</td>
-                        <td class="no-bottom-line">SERVICIO 2:</td>
-                        <td class="no-bottom-line">F. INGRESO:</td>
-                        <td class="no-bottom-line">ANTIGÜEDAD:</td>
-                        <td class="no-bottom-line">CONTRATACIÓN:</td>
-                        <td class="no-bottom-line">PLAZA</td>
-                        <td colspan="4">ROL VACACIONAL:</td>
-                        <td colspan="4">MARCA DE INCLUSIÓN:</td>
-                        <td class="no-bottom-line" style="padding: 2px 0; font-size: 9px;">AÑO:</td>
-                    </tr>
-                    <tr style="font-size: 11px; font-weight: bold; text-align: center; height: 18px;">
-                        <td class="no-top-line" id="val-servicio1"></td>
-                        <td class="no-top-line" id="val-servicio2"></td>
-                        <td class="no-top-line" id="val-fingreso"></td>
-                        <td class="no-top-line" id="val-antiguedad"></td>
-                        <td class="no-top-line" id="val-contratacion">BASE</td>
-                        <td class="no-top-line" id="val-plaza"></td>
-                        <td class="bg-purple"></td>
-                        <td class="bg-cyan"></td>
-                        <td class="bg-pink"></td>
-                        <td class="bg-cyan">-</td>
-                        <td class="bg-purple"></td>
-                        <td class="bg-cyan"></td>
-                        <td class="bg-pink"></td>
-                        <td class="bg-cyan">-</td>
-                        <td class="no-top-line" style="padding: 2px 0; font-size: 10px;" id="val-ano">2027</td>
-                    </tr>
-                </table>
-
-                <!-- CALENDARIO 2027 -->
-                <table class="cal-table">
-                    <tr>
-                        <th class="month-col">Mes \ Día</th>
-                        <th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th>
-                    </tr>
-                    
-                    <!-- Enero -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Enero</td>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Febrero -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Febrero</td>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Marzo -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Marzo</td>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td>
-                    </tr>
-
-                    <!-- Abril -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Abril</td>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Mayo -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Mayo</td>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Junio -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Junio</td>
-                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Julio -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Julio</td>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Agosto -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Agosto</td>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Septiembre -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Septiembre</td>
-                        <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Octubre -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Octubre</td>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Noviembre -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Noviembre</td>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td class="solid-blue"></td>
-                    </tr>
-
-                    <!-- Diciembre -->
-                    <tr>
-                        <td rowspan="2" class="month-col">Diciembre</td>
-                        <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                    <tr>
-                        <td class="solid-blue"></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="split-cell"></td><td class="split-cell"></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
-                    </tr>
-                </table>
-
-                <!-- FIRMAS -->
-                <div class="signatures">
-                    <div class="sig-block">
-                        <span>MTRA. JUDITH SILVA CORTÉS</span>
-                        <div class="sig-line">JEFA DE ENFERMERÍA</div>
-                    </div>
-                    <div class="sig-block">
-                        <span>LIC. GUILLERMINA PAULETTE HERRERA ALVAREZ</span>
-                        <div class="sig-line">SUBJEFE DE ENFERMERAS</div>
-                    </div>
-                    <div class="sig-block">
-                        <span id="val-nombre-firma"></span>
-                        <div class="sig-line">INTERESADA(O)</div>
-                    </div>
-                </div>
-            </div>
+        <div class="header-center">
+            DIRECCIÓN DE PRESTACIONES MÉDICAS<br>
+            COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD
         </div>
-    </main>
+        <div class="header-right">
+            <h2 style="color:#005c3a; margin:0; font-size: 24px; text-align: right; display:flex; flex-direction:column; align-items:center;">
+                <span style="font-size:35px; line-height:0.8;">&#x1F6A8;</span>
+                IMSS
+            </h2>
+        </div>
+    </div>
+
+    <!-- DATOS DE UNIDAD -->
+    <div class="form-info">
+        <div>
+            Delegación: <span class="underline" style="width: 250px;" id="val-delegacion">CDMX. NORTE</span>
+        </div>
+        <div>
+            Unidad de Servicios Médicos: <span class="underline" style="width: 350px;" id="val-unidad">U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."</span>
+        </div>
+    </div>
+
+    <!-- TABLA 1: DATOS PERSONALES -->
+    <table class="data-table">
+        <colgroup>
+            <col style="width: 37.5%;">
+            <col style="width: 13.125%;">
+            <col style="width: 12.25%;">
+            <col style="width: 6.125%;">
+            <col style="width: 9%;">
+            <col style="width: 22%;">
+        </colgroup>
+        <tr style="height: 35px;">
+            <td style="text-align: center; vertical-align: top; letter-spacing: 2px; padding-top: 4px;">N O M B R E : <span class="data-text" id="val-nombre" style="letter-spacing: normal;"></span></td>
+            <td style="text-align: center; vertical-align: top; padding-top: 4px;">CATEGORIA: <span class="data-text" id="val-categoria"></span></td>
+            <td style="padding: 0;">
+                <table style="width: 100%; height: 100%; border-collapse: collapse; border: none;">
+                    <tr><td style="border: none; padding: 4px 4px 2px 4px; vertical-align: top; text-align: center; font-size: 10px;">MATRICULA:</td></tr>
+                    <tr><td class="bg-yellow" style="border: none; height: 16px; padding: 0; text-align: center; font-weight: bold;" id="val-matricula"></td></tr>
+                </table>
+            </td>
+            <td style="text-align: center; vertical-align: top; padding-top: 4px;">C.C.: <span class="data-text" id="val-cc"></span></td>
+            <td style="text-align: center; vertical-align: top; padding-top: 4px;">DESCANSOS: <span class="data-text" id="val-descansos"></span></td>
+            <td style="text-align: center; vertical-align: top; padding-top: 4px;">CURP: <span class="data-text" id="val-curp" style="font-size: 10px;"></span></td>
+        </tr>
+    </table>
+
+    <!-- TABLA 2: SERVICIOS Y ROLES -->
+    <table class="data-table">
+        <colgroup>
+            <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;">  <col style="width: 9.9%;">   
+            <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 4.505%;"> 
+        </colgroup>
+        <tr style="font-size: 10px; font-weight: normal; text-align: center;">
+            <td class="no-bottom-line">SERVICIO 1:</td>
+            <td class="no-bottom-line">SERVICIO 2:</td>
+            <td class="no-bottom-line">F. INGRESO:</td>
+            <td class="no-bottom-line">ANTIGÜEDAD:</td>
+            <td class="no-bottom-line">CONTRATACIÓN:</td>
+            <td class="no-bottom-line">PLAZA</td>
+            <td colspan="4">ROL VACACIONAL:</td>
+            <td colspan="4">MARCA DE INCLUSIÓN:</td>
+            <td class="no-bottom-line" style="padding: 2px 0; font-size: 9px;">AÑO:</td>
+        </tr>
+        <tr style="font-size: 11px; font-weight: bold; text-align: center; height: 18px;">
+            <td class="no-top-line" id="val-servicio1"></td>
+            <td class="no-top-line" id="val-servicio2"></td>
+            <td class="no-top-line" id="val-fingreso"></td>
+            <td class="no-top-line" id="val-antiguedad"></td>
+            <td class="no-top-line" id="val-contratacion">BASE</td>
+            <td class="no-top-line" id="val-plaza"></td>
+            <td class="bg-purple"></td>
+            <td class="bg-cyan"></td>
+            <td class="bg-pink"></td>
+            <td class="bg-cyan">-</td>
+            <td class="bg-purple"></td>
+            <td class="bg-cyan"></td>
+            <td class="bg-pink"></td>
+            <td class="bg-cyan">-</td>
+            <td class="no-top-line" style="padding: 2px 0; font-size: 10px;" id="val-ano">2027</td>
+        </tr>
+    </table>
+
+    <!-- CALENDARIO 2027 -->
+    <table class="cal-table">
+        <tr>
+            <th class="month-col">Mes \ Día</th>
+            <th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th>
+        </tr>
+        
+        <!-- Enero -->
+        <tr>
+            <td rowspan="2" class="month-col">Enero</td>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Febrero -->
+        <tr>
+            <td rowspan="2" class="month-col">Febrero</td>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Marzo -->
+        <tr>
+            <td rowspan="2" class="month-col">Marzo</td>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+
+        <!-- Abril -->
+        <tr>
+            <td rowspan="2" class="month-col">Abril</td>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Mayo -->
+        <tr>
+            <td rowspan="2" class="month-col">Mayo</td>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Junio -->
+        <tr>
+            <td rowspan="2" class="month-col">Junio</td>
+            <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Julio -->
+        <tr>
+            <td rowspan="2" class="month-col">Julio</td>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Agosto -->
+        <tr>
+            <td rowspan="2" class="month-col">Agosto</td>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Septiembre -->
+        <tr>
+            <td rowspan="2" class="month-col">Septiembre</td>
+            <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Octubre -->
+        <tr>
+            <td rowspan="2" class="month-col">Octubre</td>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Noviembre -->
+        <tr>
+            <td rowspan="2" class="month-col">Noviembre</td>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
+        </tr>
+
+        <!-- Diciembre -->
+        <tr>
+            <td rowspan="2" class="month-col">Diciembre</td>
+            <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+        <tr>
+            <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+        </tr>
+    </table>
+
+    <!-- FIRMAS -->
+    <div class="signatures">
+        <div class="sig-block">
+            <span>MTRA. JUDITH SILVA CORTÉS</span>
+            <div class="sig-line">JEFA DE ENFERMERÍA</div>
+        </div>
+        <div class="sig-block">
+            <span>LIC. GUILLERMINA PAULETTE HERRERA ALVAREZ</span>
+            <div class="sig-line">SUBJEFE DE ENFERMERAS</div>
+        </div>
+        <div class="sig-block">
+            <div class="sig-line">INTERESADA(O)</div>
+        </div>
+    </div>
 </div>
-
-<!-- BOTÓN REGRESAR APP -->
-<a href="index.html" id="btnRegresar" class="btn-back">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-    </svg>
-    Regresar APP
-</a>
 
 <!-- BOTÓN DE DESCARGA -->
 <button id="btnDescargar" class="btn-download">
@@ -510,24 +421,12 @@
     Descargar
 </button>
 
+<!-- LIBRERÍAS PARA GENERAR PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
-    const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
-    document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
-
     document.addEventListener('DOMContentLoaded', function() {
-        // Cargar Menú Loreto
-        fetch('menu.html').then(res => res.text()).then(html => {
-            document.getElementById('sidebar').innerHTML = html;
-            lucide.createIcons();
-            const linkKardex = document.getElementById('link-kardex'); 
-            if(linkKardex) linkKardex.classList.add('active');
-        });
-
-        // Toggle menu móvil
-        document.getElementById('toggle-menu').addEventListener('click', () => { 
-            document.getElementById('sidebar').classList.toggle('open'); 
-        });
-
         const storedData = localStorage.getItem('kardexDatos');
         
         if (storedData) {
@@ -544,7 +443,6 @@
             setText('val-delegacion', data.delegacion);
             setText('val-unidad', data.unidad);
             setText('val-nombre', data.nombre);
-            setText('val-nombre-firma', data.nombre); // <-- NOMBRE EN LA FIRMA
             setText('val-categoria', data.categoria);
             setText('val-matricula', data.matricula);
             setText('val-cc', data.cc);
@@ -560,14 +458,11 @@
             
             // --- LÓGICA DE COLORES SEGÚN EL TURNO ---
             let shiftColor = '#00B0F0'; // Matutino (Azul)
-            let shiftColorEncoded = '%2300B0F0';
             
             if (data.turno === 'VESPERTINO') {
                 shiftColor = '#00B050'; // Verde
-                shiftColorEncoded = '%2300B050';
             } else if (data.turno === 'NOCTURNO') {
                 shiftColor = '#FF0000'; // Rojo
-                shiftColorEncoded = '%23FF0000';
             }
 
             // Aplicar el color a todas las celdas sólidas (días no laborables)
@@ -577,16 +472,13 @@
 
             // --- LÓGICA PARA COLOCAR LOS TRIÁNGULOS SEGÚN EL DÍA DE DESCANSO ---
             
-            // 1. Limpiar todos los triángulos existentes en el calendario
+            // 1. Limpiar todos los triángulos anteriores del calendario
             document.querySelectorAll('.cal-table .split-cell').forEach(cell => {
                 cell.classList.remove('split-cell');
-                cell.style.backgroundImage = ''; // Limpiar la imagen previa
+                cell.innerHTML = '';
             });
 
-            // Generar la URL del SVG dinámica con el color del turno
-            const svgUrl = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 0,100 100,100' fill='${shiftColorEncoded}'/%3E%3C/svg%3E")`;
-
-            // 2. Mapeo de días a las columnas (M, M, J, V, S, D, L)
+            // 2. Mapeo de días a las columnas del calendario
             const dayToCol = {
                 "MARTES": [1, 8, 15, 22, 29, 36],
                 "MIERCOLES": [2, 9, 16, 23, 30, 37],
@@ -619,44 +511,41 @@
                 }
             });
 
-            // 3. Pintar los triángulos solo en las filas inferiores y columnas correspondientes
+            // 3. Pintar los triángulos inyectando un SVG inline directamente compatible con html2canvas
             const rows = document.querySelector('.cal-table').querySelectorAll('tr');
             for (let i = 2; i < rows.length; i += 2) {
                 const row = rows[i];
                 for (let c = 0; c < row.cells.length; c++) {
                     const colIndex = c + 1;
-                    if (targetCols.has(colIndex) && !row.cells[c].classList.contains('solid-blue')) {
-                        row.cells[c].classList.add('split-cell');
-                        row.cells[c].style.backgroundImage = svgUrl; // Inyectar color del turno
+                    const cell = row.cells[c];
+                    if (targetCols.has(colIndex) && !cell.classList.contains('solid-blue')) {
+                        cell.classList.add('split-cell');
+                        cell.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"><polygon points="0,0 0,100 100,100" fill="${shiftColor}"/></svg>`;
                     }
                 }
             }
         }
     });
 
-    // --- LÓGICA DE DESCARGA PDF (CÓDIGO ORIGINAL RESTAURADO) ---
+    // --- LÓGICA DE DESCARGA PDF ---
     document.getElementById('btnDescargar').addEventListener('click', function() {
         const button = this;
         const originalText = button.innerHTML;
         
-        // Cambiar texto del botón para feedback visual
         button.innerText = 'Generando PDF...';
         button.disabled = true;
 
-        // Elemento a convertir
         const element = document.querySelector('.container');
 
-        // Opciones de html2canvas
         const options = {
-            scale: 2, // Mayor calidad
+            scale: 2,
             useCORS: true,
             backgroundColor: '#ffffff'
         };
 
         html2canvas(element, options).then(canvas => {
-            // Inicializar jsPDF en formato carta horizontal (landscape)
             const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('l', 'pt', 'letter'); // 'l' = landscape
+            const pdf = new jsPDF('l', 'pt', 'letter');
 
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
@@ -664,32 +553,15 @@
             const imgWidth = canvas.width;
             const imgHeight = canvas.height;
 
-            // Calcular relación de aspecto para que quepa completo en la hoja
             const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-            const imgX = (pdfWidth - imgWidth * ratio) / 2; // Centrar horizontalmente
-            const imgY = (pdfHeight - imgHeight * ratio) / 2; // Centrar verticalmente
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = (pdfHeight - imgHeight * ratio) / 2;
 
             const imgData = canvas.toDataURL('image/png');
             
             pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-            
-            // --- GENERAR NOMBRE DEL ARCHIVO DINÁMICAMENTE ---
-            let filename = 'Kardex_Vacacional_2027.pdf';
-            const storedData = localStorage.getItem('kardexDatos');
-            if (storedData) {
-                const data = JSON.parse(storedData);
-                // Formato: "turno - categoria - nombre - matricula"
-                const turno = data.turno || 'SIN_TURNO';
-                const categoria = data.categoria || 'SIN_CATEGORIA';
-                const nombre = data.nombre || 'SIN_NOMBRE';
-                const matricula = data.matricula || 'SIN_MATRICULA';
-                
-                filename = `${turno} - ${categoria} - ${nombre} - ${matricula}.pdf`;
-            }
-            
-            pdf.save(filename);
+            pdf.save('Kardex_Vacacional_2027.pdf');
 
-            // Restaurar botón
             button.innerHTML = originalText;
             button.disabled = false;
         }).catch(err => {

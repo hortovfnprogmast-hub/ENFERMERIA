@@ -102,7 +102,7 @@
         font-weight: bold;
     }
     
-    /* COLOR BASE AZUL MATUTINO ACTUALIZADO */
+    /* COLOR BASE AZUL MATUTINO */
     .solid-blue {
         background-color: #00B0F0;
     }
@@ -142,6 +142,39 @@
         font-size: 11px;
         display: block;
         margin-top: 2px;
+    }
+
+    /* BOTÓN DE DESCARGA PDF */
+    .btn-download {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: #FF0000;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s;
+        z-index: 1000;
+    }
+    .btn-download:hover {
+        background-color: #cc0000;
+    }
+    .btn-download:disabled {
+        background-color: #aa3333;
+        cursor: not-allowed;
+    }
+    .btn-download svg {
+        width: 18px;
+        height: 18px;
+        fill: white;
     }
 </style>
 </head>
@@ -371,6 +404,19 @@
     </div>
 </div>
 
+<!-- BOTÓN DE DESCARGA -->
+<button id="btnDescargar" class="btn-download">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+    </svg>
+    Descargar
+</button>
+
+<!-- LIBRERÍAS PARA GENERAR PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const storedData = localStorage.getItem('kardexDatos');
@@ -392,7 +438,7 @@
             setText('val-categoria', data.categoria);
             setText('val-matricula', data.matricula);
             setText('val-cc', data.cc);
-            setText('val-descansos', data.descansos); // <-- Solo muestra el día(s) de descanso
+            setText('val-descansos', data.descansos); 
             setText('val-curp', data.curp);
             setText('val-servicio1', data.servicio1);
             setText('val-servicio2', data.servicio2);
@@ -476,6 +522,57 @@
                 }
             }
         }
+    });
+
+    // --- LÓGICA DE DESCARGA PDF ---
+    document.getElementById('btnDescargar').addEventListener('click', function() {
+        const button = this;
+        const originalText = button.innerHTML;
+        
+        // Cambiar texto del botón para feedback visual
+        button.innerText = 'Generando PDF...';
+        button.disabled = true;
+
+        // Elemento a convertir
+        const element = document.querySelector('.container');
+
+        // Opciones de html2canvas
+        const options = {
+            scale: 2, // Mayor calidad
+            useCORS: true,
+            backgroundColor: '#ffffff'
+        };
+
+        html2canvas(element, options).then(canvas => {
+            // Inicializar jsPDF en formato carta horizontal (landscape)
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('l', 'pt', 'letter'); // 'l' = landscape
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+
+            // Calcular relación de aspecto para que quepa completo en la hoja
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+            const imgX = (pdfWidth - imgWidth * ratio) / 2; // Centrar horizontalmente
+            const imgY = (pdfHeight - imgHeight * ratio) / 2; // Centrar verticalmente
+
+            const imgData = canvas.toDataURL('image/png');
+            
+            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+            pdf.save('Kardex_Vacacional_2027.pdf');
+
+            // Restaurar botón
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }).catch(err => {
+            console.error("Error al generar el PDF:", err);
+            alert("Hubo un error al generar el PDF.");
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
     });
 </script>
 

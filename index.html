@@ -92,9 +92,25 @@
                 <label for="cc">C.C. (Cuota Cotización):</label>
                 <input type="text" id="cc" name="cc">
             </div>
+            
+            <!-- CAMBIO: Nueva lista desplegable para Descansos -->
             <div class="form-group">
                 <label for="descansos">Descansos:</label>
-                <input type="text" id="descansos" name="descansos" placeholder="Ej: Sábado, Domingo">
+                <select id="descansos" name="descansos">
+                    <option value="LUN-MAR">LUN-MAR</option>
+                    <option value="MAR-MIE">MAR-MIE</option>
+                    <option value="MIE-JUE">MIE-JUE</option>
+                    <option value="JUE-VIE">JUE-VIE</option>
+                    <option value="VIE-SAB">VIE-SAB</option>
+                    <option value="SAB-DOM">SAB-DOM</option>
+                    <option value="LUNES">LUNES</option>
+                    <option value="MARTES">MARTES</option>
+                    <option value="MIERCOLES">MIERCOLES</option>
+                    <option value="JUEVES">JUEVES</option>
+                    <option value="VIERNES">VIERNES</option>
+                    <option value="SABADO">SABADO</option>
+                    <option value="DOMINGO">DOMINGO</option>
+                </select>
             </div>
 
             <div class="form-group full">
@@ -152,22 +168,22 @@
     document.getElementById('capturaForm').addEventListener('submit', function(e) {
         e.preventDefault(); // Evita que se recargue la página
         
-        // Capturar todos los datos del formulario en un objeto
+        // Capturar todos los datos del formulario aplicando .toUpperCase() a los textos
         const datos = {
-            nombre: document.getElementById('nombre').value,
-            categoria: document.getElementById('categoria').value,
-            matricula: document.getElementById('matricula').value,
-            cc: document.getElementById('cc').value,
-            descansos: document.getElementById('descansos').value,
-            curp: document.getElementById('curp').value,
-            servicio1: document.getElementById('servicio1').value,
-            servicio2: document.getElementById('servicio2').value,
-            fingreso: document.getElementById('fingreso').value,
-            antiguedad: document.getElementById('antiguedad').value,
-            contratacion: document.getElementById('contratacion').value,
-            plaza: document.getElementById('plaza').value,
-            unidad: document.getElementById('unidad').value,
-            delegacion: document.getElementById('delegacion').value,
+            nombre: document.getElementById('nombre').value.toUpperCase(),
+            categoria: document.getElementById('categoria').value.toUpperCase(),
+            matricula: document.getElementById('matricula').value.toUpperCase(),
+            cc: document.getElementById('cc').value.toUpperCase(),
+            descansos: document.getElementById('descansos').value.toUpperCase(), // Asegura mayúsculas
+            curp: document.getElementById('curp').value.toUpperCase(),
+            servicio1: document.getElementById('servicio1').value.toUpperCase(),
+            servicio2: document.getElementById('servicio2').value.toUpperCase(),
+            fingreso: document.getElementById('fingreso').value, // La fecha no se altera
+            antiguedad: document.getElementById('antiguedad').value.toUpperCase(),
+            contratacion: document.getElementById('contratacion').value.toUpperCase(),
+            plaza: document.getElementById('plaza').value.toUpperCase(),
+            unidad: document.getElementById('unidad').value.toUpperCase(),
+            delegacion: document.getElementById('delegacion').value.toUpperCase(),
             ano: document.getElementById('ano').value
         };
 

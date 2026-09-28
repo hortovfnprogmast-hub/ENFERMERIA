@@ -17,7 +17,6 @@
 
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-color); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        /* --- HEADER Y LAYOUT --- */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
         .header-left { display: flex; align-items: center; gap: 15px; }
         .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-main); }
@@ -45,7 +44,6 @@
         .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
         .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
 
-        /* --- FORMS --- */
         .form-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid var(--border-color); margin-bottom: 25px; }
         .section-title { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--primary-blue); margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid var(--bg-color); }
         
@@ -58,7 +56,6 @@
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
         @media (max-width: 640px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
 
-        /* --- BOTONES ACCIÓN --- */
         .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
         .btn-guardar { background: var(--primary-blue); color: white; border: none; padding: 16px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
         .btn-guardar:hover { background: #1a2a6e; }
@@ -213,28 +210,24 @@
         document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Cargar el menú
             fetch('menu.html').then(res => res.text()).then(html => {
                 document.getElementById('sidebar').innerHTML = html;
                 lucide.createIcons();
-                // Marcar como activo el enlace de Rol
-                const linkRol = document.getElementById('link-rol'); 
-                if(linkRol) linkRol.classList.add('active');
+                const linkKardex = document.getElementById('link-kardex'); 
+                if(linkKardex) linkKardex.classList.add('active');
             });
 
-            // Botón de menú para móvil
             document.getElementById('toggle-menu').addEventListener('click', () => { 
                 document.getElementById('sidebar').classList.toggle('open'); 
             });
 
-            // Lógica de envío de formulario
             document.getElementById('capturaForm').addEventListener('submit', function(e) {
                 e.preventDefault(); 
                 
                 const btn = document.getElementById('btn-guardar');
                 const oldTxt = btn.innerHTML;
                 btn.disabled = true;
-                btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando...';
+                btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Generando...';
                 lucide.createIcons();
 
                 const datos = {
@@ -258,7 +251,6 @@
 
                 localStorage.setItem('kardexDatos', JSON.stringify(datos));
                 
-                // Redirigir a kardex.html
                 setTimeout(() => {
                     window.location.href = 'kardex.html';
                 }, 500);
@@ -267,7 +259,6 @@
 
         function limpiarFormulario() {
             document.getElementById('capturaForm').reset();
-            // Restaurar valores por defecto
             document.getElementById('contratacion').value = "BASE";
             document.getElementById('ano').value = "2027";
             document.getElementById('unidad').value = 'U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."';

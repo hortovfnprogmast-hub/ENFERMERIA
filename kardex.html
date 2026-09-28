@@ -40,13 +40,26 @@
     .nav-item.active i { color: var(--primary-blue); }
 
     .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-    .container { max-width: 1100px; margin: 0 auto; padding-bottom: 80px; /* Espacio para botones inferiores */ }
+    .container-view { max-width: 1100px; margin: 0 auto; padding-bottom: 80px; }
     .page-header { margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
     .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
     .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
 
-    /* --- KARDEX DOCUMENTO (Original sin alteraciones) --- */
-    .kardex-box {
+    /* BOTÓN REGRESAR APP (Izquierda) */
+    .btn-back {
+        position: fixed; bottom: 30px; left: 30px;
+        background-color: var(--primary-blue); color: white; border: none;
+        padding: 12px 20px; font-size: 16px; font-weight: bold;
+        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
+        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s; z-index: 1000;
+        text-decoration: none; font-family: 'Inter', sans-serif;
+    }
+    .btn-back:hover { background-color: #1a2a6e; }
+    .btn-back svg { width: 18px; height: 18px; fill: white; }
+
+    /* --- ESTILOS ORIGINALES DEL KARDEX (INTACTOS) --- */
+    .kardex-container {
         width: 100%;
         max-width: 1150px;
         background-color: white;
@@ -55,11 +68,9 @@
         font-family: Arial, sans-serif;
         font-size: 11px;
     }
-    
-    .kardex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .kardex-header-left, .kardex-header-right { width: 200px; text-align: center; }
-    .kardex-header-center { text-align: center; font-weight: bold; font-size: 13px; flex-grow: 1; }
-    
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .header-left, .header-right { width: 200px; text-align: center; }
+    .header-center { text-align: center; font-weight: bold; font-size: 13px; flex-grow: 1; }
     .form-info { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 10px; font-size: 12px; }
     .underline { border-bottom: 2px solid black; font-weight: bold; display: inline-block; text-align: center; }
 
@@ -90,10 +101,9 @@
     .signatures { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; padding: 0 40px; }
     .sig-block { width: 30%; font-weight: bold; font-size: 11px; display: flex; flex-direction: column; justify-content: flex-end; }
     .sig-line { border-top: 1px solid black; margin-top: 5px; padding-top: 5px; font-weight: normal; }
-
     .data-text { font-weight: bold; font-size: 11px; display: block; margin-top: 2px; }
 
-    /* BOTÓN DE DESCARGA PDF (Derecha) */
+    /* BOTÓN DE DESCARGA PDF */
     .btn-download {
         position: fixed; bottom: 30px; right: 30px;
         background-color: #FF0000; color: white; border: none;
@@ -105,19 +115,6 @@
     .btn-download:hover { background-color: #cc0000; }
     .btn-download:disabled { background-color: #aa3333; cursor: not-allowed; }
     .btn-download svg { width: 18px; height: 18px; fill: white; }
-
-    /* BOTÓN REGRESAR APP (Izquierda) */
-    .btn-back {
-        position: fixed; bottom: 30px; left: 30px;
-        background-color: var(--primary-blue); color: white; border: none;
-        padding: 12px 20px; font-size: 16px; font-weight: bold;
-        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
-        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        transition: background-color 0.3s; z-index: 1000;
-        text-decoration: none; font-family: 'Inter', sans-serif;
-    }
-    .btn-back:hover { background-color: #1a2a6e; }
-    .btn-back svg { width: 18px; height: 18px; fill: white; }
 </style>
 </head>
 <body>
@@ -138,26 +135,27 @@
     <aside class="sidebar" id="sidebar"></aside>
 
     <main class="content">
-        <div class="container">
+        <div class="container-view">
             <div class="page-header">
                 <h1>Vista Previa del Kardex</h1>
                 <p>Revisa tu información. Si necesitas hacer un cambio, da clic en "Regresar APP" para volver al formulario.</p>
             </div>
 
             <!-- DOCUMENTO KARDEX ORIGINAL -->
-            <div class="kardex-box" id="kardex-to-print">
-                <div class="kardex-header">
-                    <div class="kardex-header-left">
+            <div class="kardex-container" id="kardex-to-print">
+                <!-- CABECERA INSTITUCIONAL -->
+                <div class="header">
+                    <div class="header-left">
                         <h2 style="color:#800020; margin:0; font-size: 18px; text-align: left; display:flex; align-items:center; gap: 5px;">
                             <span style="font-size:30px;">&#x1F985;</span>
                             <div style="line-height: 1.1;">GOBIERNO DE<br>MÉXICO</div>
                         </h2>
                     </div>
-                    <div class="kardex-header-center">
+                    <div class="header-center">
                         DIRECCIÓN DE PRESTACIONES MÉDICAS<br>
                         COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD
                     </div>
-                    <div class="kardex-header-right">
+                    <div class="header-right">
                         <h2 style="color:#005c3a; margin:0; font-size: 24px; text-align: right; display:flex; flex-direction:column; align-items:center;">
                             <span style="font-size:35px; line-height:0.8;">&#x1F6A8;</span>
                             IMSS
@@ -165,6 +163,7 @@
                     </div>
                 </div>
 
+                <!-- DATOS DE UNIDAD -->
                 <div class="form-info">
                     <div>
                         Delegación: <span class="underline" style="width: 250px;" id="val-delegacion">CDMX. NORTE</span>
@@ -174,6 +173,7 @@
                     </div>
                 </div>
 
+                <!-- TABLA 1: DATOS PERSONALES -->
                 <table class="data-table">
                     <colgroup>
                         <col style="width: 37.5%;"><col style="width: 13.125%;"><col style="width: 12.25%;"><col style="width: 6.125%;"><col style="width: 9%;"><col style="width: 22%;">
@@ -193,6 +193,7 @@
                     </tr>
                 </table>
 
+                <!-- TABLA 2: SERVICIOS Y ROLES -->
                 <table class="data-table">
                     <colgroup>
                         <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;">  <col style="width: 9.9%;">   
@@ -228,6 +229,7 @@
                     </tr>
                 </table>
 
+                <!-- CALENDARIO 2027 -->
                 <table class="cal-table">
                     <tr>
                         <th class="month-col">Mes \ Día</th>
@@ -343,6 +345,7 @@
                     </tr>
                 </table>
 
+                <!-- FIRMAS -->
                 <div class="signatures">
                     <div class="sig-block">
                         <span>MTRA. JUDITH SILVA CORTÉS</span>
@@ -409,10 +412,11 @@
                 }
             };
 
+            // Llenar datos generales
             setText('val-delegacion', data.delegacion);
             setText('val-unidad', data.unidad);
             setText('val-nombre', data.nombre);
-            setText('val-nombre-firma', data.nombre); 
+            setText('val-nombre-firma', data.nombre); // <-- NOMBRE EN LA FIRMA
             setText('val-categoria', data.categoria);
             setText('val-matricula', data.matricula);
             setText('val-cc', data.cc);
@@ -426,29 +430,35 @@
             setText('val-plaza', data.plaza);
             setText('val-ano', data.ano);
             
+            // --- LÓGICA DE COLORES SEGÚN EL TURNO (CÓDIGO ORIGINAL RESTAURADO) ---
             let shiftColor = '#00B0F0'; // Matutino (Azul)
+            let shiftColorEncoded = '%2300B0F0';
             
             if (data.turno === 'VESPERTINO') {
                 shiftColor = '#00B050'; // Verde
+                shiftColorEncoded = '%2300B050';
             } else if (data.turno === 'NOCTURNO') {
                 shiftColor = '#FF0000'; // Rojo
+                shiftColorEncoded = '%23FF0000';
             }
 
-            // Aplicar el color a todas las celdas sólidas
+            // Aplicar el color a todas las celdas sólidas (días no laborables)
             document.querySelectorAll('.solid-blue').forEach(cell => {
                 cell.style.backgroundColor = shiftColor;
             });
 
-            // Limpiar triángulos existentes
+            // --- LÓGICA PARA COLOCAR LOS TRIÁNGULOS SEGÚN EL DÍA DE DESCANSO ---
+            
+            // 1. Limpiar todos los triángulos existentes en el calendario
             document.querySelectorAll('.cal-table .split-cell').forEach(cell => {
                 cell.classList.remove('split-cell');
-                cell.style.backgroundImage = ''; 
+                cell.style.backgroundImage = ''; // Limpiar la imagen previa
             });
 
-            // CORRECCIÓN: Generar el SVG de forma segura para que html2canvas lo pueda descargar en el PDF
-            const svgString = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><polygon points='0,0 0,100 100,100' fill='${shiftColor}'/></svg>`;
-            const svgUrl = `url("data:image/svg+xml,${encodeURIComponent(svgString)}")`;
+            // Generar la URL del SVG dinámica con el color del turno
+            const svgUrl = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 0,100 100,100' fill='${shiftColorEncoded}'/%3E%3C/svg%3E")`;
 
+            // 2. Mapeo de días a las columnas (M, M, J, V, S, D, L)
             const dayToCol = {
                 "MARTES": [1, 8, 15, 22, 29, 36],
                 "MIERCOLES": [2, 9, 16, 23, 30, 37],
@@ -459,6 +469,7 @@
                 "LUNES": [7, 14, 21, 28, 35]
             };
 
+            // Convertir respuesta en índices de columnas
             let selectedDays = [];
             if (data.descansos && data.descansos.includes('-')) {
                 const parts = data.descansos.split('-');
@@ -480,6 +491,7 @@
                 }
             });
 
+            // 3. Pintar los triángulos solo en las filas inferiores y columnas correspondientes
             const rows = document.querySelector('.cal-table').querySelectorAll('tr');
             for (let i = 2; i < rows.length; i += 2) {
                 const row = rows[i];
@@ -487,73 +499,78 @@
                     const colIndex = c + 1;
                     if (targetCols.has(colIndex) && !row.cells[c].classList.contains('solid-blue')) {
                         row.cells[c].classList.add('split-cell');
-                        row.cells[c].style.backgroundImage = svgUrl; 
+                        row.cells[c].style.backgroundImage = svgUrl; // Inyectar color del turno
                     }
                 }
             }
         }
     });
 
-    // LÓGICA DE DESCARGA PDF
+    // --- LÓGICA DE DESCARGA PDF (CÓDIGO ORIGINAL RESTAURADO) ---
     document.getElementById('btnDescargar').addEventListener('click', function() {
         const button = this;
         const originalText = button.innerHTML;
         
+        // Cambiar texto del botón para feedback visual
         button.innerText = 'Generando PDF...';
         button.disabled = true;
 
-        const element = document.querySelector('.kardex-box'); // Apuntar al documento original
+        // Elemento a convertir (Apunta al documento original)
+        const element = document.querySelector('.kardex-container');
 
+        // Opciones de html2canvas
         const options = {
-            scale: 2, 
+            scale: 2, // Mayor calidad
             useCORS: true,
-            backgroundColor: '#ffffff',
-            logging: false // Evitar errores en consola por imágenes
+            backgroundColor: '#ffffff'
         };
 
-        // Usar un pequeño timeout para asegurar que el navegador haya pintado los triángulos
-        setTimeout(() => {
-            html2canvas(element, options).then(canvas => {
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('l', 'pt', 'letter'); 
+        html2canvas(element, options).then(canvas => {
+            // Inicializar jsPDF en formato carta horizontal (landscape)
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('l', 'pt', 'letter'); // 'l' = landscape
 
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
 
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
 
-                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-                const imgX = (pdfWidth - imgWidth * ratio) / 2; 
-                const imgY = (pdfHeight - imgHeight * ratio) / 2; 
+            // Calcular relación de aspecto para que quepa completo en la hoja
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+            const imgX = (pdfWidth - imgWidth * ratio) / 2; // Centrar horizontalmente
+            const imgY = (pdfHeight - imgHeight * ratio) / 2; // Centrar verticalmente
 
-                const imgData = canvas.toDataURL('image/png');
+            const imgData = canvas.toDataURL('image/png');
+            
+            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+            
+            // --- GENERAR NOMBRE DEL ARCHIVO DINÁMICAMENTE ---
+            let filename = 'Kardex_Vacacional_2027.pdf';
+            const storedData = localStorage.getItem('kardexDatos');
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                // Formato: "turno - categoria - nombre - matricula"
+                // Se ponen valores por defecto por si el usuario dejó algún campo vacío
+                const turno = data.turno || 'SIN_TURNO';
+                const categoria = data.categoria || 'SIN_CATEGORIA';
+                const nombre = data.nombre || 'SIN_NOMBRE';
+                const matricula = data.matricula || 'SIN_MATRICULA';
                 
-                pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-                
-                let filename = 'Kardex_Vacacional_2027.pdf';
-                const storedData = localStorage.getItem('kardexDatos');
-                if (storedData) {
-                    const data = JSON.parse(storedData);
-                    const turno = data.turno || 'SIN_TURNO';
-                    const categoria = data.categoria || 'SIN_CATEGORIA';
-                    const nombre = data.nombre || 'SIN_NOMBRE';
-                    const matricula = data.matricula || 'SIN_MATRICULA';
-                    
-                    filename = `${turno} - ${categoria} - ${nombre} - ${matricula}.pdf`;
-                }
-                
-                pdf.save(filename);
+                filename = `${turno} - ${categoria} - ${nombre} - ${matricula}.pdf`;
+            }
+            
+            pdf.save(filename);
 
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }).catch(err => {
-                console.error("Error al generar el PDF:", err);
-                alert("Hubo un error al generar el PDF.");
-                button.innerHTML = originalText;
-                button.disabled = false;
-            });
-        }, 300); // Esperar 300ms para que el DOM se actualice
+            // Restaurar botón
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }).catch(err => {
+            console.error("Error al generar el PDF:", err);
+            alert("Hubo un error al generar el PDF.");
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
     });
 </script>
 

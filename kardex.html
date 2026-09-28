@@ -59,7 +59,7 @@
     .btn-back svg { width: 18px; height: 18px; fill: white; }
 
     /* --- ESTILOS ORIGINALES DEL KARDEX (INTACTOS) --- */
-    .kardex-container {
+    .kardex-document {
         width: 100%;
         max-width: 1150px;
         background-color: white;
@@ -68,9 +68,9 @@
         font-family: Arial, sans-serif;
         font-size: 11px;
     }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .header-left, .header-right { width: 200px; text-align: center; }
-    .header-center { text-align: center; font-weight: bold; font-size: 13px; flex-grow: 1; }
+    .header-kar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .header-left-kar, .header-right-kar { width: 200px; text-align: center; }
+    .header-center-kar { text-align: center; font-weight: bold; font-size: 13px; flex-grow: 1; }
     .form-info { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 10px; font-size: 12px; }
     .underline { border-bottom: 2px solid black; font-weight: bold; display: inline-block; text-align: center; }
 
@@ -142,20 +142,20 @@
             </div>
 
             <!-- DOCUMENTO KARDEX ORIGINAL -->
-            <div class="kardex-container" id="kardex-to-print">
+            <div class="kardex-document">
                 <!-- CABECERA INSTITUCIONAL -->
-                <div class="header">
-                    <div class="header-left">
+                <div class="header-kar">
+                    <div class="header-left-kar">
                         <h2 style="color:#800020; margin:0; font-size: 18px; text-align: left; display:flex; align-items:center; gap: 5px;">
                             <span style="font-size:30px;">&#x1F985;</span>
                             <div style="line-height: 1.1;">GOBIERNO DE<br>MÉXICO</div>
                         </h2>
                     </div>
-                    <div class="header-center">
+                    <div class="header-center-kar">
                         DIRECCIÓN DE PRESTACIONES MÉDICAS<br>
                         COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD
                     </div>
-                    <div class="header-right">
+                    <div class="header-right-kar">
                         <h2 style="color:#005c3a; margin:0; font-size: 24px; text-align: right; display:flex; flex-direction:column; align-items:center;">
                             <span style="font-size:35px; line-height:0.8;">&#x1F6A8;</span>
                             IMSS
@@ -515,8 +515,8 @@
         button.innerText = 'Generando PDF...';
         button.disabled = true;
 
-        // Elemento a convertir (Apunta al documento original)
-        const element = document.querySelector('.kardex-container');
+        // Elemento a convertir (Apunta al contenedor original)
+        const element = document.querySelector('.kardex-document');
 
         // Opciones de html2canvas
         const options = {
@@ -551,7 +551,6 @@
             if (storedData) {
                 const data = JSON.parse(storedData);
                 // Formato: "turno - categoria - nombre - matricula"
-                // Se ponen valores por defecto por si el usuario dejó algún campo vacío
                 const turno = data.turno || 'SIN_TURNO';
                 const categoria = data.categoria || 'SIN_CATEGORIA';
                 const nombre = data.nombre || 'SIN_NOMBRE';

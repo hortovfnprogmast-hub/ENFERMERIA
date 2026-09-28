@@ -564,7 +564,23 @@
             const imgData = canvas.toDataURL('image/png');
             
             pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-            pdf.save('Kardex_Vacacional_2027.pdf');
+            
+            // --- GENERAR NOMBRE DEL ARCHIVO DINÁMICAMENTE ---
+            let filename = 'Kardex_Vacacional_2027.pdf';
+            const storedData = localStorage.getItem('kardexDatos');
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                // Formato: "turno - categoria - nombre - matricula"
+                // Se ponen valores por defecto por si el usuario dejó algún campo vacío
+                const turno = data.turno || 'SIN_TURNO';
+                const categoria = data.categoria || 'SIN_CATEGORIA';
+                const nombre = data.nombre || 'SIN_NOMBRE';
+                const matricula = data.matricula || 'SIN_MATRICULA';
+                
+                filename = `${turno} - ${categoria} - ${nombre} - ${matricula}.pdf`;
+            }
+            
+            pdf.save(filename);
 
             // Restaurar botón
             button.innerHTML = originalText;

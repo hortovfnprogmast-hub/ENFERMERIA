@@ -385,14 +385,14 @@
                 }
             };
 
-            // Llenar datos generales (agregamos el turno junto a los descansos para visualizarlo)
+            // Llenar datos generales
             setText('val-delegacion', data.delegacion);
             setText('val-unidad', data.unidad);
             setText('val-nombre', data.nombre);
             setText('val-categoria', data.categoria);
             setText('val-matricula', data.matricula);
             setText('val-cc', data.cc);
-            setText('val-descansos', data.descansos + " (" + data.turno + ")");
+            setText('val-descansos', data.descansos); // <-- Solo muestra el día(s) de descanso
             setText('val-curp', data.curp);
             setText('val-servicio1', data.servicio1);
             setText('val-servicio2', data.servicio2);
@@ -453,8 +453,7 @@
                 if (abbrToFull[parts[0]]) selectedDays.push(abbrToFull[parts[0]]);
                 if (abbrToFull[parts[1]]) selectedDays.push(abbrToFull[parts[1]]);
             } else if (data.descansos) {
-                // Quitar el turno de la cadena si se inyectó, aunque usamos data.descansos original
-                selectedDays.push(data.descansos.split(' ')[0]); 
+                selectedDays.push(data.descansos);
             }
 
             let targetCols = new Set();

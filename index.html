@@ -1,208 +1,279 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Captura de Rol Vacacional</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
-        display: flex;
-        justify-content: center;
-        padding: 40px 20px;
-        margin: 0;
-    }
-    .form-container {
-        background-color: white;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 800px;
-    }
-    h2 {
-        text-align: center;
-        color: #005c3a;
-        border-bottom: 2px solid #800020;
-        padding-bottom: 10px;
-        margin-top: 0;
-    }
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-    .form-group.full {
-        grid-column: 1 / -1;
-    }
-    label {
-        font-weight: bold;
-        margin-bottom: 5px;
-        font-size: 14px;
-    }
-    input, select {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-    }
-    .btn-submit {
-        grid-column: 1 / -1;
-        background-color: #005c3a;
-        color: white;
-        border: none;
-        padding: 15px;
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 20px;
-        transition: background-color 0.3s;
-    }
-    .btn-submit:hover {
-        background-color: #004029;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kardex | Loreto Ingeniería</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #263fa4; --light-blue: #eef2ff; --bg-color: #f8fafc;
+            --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
+            --danger: #dc2626; --success: #10b981; --warning: #f59e0b;
+        }
+
+        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-color); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+        /* --- HEADER Y LAYOUT --- */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-main); }
+        .header-title { margin: 0; font-size: 15px; font-weight: 700; color: var(--primary-blue); }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .user-initial { width: 35px; height: 35px; border-radius: 50%; background-color: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 260px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; transition: transform 0.3s ease; display: flex; flex-direction: column; }
+        @media (max-width: 768px) { .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; } .sidebar.open { transform: translateX(0); } .header-title { display: none; } }
+
+        .sidebar-nav { padding: 15px 10px; }
+        .sidebar-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .sidebar-section:last-child { border-bottom: none; }
+        .sidebar .section-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 10px 15px; padding-bottom: 0; display: block; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin-bottom: 2px; transition: all 0.2s; }
+        .nav-item:hover { background-color: var(--bg-color); }
+        .nav-item.active { background-color: var(--light-blue); color: var(--primary-blue); font-weight: 700; border-left: 4px solid var(--primary-blue); }
+        .nav-item.active i { color: var(--primary-blue); }
+
+        .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .container { max-width: 1050px; margin: 0 auto; padding-bottom: 50px; }
+        
+        .page-header { margin-bottom: 30px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
+        .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
+        .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
+
+        /* --- FORMS --- */
+        .form-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid var(--border-color); margin-bottom: 25px; }
+        .section-title { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--primary-blue); margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid var(--bg-color); }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+        .form-input, .form-select { width: 100%; padding: 12px 15px; background-color: var(--bg-color); border: 1px solid transparent; border-radius: 10px; font-size: 14px; color: var(--text-main); box-sizing: border-box; outline: none; transition: all 0.2s; font-family: inherit; }
+        .form-input:focus, .form-select:focus { background-color: white; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(38,63,164,0.1); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        @media (max-width: 640px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+        /* --- BOTONES ACCIÓN --- */
+        .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
+        .btn-guardar { background: var(--primary-blue); color: white; border: none; padding: 16px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-guardar:hover { background: #1a2a6e; }
+        .btn-cancelar { background: white; color: var(--text-main); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-cancelar:hover { background: var(--bg-color); }
+    </style>
 </head>
 <body>
 
-<div class="form-container">
-    <h2>CAPTURA DE DATOS - ROL VACACIONAL 2027</h2>
-    <form id="capturaForm">
-        <div class="form-grid">
-            <div class="form-group full">
-                <label for="nombre">Nombre Completo:</label>
-                <input type="text" id="nombre" name="nombre" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="categoria">Categoría:</label>
-                <input type="text" id="categoria" name="categoria">
-            </div>
-            <div class="form-group">
-                <label for="matricula">Matrícula:</label>
-                <input type="text" id="matricula" name="matricula">
-            </div>
-
-            <div class="form-group">
-                <label for="cc">C.C. (Cuota Cotización):</label>
-                <input type="text" id="cc" name="cc">
-            </div>
-            
-            <div class="form-group">
-                <label for="turno">Turno:</label>
-                <select id="turno" name="turno">
-                    <option value="MATUTINO">MATUTINO</option>
-                    <option value="VESPERTINO">VESPERTINO</option>
-                    <option value="NOCTURNO">NOCTURNO</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="descansos">Descansos:</label>
-                <select id="descansos" name="descansos">
-                    <option value="LUN-MAR">LUN-MAR</option>
-                    <option value="MAR-MIE">MAR-MIE</option>
-                    <option value="MIE-JUE">MIE-JUE</option>
-                    <option value="JUE-VIE">JUE-VIE</option>
-                    <option value="VIE-SAB">VIE-SAB</option>
-                    <option value="SAB-DOM">SAB-DOM</option>
-                    <option value="LUNES">LUNES</option>
-                    <option value="MARTES">MARTES</option>
-                    <option value="MIERCOLES">MIERCOLES</option>
-                    <option value="JUEVES">JUEVES</option>
-                    <option value="VIERNES">VIERNES</option>
-                    <option value="SABADO">SABADO</option>
-                    <option value="DOMINGO">DOMINGO</option>
-                </select>
-            </div>
-
-            <div class="form-group full">
-                <label for="curp">CURP:</label>
-                <input type="text" id="curp" name="curp">
-            </div>
-
-            <div class="form-group">
-                <label for="servicio1">Servicio 1:</label>
-                <input type="text" id="servicio1" name="servicio1">
-            </div>
-            <div class="form-group">
-                <label for="servicio2">Servicio 2:</label>
-                <input type="text" id="servicio2" name="servicio2">
-            </div>
-
-            <div class="form-group">
-                <label for="fingreso">F. Ingreso:</label>
-                <input type="date" id="fingreso" name="fingreso">
-            </div>
-            <div class="form-group">
-                <label for="antiguedad">Antigüedad:</label>
-                <input type="text" id="antiguedad" name="antiguedad" placeholder="Ej: 10 años">
-            </div>
-
-            <div class="form-group">
-                <label for="contratacion">Contratación:</label>
-                <input type="text" id="contratacion" name="contratacion" value="BASE">
-            </div>
-            <div class="form-group">
-                <label for="plaza">Plaza:</label>
-                <input type="text" id="plaza" name="plaza">
-            </div>
-
-            <div class="form-group full">
-                <label for="unidad">Unidad de Servicios Médicos:</label>
-                <input type="text" id="unidad" name="unidad" value='U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."'>
-            </div>
-
-            <div class="form-group">
-                <label for="delegacion">Delegación:</label>
-                <input type="text" id="delegacion" name="delegacion" value="CDMX. NORTE">
-            </div>
-            <div class="form-group">
-                <label for="ano">Año:</label>
-                <input type="number" id="ano" name="ano" value="2027">
-            </div>
-
-            <button type="submit" class="btn-submit">ENVIAR AL KARDEX</button>
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-btn" id="toggle-menu"><i data-lucide="menu"></i></button>
+            <img src="https://i.ibb.co/mC4fV6TG/LOGOTIPO-2.jpg" alt="Logo" style="height: 35px; object-fit: contain;">
+            <h1 class="header-title">KARDEX</h1>
         </div>
-    </form>
-</div>
+        <div class="header-right">
+            <div class="user-initial" id="user-initial">U</div>
+            <img src="https://i.ibb.co/8Lk54Gkb/LOGOTIPO-1.jpg" alt="User" height="35" style="border-radius:4px;">
+        </div>
+    </header>
 
-<script>
-    document.getElementById('capturaForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Evita que se recargue la página
-        
-        // Capturar todos los datos del formulario aplicando .toUpperCase() a los textos
-        const datos = {
-            nombre: document.getElementById('nombre').value.toUpperCase(),
-            categoria: document.getElementById('categoria').value.toUpperCase(),
-            matricula: document.getElementById('matricula').value.toUpperCase(),
-            cc: document.getElementById('cc').value.toUpperCase(),
-            turno: document.getElementById('turno').value.toUpperCase(),
-            descansos: document.getElementById('descansos').value.toUpperCase(),
-            curp: document.getElementById('curp').value.toUpperCase(),
-            servicio1: document.getElementById('servicio1').value.toUpperCase(),
-            servicio2: document.getElementById('servicio2').value.toUpperCase(),
-            fingreso: document.getElementById('fingreso').value,
-            antiguedad: document.getElementById('antiguedad').value.toUpperCase(),
-            contratacion: document.getElementById('contratacion').value.toUpperCase(),
-            plaza: document.getElementById('plaza').value.toUpperCase(),
-            unidad: document.getElementById('unidad').value.toUpperCase(),
-            delegacion: document.getElementById('delegacion').value.toUpperCase(),
-            ano: document.getElementById('ano').value
-        };
+    <div class="main-layout">
+        <aside class="sidebar" id="sidebar"></aside>
 
-        // Guardar en el almacenamiento local del navegador
-        localStorage.setItem('kardexDatos', JSON.stringify(datos));
+        <main class="content">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Ingreso de Datos</h1>
+                    <p>Ingresa tu información personal y laboral para generar tu formato de kardex y Anecdotario.</p>
+                </div>
 
-        // Redirigir a kardex.html
-        window.location.href = 'kardex.html';
-    });
-</script>
+                <form id="capturaForm" class="form-card">
+                    <input type="hidden" id="edit-log-id">
+                    
+                    <h3 class="section-title"><i data-lucide="user"></i> Datos Personales</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-input" id="nombre" name="nombre" required>
+                    </div>
 
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Categoría</label>
+                            <input type="text" class="form-input" id="categoria" name="categoria">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Matrícula</label>
+                            <input type="text" class="form-input" id="matricula" name="matricula">
+                        </div>
+                    </div>
+
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label class="form-label">C.C. (Cuota Cotización)</label>
+                            <input type="text" class="form-input" id="cc" name="cc">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Turno</label>
+                            <select class="form-select" id="turno" name="turno">
+                                <option value="MATUTINO">MATUTINO</option>
+                                <option value="VESPERTINO">VESPERTINO</option>
+                                <option value="NOCTURNO">NOCTURNO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Descansos</label>
+                            <select class="form-select" id="descansos" name="descansos">
+                                <option value="LUN-MAR">LUN-MAR</option>
+                                <option value="MAR-MIE">MAR-MIE</option>
+                                <option value="MIE-JUE">MIE-JUE</option>
+                                <option value="JUE-VIE">JUE-VIE</option>
+                                <option value="VIE-SAB">VIE-SAB</option>
+                                <option value="SAB-DOM">SAB-DOM</option>
+                                <option value="DOM-LUN">DOM-LUN</option>
+                                <option value="LUNES">LUNES</option>
+                                <option value="MARTES">MARTES</option>
+                                <option value="MIERCOLES">MIERCOLES</option>
+                                <option value="JUEVES">JUEVES</option>
+                                <option value="VIERNES">VIERNES</option>
+                                <option value="SABADO">SABADO</option>
+                                <option value="DOMINGO">DOMINGO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">CURP</label>
+                        <input type="text" class="form-input" id="curp" name="curp">
+                    </div>
+
+                    <h3 class="section-title" style="margin-top: 20px;"><i data-lucide="briefcase"></i> Datos Laborales</h3>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Servicio 1</label>
+                            <input type="text" class="form-input" id="servicio1" name="servicio1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Servicio 2</label>
+                            <input type="text" class="form-input" id="servicio2" name="servicio2">
+                        </div>
+                    </div>
+
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label class="form-label">F. Ingreso</label>
+                            <input type="date" class="form-input" id="fingreso" name="fingreso">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Antigüedad</label>
+                            <input type="text" class="form-input" id="antiguedad" name="antiguedad" placeholder="Ej: 10 años">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contratación</label>
+                            <input type="text" class="form-input" id="contratacion" name="contratacion" value="BASE">
+                        </div>
+                    </div>
+
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Plaza</label>
+                            <input type="text" class="form-input" id="plaza" name="plaza">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Año</label>
+                            <input type="number" class="form-input" id="ano" name="ano" value="2027">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Unidad de Servicios Médicos</label>
+                        <input type="text" class="form-input" id="unidad" name="unidad" value='U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."'>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Delegación</label>
+                        <input type="text" class="form-input" id="delegacion" name="delegacion" value="CDMX. NORTE">
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-cancelar" onclick="limpiarFormulario()"><i data-lucide="x"></i> Cancelar</button>
+                        <button type="submit" class="btn-guardar" id="btn-guardar"><i data-lucide="save"></i> Enviar al Kardex</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
+        document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar el menú
+            fetch('menu.html').then(res => res.text()).then(html => {
+                document.getElementById('sidebar').innerHTML = html;
+                lucide.createIcons();
+                // Marcar como activo el enlace de Rol
+                const linkRol = document.getElementById('link-rol'); 
+                if(linkRol) linkRol.classList.add('active');
+            });
+
+            // Botón de menú para móvil
+            document.getElementById('toggle-menu').addEventListener('click', () => { 
+                document.getElementById('sidebar').classList.toggle('open'); 
+            });
+
+            // Lógica de envío de formulario
+            document.getElementById('capturaForm').addEventListener('submit', function(e) {
+                e.preventDefault(); 
+                
+                const btn = document.getElementById('btn-guardar');
+                const oldTxt = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando...';
+                lucide.createIcons();
+
+                const datos = {
+                    nombre: document.getElementById('nombre').value.toUpperCase(),
+                    categoria: document.getElementById('categoria').value.toUpperCase(),
+                    matricula: document.getElementById('matricula').value.toUpperCase(),
+                    cc: document.getElementById('cc').value.toUpperCase(),
+                    turno: document.getElementById('turno').value.toUpperCase(),
+                    descansos: document.getElementById('descansos').value.toUpperCase(),
+                    curp: document.getElementById('curp').value.toUpperCase(),
+                    servicio1: document.getElementById('servicio1').value.toUpperCase(),
+                    servicio2: document.getElementById('servicio2').value.toUpperCase(),
+                    fingreso: document.getElementById('fingreso').value,
+                    antiguedad: document.getElementById('antiguedad').value.toUpperCase(),
+                    contratacion: document.getElementById('contratacion').value.toUpperCase(),
+                    plaza: document.getElementById('plaza').value.toUpperCase(),
+                    unidad: document.getElementById('unidad').value.toUpperCase(),
+                    delegacion: document.getElementById('delegacion').value.toUpperCase(),
+                    ano: document.getElementById('ano').value
+                };
+
+                localStorage.setItem('kardexDatos', JSON.stringify(datos));
+                
+                // Redirigir a kardex.html
+                setTimeout(() => {
+                    window.location.href = 'kardex.html';
+                }, 500);
+            });
+        });
+
+        function limpiarFormulario() {
+            document.getElementById('capturaForm').reset();
+            // Restaurar valores por defecto
+            document.getElementById('contratacion').value = "BASE";
+            document.getElementById('ano').value = "2027";
+            document.getElementById('unidad').value = 'U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."';
+            document.getElementById('delegacion').value = "CDMX. NORTE";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>

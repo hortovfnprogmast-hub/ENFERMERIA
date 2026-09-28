@@ -93,7 +93,15 @@
                 <input type="text" id="cc" name="cc">
             </div>
             
-            <!-- CAMBIO: Nueva lista desplegable para Descansos -->
+            <div class="form-group">
+                <label for="turno">Turno:</label>
+                <select id="turno" name="turno">
+                    <option value="MATUTINO">MATUTINO</option>
+                    <option value="VESPERTINO">VESPERTINO</option>
+                    <option value="NOCTURNO">NOCTURNO</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="descansos">Descansos:</label>
                 <select id="descansos" name="descansos">
@@ -174,11 +182,12 @@
             categoria: document.getElementById('categoria').value.toUpperCase(),
             matricula: document.getElementById('matricula').value.toUpperCase(),
             cc: document.getElementById('cc').value.toUpperCase(),
-            descansos: document.getElementById('descansos').value.toUpperCase(), // Asegura mayúsculas
+            turno: document.getElementById('turno').value.toUpperCase(),
+            descansos: document.getElementById('descansos').value.toUpperCase(),
             curp: document.getElementById('curp').value.toUpperCase(),
             servicio1: document.getElementById('servicio1').value.toUpperCase(),
             servicio2: document.getElementById('servicio2').value.toUpperCase(),
-            fingreso: document.getElementById('fingreso').value, // La fecha no se altera
+            fingreso: document.getElementById('fingreso').value,
             antiguedad: document.getElementById('antiguedad').value.toUpperCase(),
             contratacion: document.getElementById('contratacion').value.toUpperCase(),
             plaza: document.getElementById('plaza').value.toUpperCase(),

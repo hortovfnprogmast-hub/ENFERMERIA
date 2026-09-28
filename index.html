@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Captura de Rol Vacacional</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        padding: 40px 20px;
+        margin: 0;
+    }
+    .form-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 800px;
+    }
+    h2 {
+        text-align: center;
+        color: #005c3a;
+        border-bottom: 2px solid #800020;
+        padding-bottom: 10px;
+        margin-top: 0;
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+    input, select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    .btn-submit {
+        grid-column: 1 / -1;
+        background-color: #005c3a;
+        color: white;
+        border: none;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+    }
+    .btn-submit:hover {
+        background-color: #004029;
+    }
+</style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>CAPTURA DE DATOS - ROL VACACIONAL 2027</h2>
+    <form id="capturaForm">
+        <div class="form-grid">
+            <div class="form-group full">
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="categoria">Categoría:</label>
+                <input type="text" id="categoria" name="categoria">
+            </div>
+            <div class="form-group">
+                <label for="matricula">Matrícula:</label>
+                <input type="text" id="matricula" name="matricula">
+            </div>
+
+            <div class="form-group">
+                <label for="cc">C.C. (Cuota Cotización):</label>
+                <input type="text" id="cc" name="cc">
+            </div>
+            <div class="form-group">
+                <label for="descansos">Descansos:</label>
+                <input type="text" id="descansos" name="descansos" placeholder="Ej: Sábado, Domingo">
+            </div>
+
+            <div class="form-group full">
+                <label for="curp">CURP:</label>
+                <input type="text" id="curp" name="curp">
+            </div>
+
+            <div class="form-group">
+                <label for="servicio1">Servicio 1:</label>
+                <input type="text" id="servicio1" name="servicio1">
+            </div>
+            <div class="form-group">
+                <label for="servicio2">Servicio 2:</label>
+                <input type="text" id="servicio2" name="servicio2">
+            </div>
+
+            <div class="form-group">
+                <label for="fingreso">F. Ingreso:</label>
+                <input type="date" id="fingreso" name="fingreso">
+            </div>
+            <div class="form-group">
+                <label for="antiguedad">Antigüedad:</label>
+                <input type="text" id="antiguedad" name="antiguedad" placeholder="Ej: 10 años">
+            </div>
+
+            <div class="form-group">
+                <label for="contratacion">Contratación:</label>
+                <input type="text" id="contratacion" name="contratacion" value="BASE">
+            </div>
+            <div class="form-group">
+                <label for="plaza">Plaza:</label>
+                <input type="text" id="plaza" name="plaza">
+            </div>
+
+            <div class="form-group full">
+                <label for="unidad">Unidad de Servicios Médicos:</label>
+                <input type="text" id="unidad" name="unidad" value='U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."'>
+            </div>
+
+            <div class="form-group">
+                <label for="delegacion">Delegación:</label>
+                <input type="text" id="delegacion" name="delegacion" value="CDMX. NORTE">
+            </div>
+            <div class="form-group">
+                <label for="ano">Año:</label>
+                <input type="number" id="ano" name="ano" value="2027">
+            </div>
+
+            <button type="submit" class="btn-submit">ENVIAR AL KARDEX</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('capturaForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Evita que se recargue la página
+        
+        // Capturar todos los datos del formulario en un objeto
+        const datos = {
+            nombre: document.getElementById('nombre').value,
+            categoria: document.getElementById('categoria').value,
+            matricula: document.getElementById('matricula').value,
+            cc: document.getElementById('cc').value,
+            descansos: document.getElementById('descansos').value,
+            curp: document.getElementById('curp').value,
+            servicio1: document.getElementById('servicio1').value,
+            servicio2: document.getElementById('servicio2').value,
+            fingreso: document.getElementById('fingreso').value,
+            antiguedad: document.getElementById('antiguedad').value,
+            contratacion: document.getElementById('contratacion').value,
+            plaza: document.getElementById('plaza').value,
+            unidad: document.getElementById('unidad').value,
+            delegacion: document.getElementById('delegacion').value,
+            ano: document.getElementById('ano').value
+        };
+
+        // Guardar en el almacenamiento local del navegador
+        localStorage.setItem('kardexDatos', JSON.stringify(datos));
+
+        // Redirigir a kardex.html
+        window.location.href = 'kardex.html';
+    });
+</script>
+
+</body>
+</html>

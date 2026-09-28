@@ -40,12 +40,12 @@
     .nav-item.active i { color: var(--primary-blue); }
 
     .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-    .container { max-width: 1100px; margin: 0 auto; padding-bottom: 50px; }
+    .container { max-width: 1100px; margin: 0 auto; padding-bottom: 80px; /* Espacio para botones inferiores */ }
     .page-header { margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
     .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
     .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
 
-    /* --- KARDEX DOCUMENTO (Tus estilos originales) --- */
+    /* --- KARDEX DOCUMENTO (Original sin alteraciones) --- */
     .kardex-box {
         width: 100%;
         max-width: 1150px;
@@ -56,51 +56,15 @@
         font-size: 11px;
     }
     
-    .kardex-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-    .kardex-header-left, .kardex-header-right {
-        width: 200px;
-        text-align: center;
-    }
-    .kardex-header-center {
-        text-align: center;
-        font-weight: bold;
-        font-size: 13px;
-        flex-grow: 1;
-    }
-    .form-info {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        padding: 0 10px;
-        font-size: 12px;
-    }
-    .underline {
-        border-bottom: 2px solid black;
-        font-weight: bold;
-        display: inline-block;
-        text-align: center;
-    }
+    .kardex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .kardex-header-left, .kardex-header-right { width: 200px; text-align: center; }
+    .kardex-header-center { text-align: center; font-weight: bold; font-size: 13px; flex-grow: 1; }
+    
+    .form-info { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 10px; font-size: 12px; }
+    .underline { border-bottom: 2px solid black; font-weight: bold; display: inline-block; text-align: center; }
 
-    table.data-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 8px;
-        table-layout: fixed;
-        border: 2px solid black;
-    }
-    table.data-table td {
-        border: 1px solid black;
-        padding: 2px 4px;
-        box-sizing: border-box;
-        font-size: 10px;
-        overflow: hidden;
-        white-space: nowrap;
-    }
+    table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; table-layout: fixed; border: 2px solid black; }
+    table.data-table td { border: 1px solid black; padding: 2px 4px; box-sizing: border-box; font-size: 10px; overflow: hidden; white-space: nowrap; }
     table.data-table td.no-bottom-line { border-bottom: none; }
     table.data-table td.no-top-line { border-top: none; }
 
@@ -109,28 +73,10 @@
     .bg-cyan { background-color: #00ffff; }
     .bg-pink { background-color: #ff99ff; }
 
-    .cal-table {
-        width: 100%;
-        border-collapse: collapse;
-        border: 2px solid black;
-        table-layout: fixed;
-    }
-    .cal-table th, .cal-table td {
-        border: 1px solid black;
-        padding: 0;
-        height: 18px;
-        font-size: 10px;
-        box-sizing: border-box;
-        text-align: center;
-    }
-    .cal-table th {
-        font-weight: bold;
-        background-color: white;
-    }
-    .month-col {
-        width: 7.5%;
-        font-weight: bold;
-    }
+    .cal-table { width: 100%; border-collapse: collapse; border: 2px solid black; table-layout: fixed; }
+    .cal-table th, .cal-table td { border: 1px solid black; padding: 0; height: 18px; font-size: 10px; box-sizing: border-box; text-align: center; }
+    .cal-table th { font-weight: bold; background-color: white; }
+    .month-col { width: 7.5%; font-weight: bold; }
     
     .solid-blue { background-color: #00B0F0; }
     
@@ -141,58 +87,37 @@
         background-repeat: no-repeat;
     }
 
-    .signatures {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 60px;
-        text-align: center;
-        padding: 0 40px;
-    }
-    .sig-block {
-        width: 30%;
-        font-weight: bold;
-        font-size: 11px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-    }
-    .sig-line {
-        border-top: 1px solid black;
-        margin-top: 5px;
-        padding-top: 5px;
-        font-weight: normal;
-    }
+    .signatures { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; padding: 0 40px; }
+    .sig-block { width: 30%; font-weight: bold; font-size: 11px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .sig-line { border-top: 1px solid black; margin-top: 5px; padding-top: 5px; font-weight: normal; }
 
-    .data-text {
-        font-weight: bold;
-        font-size: 11px;
-        display: block;
-        margin-top: 2px;
-    }
+    .data-text { font-weight: bold; font-size: 11px; display: block; margin-top: 2px; }
 
-    /* BOTÓN DE DESCARGA PDF */
+    /* BOTÓN DE DESCARGA PDF (Derecha) */
     .btn-download {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background-color: #FF0000;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 8px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        transition: background-color 0.3s;
-        z-index: 1000;
+        position: fixed; bottom: 30px; right: 30px;
+        background-color: #FF0000; color: white; border: none;
+        padding: 12px 20px; font-size: 16px; font-weight: bold;
+        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
+        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s; z-index: 1000;
     }
     .btn-download:hover { background-color: #cc0000; }
     .btn-download:disabled { background-color: #aa3333; cursor: not-allowed; }
     .btn-download svg { width: 18px; height: 18px; fill: white; }
+
+    /* BOTÓN REGRESAR APP (Izquierda) */
+    .btn-back {
+        position: fixed; bottom: 30px; left: 30px;
+        background-color: var(--primary-blue); color: white; border: none;
+        padding: 12px 20px; font-size: 16px; font-weight: bold;
+        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
+        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s; z-index: 1000;
+        text-decoration: none; font-family: 'Inter', sans-serif;
+    }
+    .btn-back:hover { background-color: #1a2a6e; }
+    .btn-back svg { width: 18px; height: 18px; fill: white; }
 </style>
 </head>
 <body>
@@ -216,7 +141,7 @@
         <div class="container">
             <div class="page-header">
                 <h1>Vista Previa del Kardex</h1>
-                <p>Revisa tu información. Si necesitas hacer un cambio, ve a "Kardex" en el menú para volver a llenar el formulario.</p>
+                <p>Revisa tu información. Si necesitas hacer un cambio, da clic en "Regresar APP" para volver al formulario.</p>
             </div>
 
             <!-- DOCUMENTO KARDEX ORIGINAL -->
@@ -437,6 +362,15 @@
     </main>
 </div>
 
+<!-- BOTÓN REGRESAR APP -->
+<a href="index.html" id="btnRegresar" class="btn-back">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    Regresar APP
+</a>
+
+<!-- BOTÓN DE DESCARGA -->
 <button id="btnDescargar" class="btn-download">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
@@ -478,7 +412,7 @@
             setText('val-delegacion', data.delegacion);
             setText('val-unidad', data.unidad);
             setText('val-nombre', data.nombre);
-            setText('val-nombre-firma', data.nombre); // <-- NOMBRE EN LA FIRMA
+            setText('val-nombre-firma', data.nombre); 
             setText('val-categoria', data.categoria);
             setText('val-matricula', data.matricula);
             setText('val-cc', data.cc);
@@ -493,26 +427,27 @@
             setText('val-ano', data.ano);
             
             let shiftColor = '#00B0F0'; // Matutino (Azul)
-            let shiftColorEncoded = '%2300B0F0';
             
             if (data.turno === 'VESPERTINO') {
                 shiftColor = '#00B050'; // Verde
-                shiftColorEncoded = '%2300B050';
             } else if (data.turno === 'NOCTURNO') {
                 shiftColor = '#FF0000'; // Rojo
-                shiftColorEncoded = '%23FF0000';
             }
 
+            // Aplicar el color a todas las celdas sólidas
             document.querySelectorAll('.solid-blue').forEach(cell => {
                 cell.style.backgroundColor = shiftColor;
             });
 
+            // Limpiar triángulos existentes
             document.querySelectorAll('.cal-table .split-cell').forEach(cell => {
                 cell.classList.remove('split-cell');
                 cell.style.backgroundImage = ''; 
             });
 
-            const svgUrl = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 0,100 100,100' fill='${shiftColorEncoded}'/%3E%3C/svg%3E")`;
+            // CORRECCIÓN: Generar el SVG de forma segura para que html2canvas lo pueda descargar en el PDF
+            const svgString = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><polygon points='0,0 0,100 100,100' fill='${shiftColor}'/></svg>`;
+            const svgUrl = `url("data:image/svg+xml,${encodeURIComponent(svgString)}")`;
 
             const dayToCol = {
                 "MARTES": [1, 8, 15, 22, 29, 36],
@@ -559,6 +494,7 @@
         }
     });
 
+    // LÓGICA DE DESCARGA PDF
     document.getElementById('btnDescargar').addEventListener('click', function() {
         const button = this;
         const originalText = button.innerHTML;
@@ -571,49 +507,53 @@
         const options = {
             scale: 2, 
             useCORS: true,
-            backgroundColor: '#ffffff'
+            backgroundColor: '#ffffff',
+            logging: false // Evitar errores en consola por imágenes
         };
 
-        html2canvas(element, options).then(canvas => {
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('l', 'pt', 'letter'); 
+        // Usar un pequeño timeout para asegurar que el navegador haya pintado los triángulos
+        setTimeout(() => {
+            html2canvas(element, options).then(canvas => {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('l', 'pt', 'letter'); 
 
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
 
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
 
-            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-            const imgX = (pdfWidth - imgWidth * ratio) / 2; 
-            const imgY = (pdfHeight - imgHeight * ratio) / 2; 
+                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                const imgX = (pdfWidth - imgWidth * ratio) / 2; 
+                const imgY = (pdfHeight - imgHeight * ratio) / 2; 
 
-            const imgData = canvas.toDataURL('image/png');
-            
-            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-            
-            let filename = 'Kardex_Vacacional_2027.pdf';
-            const storedData = localStorage.getItem('kardexDatos');
-            if (storedData) {
-                const data = JSON.parse(storedData);
-                const turno = data.turno || 'SIN_TURNO';
-                const categoria = data.categoria || 'SIN_CATEGORIA';
-                const nombre = data.nombre || 'SIN_NOMBRE';
-                const matricula = data.matricula || 'SIN_MATRICULA';
+                const imgData = canvas.toDataURL('image/png');
                 
-                filename = `${turno} - ${categoria} - ${nombre} - ${matricula}.pdf`;
-            }
-            
-            pdf.save(filename);
+                pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+                
+                let filename = 'Kardex_Vacacional_2027.pdf';
+                const storedData = localStorage.getItem('kardexDatos');
+                if (storedData) {
+                    const data = JSON.parse(storedData);
+                    const turno = data.turno || 'SIN_TURNO';
+                    const categoria = data.categoria || 'SIN_CATEGORIA';
+                    const nombre = data.nombre || 'SIN_NOMBRE';
+                    const matricula = data.matricula || 'SIN_MATRICULA';
+                    
+                    filename = `${turno} - ${categoria} - ${nombre} - ${matricula}.pdf`;
+                }
+                
+                pdf.save(filename);
 
-            button.innerHTML = originalText;
-            button.disabled = false;
-        }).catch(err => {
-            console.error("Error al generar el PDF:", err);
-            alert("Hubo un error al generar el PDF.");
-            button.innerHTML = originalText;
-            button.disabled = false;
-        });
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }).catch(err => {
+                console.error("Error al generar el PDF:", err);
+                alert("Hubo un error al generar el PDF.");
+                button.innerHTML = originalText;
+                button.disabled = false;
+            });
+        }, 300); // Esperar 300ms para que el DOM se actualice
     });
 </script>
 

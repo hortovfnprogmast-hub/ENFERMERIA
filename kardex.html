@@ -135,6 +135,14 @@
         padding-top: 5px;
         font-weight: normal;
     }
+
+    /* Estilos para los textos inyectados */
+    .data-text {
+        font-weight: bold;
+        font-size: 11px;
+        display: block;
+        margin-top: 2px;
+    }
 </style>
 </head>
 <body>
@@ -163,10 +171,10 @@
     <!-- DATOS DE UNIDAD -->
     <div class="form-info">
         <div>
-            Delegación: <span class="underline" style="width: 250px;">CDMX. NORTE</span>
+            Delegación: <span class="underline" style="width: 250px;" id="val-delegacion">CDMX. NORTE</span>
         </div>
         <div>
-            Unidad de Servicios Médicos: <span class="underline" style="width: 350px;">U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."</span>
+            Unidad de Servicios Médicos: <span class="underline" style="width: 350px;" id="val-unidad">U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."</span>
         </div>
     </div>
 
@@ -181,17 +189,17 @@
             <col style="width: 22%;">
         </colgroup>
         <tr style="height: 35px;">
-            <td style="text-align: center; vertical-align: top; letter-spacing: 2px; padding-top: 4px;">N O M B R E :</td>
-            <td style="text-align: center; vertical-align: top; padding-top: 4px;">CATEGORIA:</td>
+            <td style="text-align: center; vertical-align: top; letter-spacing: 2px; padding-top: 4px;">N O M B R E : <span class="data-text" id="val-nombre" style="letter-spacing: normal;"></span></td>
+            <td style="text-align: center; vertical-align: top; padding-top: 4px;">CATEGORIA: <span class="data-text" id="val-categoria"></span></td>
             <td style="padding: 0;">
                 <table style="width: 100%; height: 100%; border-collapse: collapse; border: none;">
                     <tr><td style="border: none; padding: 4px 4px 2px 4px; vertical-align: top; text-align: center; font-size: 10px;">MATRICULA:</td></tr>
-                    <tr><td class="bg-yellow" style="border: none; height: 16px; padding: 0;"></td></tr>
+                    <tr><td class="bg-yellow" style="border: none; height: 16px; padding: 0; text-align: center; font-weight: bold;" id="val-matricula"></td></tr>
                 </table>
             </td>
-            <td style="text-align: center; vertical-align: top; padding-top: 4px;">C.C.:</td>
-            <td style="text-align: center; vertical-align: top; padding-top: 4px;">DESCANSOS:</td>
-            <td style="text-align: center; vertical-align: top; padding-top: 4px;">CURP:</td>
+            <td style="text-align: center; vertical-align: top; padding-top: 4px;">C.C.: <span class="data-text" id="val-cc"></span></td>
+            <td style="text-align: center; vertical-align: top; padding-top: 4px;">DESCANSOS: <span class="data-text" id="val-descansos"></span></td>
+            <td style="text-align: center; vertical-align: top; padding-top: 4px;">CURP: <span class="data-text" id="val-curp" style="font-size: 10px;"></span></td>
         </tr>
     </table>
 
@@ -204,7 +212,6 @@
             <col style="width: 11.7%;">  
             <col style="width: 10.795%;"> 
             <col style="width: 9.9%;">   
-            <!-- 8 CUADROS CON EL MISMO ANCHO UNIFORME (3.75% CADA UNO) -->
             <col style="width: 3.75%;">   
             <col style="width: 3.75%;">   
             <col style="width: 3.75%;">   
@@ -227,12 +234,12 @@
             <td class="no-bottom-line" style="padding: 2px 0; font-size: 9px;">AÑO:</td>
         </tr>
         <tr style="font-size: 11px; font-weight: bold; text-align: center; height: 18px;">
-            <td class="no-top-line"></td>
-            <td class="no-top-line">-</td>
-            <td class="no-top-line"></td>
-            <td class="no-top-line"></td>
-            <td class="no-top-line">BASE</td>
-            <td class="no-top-line"></td>
+            <td class="no-top-line" id="val-servicio1"></td>
+            <td class="no-top-line" id="val-servicio2"></td>
+            <td class="no-top-line" id="val-fingreso"></td>
+            <td class="no-top-line" id="val-antiguedad"></td>
+            <td class="no-top-line" id="val-contratacion">BASE</td>
+            <td class="no-top-line" id="val-plaza"></td>
             <td class="bg-purple"></td>
             <td class="bg-cyan"></td>
             <td class="bg-pink"></td>
@@ -241,7 +248,7 @@
             <td class="bg-cyan"></td>
             <td class="bg-pink"></td>
             <td class="bg-cyan">-</td>
-            <td class="no-top-line" style="padding: 2px 0; font-size: 10px;">2027</td>
+            <td class="no-top-line" style="padding: 2px 0; font-size: 10px;" id="val-ano">2027</td>
         </tr>
     </table>
 
@@ -376,6 +383,51 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Este script se ejecuta cuando el kardex.html carga
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener los datos guardados en el almacenamiento local por index.html
+        const storedData = localStorage.getItem('kardexDatos');
+        
+        if (storedData) {
+            const data = JSON.parse(storedData);
+            
+            // Función para inyectar texto en los elementos y evitar errores si no existe el ID
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerText = value || '';
+                }
+            };
+
+            // Llenar los campos de encabezado
+            setText('val-delegacion', data.delegacion);
+            setText('val-unidad', data.unidad);
+            
+            // Llenar Tabla 1 (Datos Personales)
+            setText('val-nombre', data.nombre);
+            setText('val-categoria', data.categoria);
+            setText('val-matricula', data.matricula);
+            setText('val-cc', data.cc);
+            setText('val-descansos', data.descansos);
+            setText('val-curp', data.curp);
+            
+            // Llenar Tabla 2 (Servicios y Roles)
+            setText('val-servicio1', data.servicio1);
+            setText('val-servicio2', data.servicio2);
+            // Formatear la fecha para que se vea mejor (ej. 2023-05-12)
+            setText('val-fingreso', data.fingreso);
+            setText('val-antiguedad', data.antiguedad);
+            setText('val-contratacion', data.contratacion);
+            setText('val-plaza', data.plaza);
+            setText('val-ano', data.ano);
+            
+            // Opcional: Limpiar el almacenamiento local después de usarlo
+            // localStorage.removeItem('kardexDatos');
+        }
+    });
+</script>
 
 </body>
 </html>

@@ -69,7 +69,6 @@
         white-space: nowrap;
     }
 
-    /* Celdas sin línea divisoria */
     table.data-table td.no-bottom-line { border-bottom: none; }
     table.data-table td.no-top-line { border-top: none; }
 
@@ -79,7 +78,7 @@
     .bg-cyan { background-color: #00ffff; }
     .bg-pink { background-color: #ff99ff; }
 
-    /* CALENDARIO (37 columnas de días) */
+    /* CALENDARIO */
     .cal-table {
         width: 100%;
         border-collapse: collapse;
@@ -102,13 +101,15 @@
         width: 7.5%;
         font-weight: bold;
     }
+    
+    /* COLOR BASE AZUL MATUTINO ACTUALIZADO */
     .solid-blue {
-        background-color: #00a2e8;
+        background-color: #00B0F0;
     }
     
     .split-cell {
         background-color: white;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 0,100 100,100' fill='%2300a2e8'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 0,100 100,100' fill='%2300B0F0'/%3E%3C/svg%3E");
         background-size: 100% 100%;
         background-repeat: no-repeat;
     }
@@ -136,7 +137,6 @@
         font-weight: normal;
     }
 
-    /* Estilos para los textos inyectados */
     .data-text {
         font-weight: bold;
         font-size: 11px;
@@ -206,21 +206,8 @@
     <!-- TABLA 2: SERVICIOS Y ROLES -->
     <table class="data-table">
         <colgroup>
-            <col style="width: 10.7%;">  
-            <col style="width: 10.7%;">  
-            <col style="width: 11.7%;">  
-            <col style="width: 11.7%;">  
-            <col style="width: 10.795%;"> 
-            <col style="width: 9.9%;">   
-            <col style="width: 3.75%;">   
-            <col style="width: 3.75%;">   
-            <col style="width: 3.75%;">   
-            <col style="width: 3.75%;">   
-            <col style="width: 3.75%;">   
-            <col style="width: 3.75%;">   
-            <col style="width: 3.75%;">   
-            <col style="width: 3.75%;">   
-            <col style="width: 4.505%;"> 
+            <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;">  <col style="width: 9.9%;">   
+            <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 4.505%;"> 
         </colgroup>
         <tr style="font-size: 10px; font-weight: normal; text-align: center;">
             <td class="no-bottom-line">SERVICIO 1:</td>
@@ -252,7 +239,7 @@
         </tr>
     </table>
 
-    <!-- CALENDARIO 2027 (Estructura original restablecida) -->
+    <!-- CALENDARIO 2027 -->
     <table class="cal-table">
         <tr>
             <th class="month-col">Mes \ Día</th>
@@ -398,13 +385,14 @@
                 }
             };
 
+            // Llenar datos generales (agregamos el turno junto a los descansos para visualizarlo)
             setText('val-delegacion', data.delegacion);
             setText('val-unidad', data.unidad);
             setText('val-nombre', data.nombre);
             setText('val-categoria', data.categoria);
             setText('val-matricula', data.matricula);
             setText('val-cc', data.cc);
-            setText('val-descansos', data.descansos);
+            setText('val-descansos', data.descansos + " (" + data.turno + ")");
             setText('val-curp', data.curp);
             setText('val-servicio1', data.servicio1);
             setText('val-servicio2', data.servicio2);
@@ -414,14 +402,35 @@
             setText('val-plaza', data.plaza);
             setText('val-ano', data.ano);
             
+            // --- LÓGICA DE COLORES SEGÚN EL TURNO ---
+            let shiftColor = '#00B0F0'; // Matutino (Azul)
+            let shiftColorEncoded = '%2300B0F0';
+            
+            if (data.turno === 'VESPERTINO') {
+                shiftColor = '#00B050'; // Verde
+                shiftColorEncoded = '%2300B050';
+            } else if (data.turno === 'NOCTURNO') {
+                shiftColor = '#FF0000'; // Rojo
+                shiftColorEncoded = '%23FF0000';
+            }
+
+            // Aplicar el color a todas las celdas sólidas (días no laborables)
+            document.querySelectorAll('.solid-blue').forEach(cell => {
+                cell.style.backgroundColor = shiftColor;
+            });
+
             // --- LÓGICA PARA COLOCAR LOS TRIÁNGULOS SEGÚN EL DÍA DE DESCANSO ---
             
             // 1. Limpiar todos los triángulos existentes en el calendario
             document.querySelectorAll('.cal-table .split-cell').forEach(cell => {
                 cell.classList.remove('split-cell');
+                cell.style.backgroundImage = ''; // Limpiar la imagen previa
             });
 
-            // 2. Mapeo de días a las columnas del calendario (basado en el encabezado: M, M, J, V, S, D, L)
+            // Generar la URL del SVG dinámica con el color del turno
+            const svgUrl = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 0,100 100,100' fill='${shiftColorEncoded}'/%3E%3C/svg%3E")`;
+
+            // 2. Mapeo de días a las columnas (M, M, J, V, S, D, L)
             const dayToCol = {
                 "MARTES": [1, 8, 15, 22, 29, 36],
                 "MIERCOLES": [2, 9, 16, 23, 30, 37],
@@ -432,7 +441,7 @@
                 "LUNES": [7, 14, 21, 28, 35]
             };
 
-            // Convertir respuesta (ej. "MAR-MIE" -> ["MARTES", "MIERCOLES"])
+            // Convertir respuesta en índices de columnas
             let selectedDays = [];
             if (data.descansos && data.descansos.includes('-')) {
                 const parts = data.descansos.split('-');
@@ -444,7 +453,8 @@
                 if (abbrToFull[parts[0]]) selectedDays.push(abbrToFull[parts[0]]);
                 if (abbrToFull[parts[1]]) selectedDays.push(abbrToFull[parts[1]]);
             } else if (data.descansos) {
-                selectedDays.push(data.descansos);
+                // Quitar el turno de la cadena si se inyectó, aunque usamos data.descansos original
+                selectedDays.push(data.descansos.split(' ')[0]); 
             }
 
             let targetCols = new Set();
@@ -454,16 +464,15 @@
                 }
             });
 
-            // 3. Pintar los triángulos solo en las filas inferiores (pares) y columnas correspondientes
+            // 3. Pintar los triángulos solo en las filas inferiores y columnas correspondientes
             const rows = document.querySelector('.cal-table').querySelectorAll('tr');
-            // Iniciamos en i=2 (primera fila inferior de Enero), saltando de 2 en 2
             for (let i = 2; i < rows.length; i += 2) {
                 const row = rows[i];
                 for (let c = 0; c < row.cells.length; c++) {
-                    const colIndex = c + 1; // Índice basado en 1
-                    // Si la columna corresponde a un día de descanso y NO es una celda azul de borde
+                    const colIndex = c + 1;
                     if (targetCols.has(colIndex) && !row.cells[c].classList.contains('solid-blue')) {
                         row.cells[c].classList.add('split-cell');
+                        row.cells[c].style.backgroundImage = svgUrl; // Inyectar color del turno
                     }
                 }
             }

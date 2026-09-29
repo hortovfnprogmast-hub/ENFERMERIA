@@ -12,6 +12,7 @@
         :root {
             --primary-blue: #263fa4; --light-blue: #eef2ff; --bg-color: #f8fafc;
             --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
+            --danger: #dc2626; --success: #10b981;
         }
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-color); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
@@ -36,7 +37,7 @@
         .nav-item.active i { color: var(--primary-blue); }
 
         .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        .container { max-width: 600px; margin: 0 auto; padding-bottom: 50px; }
+        .container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
         .page-header { margin-bottom: 30px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
         .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
         .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
@@ -54,6 +55,20 @@
         
         .form-input-table { width: 100%; padding: 8px 10px; background-color: var(--bg-color); border: 1px solid transparent; border-radius: 8px; font-size: 14px; color: var(--text-main); box-sizing: border-box; outline: none; transition: all 0.2s; font-family: inherit; text-align: center; }
         .form-input-table:focus { background-color: white; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(38,63,164,0.1); }
+        .form-input-table:disabled { background-color: #f1f5f9; color: var(--text-muted); cursor: not-allowed; opacity: 0.8; }
+
+        /* BOTÓN FLOTANTE */
+        .btn-flotante {
+            position: fixed; bottom: 30px; right: 30px;
+            padding: 12px 20px; font-size: 16px; font-weight: bold;
+            color: white; border: none; border-radius: 8px;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index: 1000;
+            transition: all 0.3s; font-family: 'Inter', sans-serif;
+        }
+        .btn-flotante.edit-mode { background-color: var(--danger); }
+        .btn-flotante.save-mode { background-color: var(--success); }
+        .btn-flotante svg { width: 18px; height: 18px; fill: white; }
     </style>
 </head>
 <body>
@@ -77,7 +92,7 @@
             <div class="container">
                 <div class="page-header">
                     <h1>Control de Rol</h1>
-                    <p>Edita las fechas correspondientes a cada número de rol.</p>
+                    <p>Presiona el botón "Editar" para autorizar la modificación de las fechas.</p>
                 </div>
 
                 <div class="form-card">
@@ -91,30 +106,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td class="row-num">1</td><td><input type="text" class="form-input-table" value="1-ene-26"></td></tr>
-                                <tr><td class="row-num">2</td><td><input type="text" class="form-input-table" value="2-feb-26"></td></tr>
-                                <tr><td class="row-num">3</td><td><input type="text" class="form-input-table" value="3-mar-26"></td></tr>
-                                <tr><td class="row-num">4</td><td><input type="text" class="form-input-table" value="4-abr-26"></td></tr>
-                                <tr><td class="row-num">5</td><td><input type="text" class="form-input-table" value="5-may-26"></td></tr>
-                                <tr><td class="row-num">6</td><td><input type="text" class="form-input-table" value="6-jun-26"></td></tr>
-                                <tr><td class="row-num">7</td><td><input type="text" class="form-input-table" value="7-jul-26"></td></tr>
-                                <tr><td class="row-num">8</td><td><input type="text" class="form-input-table" value="8-ago-26"></td></tr>
-                                <tr><td class="row-num">9</td><td><input type="text" class="form-input-table" value="9-sep-26"></td></tr>
-                                <tr><td class="row-num">10</td><td><input type="text" class="form-input-table" value="10-oct-26"></td></tr>
-                                <tr><td class="row-num">11</td><td><input type="text" class="form-input-table" value="11-nov-26"></td></tr>
-                                <tr><td class="row-num">12</td><td><input type="text" class="form-input-table" value="12-dic-26"></td></tr>
-                                <tr><td class="row-num">13</td><td><input type="text" class="form-input-table" value="13-ene-26"></td></tr>
-                                <tr><td class="row-num">14</td><td><input type="text" class="form-input-table" value="14-feb-26"></td></tr>
-                                <tr><td class="row-num">15</td><td><input type="text" class="form-input-table" value="15-mar-26"></td></tr>
-                                <tr><td class="row-num">16</td><td><input type="text" class="form-input-table" value="16-abr-26"></td></tr>
-                                <tr><td class="row-num">17</td><td><input type="text" class="form-input-table" value="17-may-26"></td></tr>
-                                <tr><td class="row-num">18</td><td><input type="text" class="form-input-table" value="18-jun-26"></td></tr>
-                                <tr><td class="row-num">19</td><td><input type="text" class="form-input-table" value="19-jul-26"></td></tr>
-                                <tr><td class="row-num">20</td><td><input type="text" class="form-input-table" value="20-ago-26"></td></tr>
-                                <tr><td class="row-num">21</td><td><input type="text" class="form-input-table" value="21-sep-26"></td></tr>
-                                <tr><td class="row-num">22</td><td><input type="text" class="form-input-table" value="22-oct-26"></td></tr>
-                                <tr><td class="row-num">23</td><td><input type="text" class="form-input-table" value="23-nov-26"></td></tr>
-                                <tr><td class="row-num">24</td><td><input type="text" class="form-input-table" value="24-dic-26"></td></tr>
+                                <tr><td class="row-num">1</td><td><input type="text" class="form-input-table" value="1-ene-26" disabled></td></tr>
+                                <tr><td class="row-num">2</td><td><input type="text" class="form-input-table" value="2-feb-26" disabled></td></tr>
+                                <tr><td class="row-num">3</td><td><input type="text" class="form-input-table" value="3-mar-26" disabled></td></tr>
+                                <tr><td class="row-num">4</td><td><input type="text" class="form-input-table" value="4-abr-26" disabled></td></tr>
+                                <tr><td class="row-num">5</td><td><input type="text" class="form-input-table" value="5-may-26" disabled></td></tr>
+                                <tr><td class="row-num">6</td><td><input type="text" class="form-input-table" value="6-jun-26" disabled></td></tr>
+                                <tr><td class="row-num">7</td><td><input type="text" class="form-input-table" value="7-jul-26" disabled></td></tr>
+                                <tr><td class="row-num">8</td><td><input type="text" class="form-input-table" value="8-ago-26" disabled></td></tr>
+                                <tr><td class="row-num">9</td><td><input type="text" class="form-input-table" value="9-sep-26" disabled></td></tr>
+                                <tr><td class="row-num">10</td><td><input type="text" class="form-input-table" value="10-oct-26" disabled></td></tr>
+                                <tr><td class="row-num">11</td><td><input type="text" class="form-input-table" value="11-nov-26" disabled></td></tr>
+                                <tr><td class="row-num">12</td><td><input type="text" class="form-input-table" value="12-dic-26" disabled></td></tr>
+                                <tr><td class="row-num">13</td><td><input type="text" class="form-input-table" value="13-ene-26" disabled></td></tr>
+                                <tr><td class="row-num">14</td><td><input type="text" class="form-input-table" value="14-feb-26" disabled></td></tr>
+                                <tr><td class="row-num">15</td><td><input type="text" class="form-input-table" value="15-mar-26" disabled></td></tr>
+                                <tr><td class="row-num">16</td><td><input type="text" class="form-input-table" value="16-abr-26" disabled></td></tr>
+                                <tr><td class="row-num">17</td><td><input type="text" class="form-input-table" value="17-may-26" disabled></td></tr>
+                                <tr><td class="row-num">18</td><td><input type="text" class="form-input-table" value="18-jun-26" disabled></td></tr>
+                                <tr><td class="row-num">19</td><td><input type="text" class="form-input-table" value="19-jul-26" disabled></td></tr>
+                                <tr><td class="row-num">20</td><td><input type="text" class="form-input-table" value="20-ago-26" disabled></td></tr>
+                                <tr><td class="row-num">21</td><td><input type="text" class="form-input-table" value="21-sep-26" disabled></td></tr>
+                                <tr><td class="row-num">22</td><td><input type="text" class="form-input-table" value="22-oct-26" disabled></td></tr>
+                                <tr><td class="row-num">23</td><td><input type="text" class="form-input-table" value="23-nov-26" disabled></td></tr>
+                                <tr><td class="row-num">24</td><td><input type="text" class="form-input-table" value="24-dic-26" disabled></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -122,6 +137,11 @@
             </div>
         </main>
     </div>
+
+    <button id="btnEditar" class="btn-flotante edit-mode">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 3 10.707V11h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l7.5-7.5z"/></svg>
+        Editar
+    </button>
 
     <script>
         const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
@@ -137,6 +157,42 @@
 
             document.getElementById('toggle-menu').addEventListener('click', () => { 
                 document.getElementById('sidebar').classList.toggle('open'); 
+            });
+
+            // LÓGICA DE EDICIÓN
+            const btnEditar = document.getElementById('btnEditar');
+            const inputs = document.querySelectorAll('.form-input-table');
+            let isEditing = false;
+
+            const editIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 3 10.707V11h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l7.5-7.5z"/></svg> Editar';
+            const saveIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4l-3-3zm-5.5 1A1.5 1.5 0 0 1 7 3.5v2A1.5 1.5 0 0 1 5.5 7h-2A1.5 1.5 0 0 1 2 5.5v-2A1.5 1.5 0 0 1 3.5 2h2zM3 8h10v5H3V8z"/></svg> Guardar';
+
+            btnEditar.addEventListener('click', function() {
+                if (!isEditing) {
+                    isEditing = true;
+                    inputs.forEach(input => input.disabled = false);
+                    btnEditar.classList.remove('edit-mode');
+                    btnEditar.classList.add('save-mode');
+                    btnEditar.innerHTML = saveIcon;
+                } else {
+                    isEditing = false;
+                    inputs.forEach(input => input.disabled = true);
+                    btnEditar.classList.remove('save-mode');
+                    btnEditar.classList.add('edit-mode');
+                    btnEditar.innerHTML = editIcon;
+                    alert('Cambios guardados correctamente.');
+                }
+            });
+
+            // Detectar cambios para ponerlo en modo guardar
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (isEditing) {
+                        btnEditar.classList.remove('edit-mode');
+                        btnEditar.classList.add('save-mode');
+                        btnEditar.innerHTML = saveIcon;
+                    }
+                });
             });
         });
     </script>

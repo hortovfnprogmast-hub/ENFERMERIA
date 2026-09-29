@@ -69,6 +69,12 @@
         .btn-flotante.edit-mode { background-color: var(--danger); }
         .btn-flotante.save-mode { background-color: var(--success); }
         .btn-flotante svg { width: 18px; height: 18px; fill: white; }
+
+        /* MODAL LORETO */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .modal-small { background: white; padding: 25px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-small p { font-size: 15px; color: var(--text-main); margin-bottom: 20px; font-weight: 600; line-height: 1.5; }
+        .btn-modal { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif; font-size: 15px; }
     </style>
 </head>
 <body>
@@ -106,30 +112,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td class="row-num">1</td><td><input type="text" class="form-input-table" value="1-ene-26" disabled></td></tr>
-                                <tr><td class="row-num">2</td><td><input type="text" class="form-input-table" value="2-feb-26" disabled></td></tr>
-                                <tr><td class="row-num">3</td><td><input type="text" class="form-input-table" value="3-mar-26" disabled></td></tr>
-                                <tr><td class="row-num">4</td><td><input type="text" class="form-input-table" value="4-abr-26" disabled></td></tr>
-                                <tr><td class="row-num">5</td><td><input type="text" class="form-input-table" value="5-may-26" disabled></td></tr>
-                                <tr><td class="row-num">6</td><td><input type="text" class="form-input-table" value="6-jun-26" disabled></td></tr>
-                                <tr><td class="row-num">7</td><td><input type="text" class="form-input-table" value="7-jul-26" disabled></td></tr>
-                                <tr><td class="row-num">8</td><td><input type="text" class="form-input-table" value="8-ago-26" disabled></td></tr>
-                                <tr><td class="row-num">9</td><td><input type="text" class="form-input-table" value="9-sep-26" disabled></td></tr>
-                                <tr><td class="row-num">10</td><td><input type="text" class="form-input-table" value="10-oct-26" disabled></td></tr>
-                                <tr><td class="row-num">11</td><td><input type="text" class="form-input-table" value="11-nov-26" disabled></td></tr>
-                                <tr><td class="row-num">12</td><td><input type="text" class="form-input-table" value="12-dic-26" disabled></td></tr>
-                                <tr><td class="row-num">13</td><td><input type="text" class="form-input-table" value="13-ene-26" disabled></td></tr>
-                                <tr><td class="row-num">14</td><td><input type="text" class="form-input-table" value="14-feb-26" disabled></td></tr>
-                                <tr><td class="row-num">15</td><td><input type="text" class="form-input-table" value="15-mar-26" disabled></td></tr>
-                                <tr><td class="row-num">16</td><td><input type="text" class="form-input-table" value="16-abr-26" disabled></td></tr>
-                                <tr><td class="row-num">17</td><td><input type="text" class="form-input-table" value="17-may-26" disabled></td></tr>
-                                <tr><td class="row-num">18</td><td><input type="text" class="form-input-table" value="18-jun-26" disabled></td></tr>
-                                <tr><td class="row-num">19</td><td><input type="text" class="form-input-table" value="19-jul-26" disabled></td></tr>
-                                <tr><td class="row-num">20</td><td><input type="text" class="form-input-table" value="20-ago-26" disabled></td></tr>
-                                <tr><td class="row-num">21</td><td><input type="text" class="form-input-table" value="21-sep-26" disabled></td></tr>
-                                <tr><td class="row-num">22</td><td><input type="text" class="form-input-table" value="22-oct-26" disabled></td></tr>
-                                <tr><td class="row-num">23</td><td><input type="text" class="form-input-table" value="23-nov-26" disabled></td></tr>
-                                <tr><td class="row-num">24</td><td><input type="text" class="form-input-table" value="24-dic-26" disabled></td></tr>
+                                <tr><td class="row-num">1</td><td><input type="date" class="form-input-table" value="2026-01-01" disabled></td></tr>
+                                <tr><td class="row-num">2</td><td><input type="date" class="form-input-table" value="2026-02-02" disabled></td></tr>
+                                <tr><td class="row-num">3</td><td><input type="date" class="form-input-table" value="2026-03-03" disabled></td></tr>
+                                <tr><td class="row-num">4</td><td><input type="date" class="form-input-table" value="2026-04-04" disabled></td></tr>
+                                <tr><td class="row-num">5</td><td><input type="date" class="form-input-table" value="2026-05-05" disabled></td></tr>
+                                <tr><td class="row-num">6</td><td><input type="date" class="form-input-table" value="2026-06-06" disabled></td></tr>
+                                <tr><td class="row-num">7</td><td><input type="date" class="form-input-table" value="2026-07-07" disabled></td></tr>
+                                <tr><td class="row-num">8</td><td><input type="date" class="form-input-table" value="2026-08-08" disabled></td></tr>
+                                <tr><td class="row-num">9</td><td><input type="date" class="form-input-table" value="2026-09-09" disabled></td></tr>
+                                <tr><td class="row-num">10</td><td><input type="date" class="form-input-table" value="2026-10-10" disabled></td></tr>
+                                <tr><td class="row-num">11</td><td><input type="date" class="form-input-table" value="2026-11-11" disabled></td></tr>
+                                <tr><td class="row-num">12</td><td><input type="date" class="form-input-table" value="2026-12-12" disabled></td></tr>
+                                <tr><td class="row-num">13</td><td><input type="date" class="form-input-table" value="2026-01-13" disabled></td></tr>
+                                <tr><td class="row-num">14</td><td><input type="date" class="form-input-table" value="2026-02-14" disabled></td></tr>
+                                <tr><td class="row-num">15</td><td><input type="date" class="form-input-table" value="2026-03-15" disabled></td></tr>
+                                <tr><td class="row-num">16</td><td><input type="date" class="form-input-table" value="2026-04-16" disabled></td></tr>
+                                <tr><td class="row-num">17</td><td><input type="date" class="form-input-table" value="2026-05-17" disabled></td></tr>
+                                <tr><td class="row-num">18</td><td><input type="date" class="form-input-table" value="2026-06-18" disabled></td></tr>
+                                <tr><td class="row-num">19</td><td><input type="date" class="form-input-table" value="2026-07-19" disabled></td></tr>
+                                <tr><td class="row-num">20</td><td><input type="date" class="form-input-table" value="2026-08-20" disabled></td></tr>
+                                <tr><td class="row-num">21</td><td><input type="date" class="form-input-table" value="2026-09-21" disabled></td></tr>
+                                <tr><td class="row-num">22</td><td><input type="date" class="form-input-table" value="2026-10-22" disabled></td></tr>
+                                <tr><td class="row-num">23</td><td><input type="date" class="form-input-table" value="2026-11-23" disabled></td></tr>
+                                <tr><td class="row-num">24</td><td><input type="date" class="form-input-table" value="2026-12-24" disabled></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -142,6 +148,14 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 3 10.707V11h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l7.5-7.5z"/></svg>
         Editar
     </button>
+
+    <div id="modal-success" class="modal-overlay">
+        <div class="modal-small">
+            <i data-lucide="check-circle" style="color: var(--success); width: 48px; height: 48px; margin-bottom: 15px;"></i>
+            <p>Cambios guardados correctamente.</p>
+            <button class="btn-modal" style="background:var(--success); color:white;" onclick="document.getElementById('modal-success').style.display='none'">Aceptar</button>
+        </div>
+    </div>
 
     <script>
         const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
@@ -159,7 +173,6 @@
                 document.getElementById('sidebar').classList.toggle('open'); 
             });
 
-            // LÓGICA DE EDICIÓN
             const btnEditar = document.getElementById('btnEditar');
             const inputs = document.querySelectorAll('.form-input-table');
             let isEditing = false;
@@ -180,11 +193,13 @@
                     btnEditar.classList.remove('save-mode');
                     btnEditar.classList.add('edit-mode');
                     btnEditar.innerHTML = editIcon;
-                    alert('Cambios guardados correctamente.');
+                    
+                    // Mostrar modal de éxito
+                    document.getElementById('modal-success').style.display = 'flex';
+                    lucide.createIcons();
                 }
             });
 
-            // Detectar cambios para ponerlo en modo guardar
             inputs.forEach(input => {
                 input.addEventListener('input', function() {
                     if (isEditing) {

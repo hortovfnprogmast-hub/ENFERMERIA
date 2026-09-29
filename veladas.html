@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Veladas | Loreto Ingeniería</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #263fa4; --light-blue: #eef2ff; --bg-color: #f8fafc;
+            --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
+            --danger: #dc2626; --success: #10b981;
+        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-color); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-main); }
+        .header-title { margin: 0; font-size: 15px; font-weight: 700; color: var(--primary-blue); }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .user-initial { width: 35px; height: 35px; border-radius: 50%; background-color: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 260px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; transition: transform 0.3s ease; display: flex; flex-direction: column; }
+        @media (max-width: 768px) { .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; } .sidebar.open { transform: translateX(0); } .header-title { display: none; } }
+
+        .sidebar-nav { padding: 15px 10px; }
+        .sidebar-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .sidebar-section:last-child { border-bottom: none; }
+        .sidebar .section-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 10px 15px; padding-bottom: 0; display: block; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin-bottom: 2px; transition: all 0.2s; }
+        .nav-item:hover { background-color: var(--bg-color); }
+        .nav-item.active { background-color: var(--light-blue); color: var(--primary-blue); font-weight: 700; border-left: 4px solid var(--primary-blue); }
+        .nav-item.active i { color: var(--primary-blue); }
+
+        .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .container { max-width: 750px; margin: 0 auto; padding-bottom: 100px; }
+        .page-header { margin-bottom: 30px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
+        .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
+        .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
+
+        .form-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid var(--border-color); margin-bottom: 25px; }
+        .section-title { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--primary-blue); margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid var(--bg-color); }
+
+        /* Tabla */
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        .data-table th { background-color: var(--light-blue); color: var(--primary-blue); font-size: 12px; font-weight: 800; text-transform: uppercase; padding: 12px 10px; text-align: center; border-bottom: 2px solid var(--border-color); }
+        .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border-color); font-size: 14px; color: var(--text-main); text-align: center; }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table .row-num { font-weight: 800; color: var(--primary-blue); width: 22%; background-color: #f8fafc; }
+        
+        .form-input-table { width: 100%; padding: 8px 10px; background-color: var(--bg-color); border: 1px solid transparent; border-radius: 8px; font-size: 14px; color: var(--text-main); box-sizing: border-box; outline: none; transition: all 0.2s; font-family: inherit; text-align: center; }
+        .form-input-table:focus { background-color: white; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(38,63,164,0.1); }
+        .form-input-table:disabled { background-color: #f1f5f9; color: var(--text-muted); cursor: not-allowed; opacity: 0.9; }
+
+        /* BOTÓN FLOTANTE */
+        .btn-flotante {
+            position: fixed; bottom: 30px; right: 30px;
+            padding: 12px 20px; font-size: 16px; font-weight: bold;
+            color: white; border: none; border-radius: 8px;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index: 1000;
+            transition: all 0.3s; font-family: 'Inter', sans-serif;
+        }
+        .btn-flotante.edit-mode { background-color: var(--danger); }
+        .btn-flotante.save-mode { background-color: var(--success); }
+        .btn-flotante svg { width: 18px; height: 18px; fill: white; }
+
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .modal-small { background: white; padding: 25px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-small p { font-size: 15px; color: var(--text-main); margin-bottom: 20px; font-weight: 600; line-height: 1.5; }
+        .btn-modal { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif; font-size: 15px; }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-btn" id="toggle-menu"><i data-lucide="menu"></i></button>
+            <img src="https://i.ibb.co/mC4fV6TG/LOGOTIPO-2.jpg" alt="Logo" style="height: 35px; object-fit: contain;">
+            <h1 class="header-title">Veladas</h1>
+        </div>
+        <div class="header-right">
+            <div class="user-initial" id="user-initial">U</div>
+            <img src="https://i.ibb.co/8Lk54Gkb/LOGOTIPO-1.jpg" alt="User" height="35" style="border-radius:4px;">
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar" id="sidebar"></aside>
+
+        <main class="content">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Control de Veladas</h1>
+                    <p>Presiona el botón "Editar" para autorizar la modificación de las asignaciones de veladas.</p>
+                </div>
+
+                <div class="form-card">
+                    <h3 class="section-title"><i data-lucide="moon"></i> Asignación de Veladas por Descanso</h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>DESCANSOS</th>
+                                    <th>VELADAS 1</th>
+                                    <th>VELADAS 2</th>
+                                    <th>VELADAS 3</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="row-num">LUNES</td>
+                                    <td><input type="text" class="form-input-table" value="MARTES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="JUEVES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="SÁBADO" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td class="row-num">MARTES</td>
+                                    <td><input type="text" class="form-input-table" value="MIÉRCOLES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="VIERNES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="DOMINGO" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td class="row-num">MIÉRCOLES</td>
+                                    <td><input type="text" class="form-input-table" value="LUNES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="JUEVES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="SÁBADO" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td class="row-num">JUEVES</td>
+                                    <td><input type="text" class="form-input-table" value="MARTES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="VIERNES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="DOMINGO" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td class="row-num">VIERNES</td>
+                                    <td><input type="text" class="form-input-table" value="LUNES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="MIÉRCOLES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="SÁBADO" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td class="row-num">SÁBADO</td>
+                                    <td><input type="text" class="form-input-table" value="MARTES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="JUEVES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="DOMINGO" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td class="row-num">DOMINGO</td>
+                                    <td><input type="text" class="form-input-table" value="LUNES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="MIÉRCOLES" disabled></td>
+                                    <td><input type="text" class="form-input-table" value="VIERNES" disabled></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button id="btnEditar" class="btn-flotante edit-mode">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 3 10.707V11h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l7.5-7.5z"/></svg>
+        Editar
+    </button>
+
+    <div id="modal-success" class="modal-overlay">
+        <div class="modal-small">
+            <i data-lucide="check-circle" style="color: var(--success); width: 48px; height: 48px; margin-bottom: 15px;"></i>
+            <p>Cambios guardados correctamente.</p>
+            <button class="btn-modal" style="background:var(--success); color:white;" onclick="document.getElementById('modal-success').style.display='none'">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
+        document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('menu.html').then(res => res.text()).then(html => {
+                document.getElementById('sidebar').innerHTML = html;
+                lucide.createIcons();
+                const link = document.getElementById('link-veladas'); 
+                if(link) link.classList.add('active');
+            });
+
+            document.getElementById('toggle-menu').addEventListener('click', () => { 
+                document.getElementById('sidebar').classList.toggle('open'); 
+            });
+
+            const btnEditar = document.getElementById('btnEditar');
+            const inputs = document.querySelectorAll('.form-input-table');
+            let isEditing = false;
+
+            const editIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 3 10.707V11h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l7.5-7.5z"/></svg> Editar';
+            const saveIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4l-3-3zm-5.5 1A1.5 1.5 0 0 1 7 3.5v2A1.5 1.5 0 0 1 5.5 7h-2A1.5 1.5 0 0 1 2 5.5v-2A1.5 1.5 0 0 1 3.5 2h2zM3 8h10v5H3V8z"/></svg> Guardar';
+
+            btnEditar.addEventListener('click', function() {
+                if (!isEditing) {
+                    isEditing = true;
+                    inputs.forEach(input => input.disabled = false);
+                    btnEditar.classList.remove('edit-mode');
+                    btnEditar.classList.add('save-mode');
+                    btnEditar.innerHTML = saveIcon;
+                } else {
+                    isEditing = false;
+                    inputs.forEach(input => {
+                        input.disabled = true;
+                    });
+                    btnEditar.classList.remove('save-mode');
+                    btnEditar.classList.add('edit-mode');
+                    btnEditar.innerHTML = editIcon;
+                    
+                    document.getElementById('modal-success').style.display = 'flex';
+                    lucide.createIcons();
+                }
+            });
+
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (isEditing) {
+                        btnEditar.classList.remove('edit-mode');
+                        btnEditar.classList.add('save-mode');
+                        btnEditar.innerHTML = saveIcon;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

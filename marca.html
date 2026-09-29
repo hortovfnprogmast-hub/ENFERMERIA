@@ -69,6 +69,12 @@
         .btn-flotante.edit-mode { background-color: var(--danger); }
         .btn-flotante.save-mode { background-color: var(--success); }
         .btn-flotante svg { width: 18px; height: 18px; fill: white; }
+
+        /* MODAL LORETO */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .modal-small { background: white; padding: 25px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-small p { font-size: 15px; color: var(--text-main); margin-bottom: 20px; font-weight: 600; line-height: 1.5; }
+        .btn-modal { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif; font-size: 15px; }
     </style>
 </head>
 <body>
@@ -135,6 +141,14 @@
         Editar
     </button>
 
+    <div id="modal-success" class="modal-overlay">
+        <div class="modal-small">
+            <i data-lucide="check-circle" style="color: var(--success); width: 48px; height: 48px; margin-bottom: 15px;"></i>
+            <p>Cambios guardados correctamente.</p>
+            <button class="btn-modal" style="background:var(--success); color:white;" onclick="document.getElementById('modal-success').style.display='none'">Aceptar</button>
+        </div>
+    </div>
+
     <script>
         const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
         document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
@@ -151,7 +165,6 @@
                 document.getElementById('sidebar').classList.toggle('open'); 
             });
 
-            // LÓGICA DE EDICIÓN
             const btnEditar = document.getElementById('btnEditar');
             const inputs = document.querySelectorAll('.form-input-table');
             let isEditing = false;
@@ -172,7 +185,9 @@
                     btnEditar.classList.remove('save-mode');
                     btnEditar.classList.add('edit-mode');
                     btnEditar.innerHTML = editIcon;
-                    alert('Cambios guardados correctamente.');
+                    
+                    document.getElementById('modal-success').style.display = 'flex';
+                    lucide.createIcons();
                 }
             });
 

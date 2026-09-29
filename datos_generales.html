@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Datos Generales | Loreto Ingeniería</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- LIBRERÍAS DE FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #263fa4; --light-blue: #eef2ff; --bg-color: #f8fafc;
+            --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
+            --danger: #dc2626; --success: #10b981; --warning: #f59e0b;
+        }
+
+        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-color); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-main); }
+        .header-title { margin: 0; font-size: 15px; font-weight: 700; color: var(--primary-blue); }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .user-initial { width: 35px; height: 35px; border-radius: 50%; background-color: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 260px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; transition: transform 0.3s ease; display: flex; flex-direction: column; }
+        @media (max-width: 768px) { .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; } .sidebar.open { transform: translateX(0); } .header-title { display: none; } }
+
+        .sidebar-nav { padding: 15px 10px; }
+        .sidebar-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .sidebar-section:last-child { border-bottom: none; }
+        .sidebar .section-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 10px 15px; padding-bottom: 0; display: block; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin-bottom: 2px; transition: all 0.2s; }
+        .nav-item:hover { background-color: var(--bg-color); }
+        .nav-item.active { background-color: var(--light-blue); color: var(--primary-blue); font-weight: 700; border-left: 4px solid var(--primary-blue); }
+        .nav-item.active i { color: var(--primary-blue); }
+
+        .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .container { max-width: 1050px; margin: 0 auto; padding-bottom: 50px; }
+        
+        .page-header { margin-bottom: 30px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
+        .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
+        .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
+
+        .form-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid var(--border-color); margin-bottom: 25px; }
+        .section-title { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--primary-blue); margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid var(--bg-color); }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+        .form-input { width: 100%; padding: 12px 15px; background-color: var(--bg-color); border: 1px solid transparent; border-radius: 10px; font-size: 14px; color: var(--text-main); box-sizing: border-box; outline: none; transition: all 0.2s; font-family: inherit; }
+        .form-input:focus { background-color: white; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(38,63,164,0.1); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
+        .btn-guardar { background: var(--primary-blue); color: white; border: none; padding: 16px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-guardar:hover { background: #1a2a6e; }
+        .btn-limpiar { background: white; color: var(--text-main); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-limpiar:hover { background: var(--bg-color); }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-btn" id="toggle-menu"><i data-lucide="menu"></i></button>
+            <img src="https://i.ibb.co/mC4fV6TG/LOGOTIPO-2.jpg" alt="Logo" style="height: 35px; object-fit: contain;">
+            <h1 class="header-title">DATOS GENERALES</h1>
+        </div>
+        <div class="header-right">
+            <div class="user-initial" id="user-initial">U</div>
+            <img src="https://i.ibb.co/8Lk54Gkb/LOGOTIPO-1.jpg" alt="User" height="35" style="border-radius:4px;">
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar" id="sidebar"></aside>
+
+        <main class="content">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Configuración General</h1>
+                    <p>Ingresa la información institucional y de personal para que se refleje en los formatos del sistema.</p>
+                </div>
+
+                <form id="capturaForm" class="form-card">
+                    <h3 class="section-title"><i data-lucide="building"></i> Información Institucional</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Unidad de Servicios Médicos</label>
+                        <input type="text" class="form-input" id="unidad" name="unidad">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Delegación</label>
+                        <input type="text" class="form-input" id="delegacion" name="delegacion">
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Encabezado 1</label>
+                            <input type="text" class="form-input" id="encabezado1" name="encabezado1" value="DIRECCIÓN DE PRESTACIONES MÉDICAS">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Encabezado 2</label>
+                            <input type="text" class="form-input" id="encabezado2" name="encabezado2" value="COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD">
+                        </div>
+                    </div>
+
+                    <h3 class="section-title" style="margin-top: 20px;"><i data-lucide="users"></i> Personal de Enfermería</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Jefe de Enfermeras</label>
+                        <input type="text" class="form-input" id="jefe_enfermeras" name="jefe_enfermeras">
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Subjefe de Enfermeras Turno Matutino</label>
+                            <input type="text" class="form-input" id="subjefe_matutino" name="subjefe_matutino">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Enfermeras Turno Vespertino</label>
+                            <input type="text" class="form-input" id="enfermera_vespertino" name="enfermera_vespertino">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Enfermeras Turno Nocturno</label>
+                        <input type="text" class="form-input" id="enfermera_nocturno" name="enfermera_nocturno">
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-limpiar" onclick="limpiarFormulario()"><i data-lucide="x"></i> Cancelar</button>
+                        <button type="submit" class="btn-guardar" id="btn-guardar"><i data-lucide="save"></i> Guardar Datos</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyBlrkgm8k0veEjLaQeiAUHMiU6TPln9HKs",
+          authDomain: "enfermeria-7e72e.firebaseapp.com",
+          projectId: "enfermeria-7e72e",
+          storageBucket: "enfermeria-7e72e.firebasestorage.app",
+          messagingSenderId: "835871995478",
+          appId: "1:835871995478:web:9f9d9bbf253a5ff047edf7",
+          measurementId: "G-0KXWK8L79Z"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
+        document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('menu.html').then(res => res.text()).then(html => {
+                document.getElementById('sidebar').innerHTML = html;
+                lucide.createIcons();
+                const linkBase = document.getElementById('link-base-datos'); 
+                const linkDatos = document.getElementById('link-datos-generales'); 
+                if(linkBase) linkBase.classList.add('active');
+                if(linkDatos) linkDatos.classList.add('active');
+            });
+
+            document.getElementById('toggle-menu').addEventListener('click', () => { 
+                document.getElementById('sidebar').classList.toggle('open'); 
+            });
+
+            // Cargar datos guardados de Firebase
+            db.collection('configuracion').doc('datos_generales').get().then(doc => {
+                if(doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('unidad').value = data.unidad || '';
+                    document.getElementById('delegacion').value = data.delegacion || '';
+                    document.getElementById('encabezado1').value = data.encabezado1 || 'DIRECCIÓN DE PRESTACIONES MÉDICAS';
+                    document.getElementById('encabezado2').value = data.encabezado2 || 'COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD';
+                    document.getElementById('jefe_enfermeras').value = data.jefe_enfermeras || '';
+                    document.getElementById('subjefe_matutino').value = data.subjefe_matutino || '';
+                    document.getElementById('enfermera_vespertino').value = data.enfermera_vespertino || '';
+                    document.getElementById('enfermera_nocturno').value = data.enfermera_nocturno || '';
+                }
+            }).catch(error => {
+                console.error("Error al cargar datos: ", error);
+            });
+
+            // Guardar datos en Firebase
+            document.getElementById('capturaForm').addEventListener('submit', function(e) {
+                e.preventDefault(); 
+                
+                const btn = document.getElementById('btn-guardar');
+                const oldTxt = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando...';
+                lucide.createIcons();
+
+                const datos = {
+                    unidad: document.getElementById('unidad').value.toUpperCase(),
+                    delegacion: document.getElementById('delegacion').value.toUpperCase(),
+                    encabezado1: document.getElementById('encabezado1').value.toUpperCase(),
+                    encabezado2: document.getElementById('encabezado2').value.toUpperCase(),
+                    jefe_enfermeras: document.getElementById('jefe_enfermeras').value.toUpperCase(),
+                    subjefe_matutino: document.getElementById('subjefe_matutino').value.toUpperCase(),
+                    enfermera_vespertino: document.getElementById('enfermera_vespertino').value.toUpperCase(),
+                    enfermera_nocturno: document.getElementById('enfermera_nocturno').value.toUpperCase()
+                };
+
+                db.collection('configuracion').doc('datos_generales').set(datos)
+                .then(() => {
+                    alert("Datos guardados correctamente en la base de datos.");
+                    btn.disabled = false;
+                    btn.innerHTML = oldTxt;
+                    lucide.createIcons();
+                })
+                .catch(error => {
+                    console.error("Error guardando en Firebase:", error);
+                    alert("Ocurrió un error al guardar en la base de datos.");
+                    btn.disabled = false;
+                    btn.innerHTML = oldTxt;
+                    lucide.createIcons();
+                });
+            });
+        });
+
+        function limpiarFormulario() {
+            document.getElementById('capturaForm').reset();
+            document.getElementById('encabezado1').value = "DIRECCIÓN DE PRESTACIONES MÉDICAS";
+            document.getElementById('encabezado2').value = "COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -167,10 +167,19 @@
             fetch('menu.html').then(res => res.text()).then(html => {
                 document.getElementById('sidebar').innerHTML = html;
                 lucide.createIcons();
-                const linkBase = document.getElementById('link-base-datos'); 
-                const linkDatos = document.getElementById('link-datos-generales'); 
-                if(linkBase) linkBase.classList.add('active');
-                if(linkDatos) linkDatos.classList.add('active');
+                
+                // Leer el parámetro de la URL para saber en qué botón se hizo clic
+                const urlParams = new URLSearchParams(window.location.search);
+                const src = urlParams.get('src');
+                
+                if(src === 'base') {
+                    const linkBase = document.getElementById('link-base-datos'); 
+                    if(linkBase) linkBase.classList.add('active');
+                } else {
+                    // Por defecto marca "Datos Generales" si no hay parámetro o si es ?src=datos
+                    const linkDatos = document.getElementById('link-datos-generales'); 
+                    if(linkDatos) linkDatos.classList.add('active');
+                }
             });
 
             document.getElementById('toggle-menu').addEventListener('click', () => { 

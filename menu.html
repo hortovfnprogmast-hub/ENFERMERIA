@@ -1,77 +1,29 @@
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch('menu.html').then(res => res.text()).then(html => {
-                document.getElementById('sidebar').innerHTML = html;
-                lucide.createIcons();
-                
-                // Leer el parámetro de la URL para saber en qué botón se hizo clic
-                const urlParams = new URLSearchParams(window.location.search);
-                const src = urlParams.get('src');
-                
-                if(src === 'base') {
-                    const linkBase = document.getElementById('link-base-datos'); 
-                    if(linkBase) linkBase.classList.add('active');
-                } else {
-                    // Por defecto marca "Datos Generales" si no hay parámetro o si es ?src=datos
-                    const linkDatos = document.getElementById('link-datos-generales'); 
-                    if(linkDatos) linkDatos.classList.add('active');
-                }
-            });
+<nav class="sidebar-nav">
+    <a href="inicio.html" class="nav-item" id="link-inicio"><i data-lucide="home"></i> Inicio</a>
+    
+    <div class="sidebar-section">
+        <div class="section-title">Administración</div>
+    </div>
 
-            document.getElementById('toggle-menu').addEventListener('click', () => { 
-                document.getElementById('sidebar').classList.toggle('open'); 
-            });
+    <a href="index.html" class="nav-item" id="link-kardex"><i data-lucide="clipboard-check"></i> Kardex</a>
+    <a href="datos_generales.html?src=base" class="nav-item" id="link-base-datos"><i data-lucide="database"></i> Base de Datos</a>
+    <a href="datos_generales.html?src=datos" class="nav-item" id="link-datos-generales"><i data-lucide="file-text"></i> Datos Generales</a>
+    <a href="rol.html" class="nav-item" id="link-rol"><i data-lucide="calendar-days"></i> Rol</a>
+    <a href="marca.html" class="nav-item" id="link-marca"><i data-lucide="bookmark"></i> Marca</a>
+    <a href="dias_festivos.html" class="nav-item" id="link-dias-festivos"><i data-lucide="party-popper"></i> Días festivos</a>
+    <a href="veladas.html" class="nav-item" id="link-veladas"><i data-lucide="moon"></i> Veladas</a>
+</nav><nav class="sidebar-nav">
+    <a href="inicio.html" class="nav-item" id="link-inicio"><i data-lucide="home"></i> Inicio</a>
+    
+    <div class="sidebar-section">
+        <div class="section-title">Administración</div>
+    </div>
 
-            // Cargar datos guardados de Firebase
-            db.collection('configuracion').doc('datos_generales').get().then(doc => {
-                if(doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('unidad').value = data.unidad || '';
-                    document.getElementById('delegacion').value = data.delegacion || '';
-                    document.getElementById('encabezado1').value = data.encabezado1 || 'DIRECCIÓN DE PRESTACIONES MÉDICAS';
-                    document.getElementById('encabezado2').value = data.encabezado2 || 'COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD';
-                    document.getElementById('jefe_enfermeras').value = data.jefe_enfermeras || '';
-                    document.getElementById('subjefe_matutino').value = data.subjefe_matutino || '';
-                    document.getElementById('enfermera_vespertino').value = data.enfermera_vespertino || '';
-                    document.getElementById('enfermera_nocturno').value = data.enfermera_nocturno || '';
-                }
-            }).catch(error => {
-                console.error("Error al cargar datos: ", error);
-            });
-
-            // Guardar datos en Firebase
-            document.getElementById('capturaForm').addEventListener('submit', function(e) {
-                e.preventDefault(); 
-                
-                const btn = document.getElementById('btn-guardar');
-                const oldTxt = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando...';
-                lucide.createIcons();
-
-                const datos = {
-                    unidad: document.getElementById('unidad').value.toUpperCase(),
-                    delegacion: document.getElementById('delegacion').value.toUpperCase(),
-                    encabezado1: document.getElementById('encabezado1').value.toUpperCase(),
-                    encabezado2: document.getElementById('encabezado2').value.toUpperCase(),
-                    jefe_enfermeras: document.getElementById('jefe_enfermeras').value.toUpperCase(),
-                    subjefe_matutino: document.getElementById('subjefe_matutino').value.toUpperCase(),
-                    enfermera_vespertino: document.getElementById('enfermera_vespertino').value.toUpperCase(),
-                    enfermera_nocturno: document.getElementById('enfermera_nocturno').value.toUpperCase()
-                };
-
-                db.collection('configuracion').doc('datos_generales').set(datos)
-                .then(() => {
-                    alert("Datos guardados correctamente en la base de datos.");
-                    btn.disabled = false;
-                    btn.innerHTML = oldTxt;
-                    lucide.createIcons();
-                })
-                .catch(error => {
-                    console.error("Error guardando en Firebase:", error);
-                    alert("Ocurrió un error al guardar en la base de datos.");
-                    btn.disabled = false;
-                    btn.innerHTML = oldTxt;
-                    lucide.createIcons();
-                });
-            });
-        });
+    <a href="index.html" class="nav-item" id="link-kardex"><i data-lucide="clipboard-check"></i> Kardex</a>
+    <a href="datos_generales.html?src=base" class="nav-item" id="link-base-datos"><i data-lucide="database"></i> Base de Datos</a>
+    <a href="datos_generales.html?src=datos" class="nav-item" id="link-datos-generales"><i data-lucide="file-text"></i> Datos Generales</a>
+    <a href="rol.html" class="nav-item" id="link-rol"><i data-lucide="calendar-days"></i> Rol</a>
+    <a href="marca.html" class="nav-item" id="link-marca"><i data-lucide="bookmark"></i> Marca</a>
+    <a href="dias_festivos.html" class="nav-item" id="link-dias-festivos"><i data-lucide="party-popper"></i> Días festivos</a>
+    <a href="veladas.html" class="nav-item" id="link-veladas"><i data-lucide="moon"></i> Veladas</a>
+</nav>

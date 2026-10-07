@@ -450,7 +450,15 @@
             setText('val-contratacion', data.contratacion || 'BASE');
             setText('val-plaza', data.plaza);
             setText('val-ano', data.ano || '2027');
-
+            setText('val-rol1', data.rol1 || '');
+            setText('val-rol2', data.rol2 || '');
+            setText('val-rol3', data.rol3 || '');
+            setText('val-rol4', data.rol4 || '');
+            setText('val-marca1', data.marca1 || '');
+            setText('val-marca2', data.marca2 || '');
+            setText('val-marca3', data.marca3 || '');
+            setText('val-marca4', data.marca4 || '');
+            
             // COLOR SEGÚN TURNO
             let shiftColor = '#00a2e8'; // Matutino (Azul)
             const t = (data.turno || '').toUpperCase();

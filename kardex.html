@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Formato Kardex | Loreto Ingeniería</title>
+<title>Formato de Rol Vacacional 2027 | Loreto Ingeniería</title>
 
+<!-- FUENTES E ICONOS -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
@@ -12,7 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- LIBRERÍAS DE FIREBASE -->
+<!-- LIBRERÍAS DE FIREBASE (Compat/V8) -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
@@ -32,7 +33,7 @@
         overflow: hidden;
     }
 
-    /* --- LORETO LAYOUT --- */
+    /* LORETO LAYOUT */
     .loreto-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
     .loreto-left { display: flex; align-items: center; gap: 15px; }
     .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-main); }
@@ -51,32 +52,14 @@
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin-bottom: 2px; transition: all 0.2s; }
     .nav-item:hover { background-color: var(--bg-color); }
     .nav-item.active { background-color: var(--light-blue); color: var(--primary-blue); font-weight: 700; border-left: 4px solid var(--primary-blue); }
-    .nav-item.active i { color: var(--primary-blue); }
 
     .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .page-header { margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; max-width: 1150px; margin-left: auto; margin-right: auto; }
     .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
     .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
 
-    /* BOTÓN REGRESAR APP (Izquierda) */
-    .btn-back {
-        position: fixed; bottom: 30px; left: 30px;
-        background-color: var(--primary-blue); color: white; border: none;
-        padding: 12px 20px; font-size: 16px; font-weight: bold;
-        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
-        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        transition: background-color 0.3s; z-index: 1000;
-        text-decoration: none; font-family: 'Inter', sans-serif;
-    }
-    .btn-back:hover { background-color: #1a2a6e; }
-    .btn-back svg { width: 18px; height: 18px; fill: white; }
-
-    /* --- ESTILOS ORIGINALES DEL KARDEX (SIN ALTERAR) --- */
-    .kardex-wrapper {
-        display: flex;
-        justify-content: center;
-        padding-bottom: 80px;
-    }
+    /* ESTILOS DEL KARDEX */
+    .kardex-wrapper { display: flex; justify-content: center; padding-bottom: 80px; }
     .container {
         width: 100%;
         max-width: 1150px;
@@ -87,169 +70,61 @@
         font-size: 11px;
     }
     
-    /* ENCABEZADOS Y LOGOS */
-    .container .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-    .container .header-left, .container .header-right {
-        width: 200px;
-        text-align: center;
-    }
-    .container .header-center {
-        text-align: center;
-        font-weight: bold;
-        font-size: 13px;
-        flex-grow: 1;
-    }
-    .form-info {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        padding: 0 10px;
-        font-size: 12px;
-    }
-    .underline {
-        border-bottom: 2px solid black;
-        font-weight: bold;
-        display: inline-block;
-        text-align: center;
-    }
+    .container .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .container .header-left, .container .header-right { width: 200px; text-align: center; }
+    .container .header-center { text-align: center; font-weight: bold; font-size: 13px; flex-grow: 1; }
+    
+    .form-info { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 10px; font-size: 12px; }
+    .underline { border-bottom: 2px solid black; font-weight: bold; display: inline-block; text-align: center; }
 
-    /* TABLAS SUPERIORES */
-    table.data-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 8px;
-        table-layout: fixed;
-        border: 2px solid black;
-    }
-    table.data-table td {
-        border: 1px solid black;
-        padding: 2px 4px;
-        box-sizing: border-box;
-        font-size: 10px;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-
+    table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; table-layout: fixed; border: 2px solid black; }
+    table.data-table td { border: 1px solid black; padding: 2px 4px; box-sizing: border-box; font-size: 10px; overflow: hidden; white-space: nowrap; }
     table.data-table td.no-bottom-line { border-bottom: none; }
     table.data-table td.no-top-line { border-top: none; }
 
-    /* COLORES DE CELDAS SUPERIORES */
     .bg-yellow { background-color: #ffff99; }
     .bg-purple { background-color: #b4a7d6; }
     .bg-cyan { background-color: #00ffff; }
     .bg-pink { background-color: #ff99ff; }
 
     /* CALENDARIO */
-    .cal-table {
-        width: 100%;
-        border-collapse: collapse;
-        border: 2px solid black;
-        table-layout: fixed;
-    }
-    .cal-table th, .cal-table td {
-        border: 1px solid black;
-        padding: 0;
-        height: 18px;
-        font-size: 10px;
-        box-sizing: border-box;
-        text-align: center;
-    }
-    .cal-table th {
-        font-weight: bold;
-        background-color: white;
-    }
-    .month-col {
-        width: 7.5%;
-        font-weight: bold;
-    }
+    .cal-table { width: 100%; border-collapse: collapse; border: 2px solid black; table-layout: fixed; }
+    .cal-table th, .cal-table td { border: 1px solid black; padding: 0; height: 18px; font-size: 10px; box-sizing: border-box; text-align: center; }
+    .cal-table th { font-weight: bold; background-color: white; }
+    .month-col { width: 7.5%; font-weight: bold; }
     
-    /* COLOR BASE TURNO */
-    .solid-blue {
-        background-color: #00B0F0;
-    }
+    .solid-blue { background-color: #00a2e8; }
     
-    /* CELDAS CON TRIÁNGULO (SVG INLINE COMPATIBLE CON PDF) */
-    .split-cell {
-        background-color: white;
-        position: relative;
-    }
-    .split-cell svg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: block;
-        pointer-events: none;
-    }
+    /* REGLA CLAVE: La celda dividida se posiciona relativo para el SVG inline */
+    .split-cell { position: relative; padding: 0 !important; }
 
     /* FIRMAS */
-    .signatures {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 60px;
-        text-align: center;
-        padding: 0 40px;
-    }
-    .sig-block {
-        width: 30%;
-        font-weight: bold;
-        font-size: 11px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-    }
-    .sig-line {
-        border-top: 1px solid black;
-        margin-top: 5px;
-        padding-top: 5px;
-        font-weight: normal;
-    }
+    .signatures { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; padding: 0 40px; }
+    .sig-block { width: 30%; font-weight: bold; font-size: 11px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .sig-line { border-top: 1px solid black; margin-top: 5px; padding-top: 5px; font-weight: normal; }
+    .data-text { font-weight: bold; font-size: 11px; display: block; margin-top: 2px; }
 
-    .data-text {
-        font-weight: bold;
-        font-size: 11px;
-        display: block;
-        margin-top: 2px;
+    /* BOTONES FLOTANTES */
+    .btn-back {
+        position: fixed; bottom: 30px; left: 30px;
+        background-color: var(--primary-blue); color: white; border: none;
+        padding: 12px 20px; font-size: 16px; font-weight: bold;
+        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
+        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s; z-index: 1000; text-decoration: none;
     }
+    .btn-back:hover { background-color: #1a2a6e; }
 
-    /* BOTÓN DE DESCARGA PDF */
     .btn-download {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background-color: #FF0000;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 8px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        transition: background-color 0.3s;
-        z-index: 1000;
+        position: fixed; bottom: 30px; right: 30px;
+        background-color: #FF0000; color: white; border: none;
+        padding: 12px 20px; font-size: 16px; font-weight: bold;
+        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
+        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s; z-index: 1000;
     }
-    .btn-download:hover {
-        background-color: #cc0000;
-    }
-    .btn-download:disabled {
-        background-color: #aa3333;
-        cursor: not-allowed;
-    }
-    .btn-download svg {
-        width: 18px;
-        height: 18px;
-        fill: white;
-    }
+    .btn-download:hover { background-color: #cc0000; }
+    .btn-download:disabled { background-color: #aa3333; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -267,17 +142,24 @@
 </header>
 
 <div class="main-layout">
-    <aside class="sidebar" id="sidebar"></aside>
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <div class="sidebar-section">
+                <span class="section-title">Navegación</span>
+                <a href="index.html" class="nav-item"><i data-lucide="home"></i> Inicio</a>
+                <a href="kardex.html" class="nav-item active" id="link-kardex"><i data-lucide="file-text"></i> Kardex</a>
+            </div>
+        </nav>
+    </aside>
 
     <main class="content">
         <div class="page-header">
             <h1>Vista Previa del Kardex</h1>
-            <p>Revisa tu información. Si necesitas hacer un cambio, da clic en "Regresar APP" para volver al formulario.</p>
+            <p>Revisa tu información. Si necesitas hacer un cambio, da clic en "Regresar APP".</p>
         </div>
 
         <div class="kardex-wrapper">
-            <!-- DOCUMENTO KARDEX ORIGINAL -->
-            <div class="container">
+            <div class="container" id="kardex-document">
                 <!-- CABECERA INSTITUCIONAL -->
                 <div class="header">
                     <div class="header-left">
@@ -319,7 +201,7 @@
                         <col style="width: 22%;">
                     </colgroup>
                     <tr style="height: 35px;">
-                        <td style="text-align: center; vertical-align: top; letter-spacing: 2px; padding-top: 4px;">N O M B R E : <span class="data-text" id="val-nombre" style="letter-spacing: normal;"></span></td>
+                        <td style="text-align: center; vertical-align: top; letter-spacing: 2px; padding-top: 4px;">N O M B R E : <span class="data-text" id="val-nombre"></span></td>
                         <td style="text-align: center; vertical-align: top; padding-top: 4px;">CATEGORIA: <span class="data-text" id="val-categoria"></span></td>
                         <td style="padding: 0;">
                             <table style="width: 100%; height: 100%; border-collapse: collapse; border: none;">
@@ -329,14 +211,14 @@
                         </td>
                         <td style="text-align: center; vertical-align: top; padding-top: 4px;">C.C.: <span class="data-text" id="val-cc"></span></td>
                         <td style="text-align: center; vertical-align: top; padding-top: 4px;">DESCANSOS: <span class="data-text" id="val-descansos"></span></td>
-                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">CURP: <span class="data-text" id="val-curp" style="font-size: 10px;"></span></td>
+                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">CURP: <span class="data-text" id="val-curp"></span></td>
                     </tr>
                 </table>
 
                 <!-- TABLA 2: SERVICIOS Y ROLES -->
                 <table class="data-table">
                     <colgroup>
-                        <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;">  <col style="width: 9.9%;">   
+                        <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;"> <col style="width: 9.9%;">   
                         <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 4.505%;"> 
                     </colgroup>
                     <tr style="font-size: 10px; font-weight: normal; text-align: center;">
@@ -352,76 +234,70 @@
                     </tr>
                     <tr style="font-size: 11px; font-weight: bold; text-align: center; height: 18px;">
                         <td class="no-top-line" id="val-servicio1"></td>
-                        <td class="no-top-line" id="val-servicio2"></td>
+                        <td class="no-top-line" id="val-servicio2">-</td>
                         <td class="no-top-line" id="val-fingreso"></td>
                         <td class="no-top-line" id="val-antiguedad"></td>
                         <td class="no-top-line" id="val-contratacion">BASE</td>
                         <td class="no-top-line" id="val-plaza"></td>
-                        <td class="bg-purple"></td>
-                        <td class="bg-cyan"></td>
-                        <td class="bg-pink"></td>
-                        <td class="bg-cyan">-</td>
-                        <td class="bg-purple"></td>
-                        <td class="bg-cyan"></td>
-                        <td class="bg-pink"></td>
-                        <td class="bg-cyan">-</td>
+                        <td class="bg-purple"></td><td class="bg-cyan"></td><td class="bg-pink"></td><td class="bg-cyan">-</td>
+                        <td class="bg-purple"></td><td class="bg-cyan"></td><td class="bg-pink"></td><td class="bg-cyan">-</td>
                         <td class="no-top-line" style="padding: 2px 0; font-size: 10px;" id="val-ano">2027</td>
                     </tr>
                 </table>
 
-                <!-- CALENDARIO 2027 -->
-                <table class="cal-table">
+                <!-- CALENDARIO 2027 COMPLETO (12 MESES) -->
+                <table class="cal-table" id="cal-table">
                     <tr>
                         <th class="month-col">Mes \ Día</th>
                         <th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th>
                     </tr>
                     
-                    <!-- Enero -->
+                    <!-- Enero (1=Viernes) -> 3 blue, 31 días, 3 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Enero</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Febrero -->
+                    <!-- Febrero (1=Lunes) -> 6 blue, 28 días, 3 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Febrero</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Marzo -->
+                    <!-- Marzo (1=Lunes) -> 6 blue, 31 días, 0 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Marzo</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
 
-                    <!-- Abril -->
+                    <!-- Abril (1=Jueves) -> 2 blue, 30 días, 5 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Abril</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Mayo -->
+                    <!-- Mayo (1=Sábado) -> 4 blue, 31 días, 2 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Mayo</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Junio -->
+                    <!-- Junio (1=Martes) -> 0 blue, 30 días, 7 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Junio</td>
                         <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
@@ -430,58 +306,58 @@
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Julio -->
+                    <!-- Julio (1=Jueves) -> 2 blue, 31 días, 4 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Julio</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Agosto -->
+                    <!-- Agosto (1=Domingo) -> 5 blue, 31 días, 1 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Agosto</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Septiembre -->
+                    <!-- Septiembre (1=Miércoles) -> 1 blue, 30 días, 6 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Septiembre</td>
                         <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Octubre -->
+                    <!-- Octubre (1=Viernes) -> 3 blue, 31 días, 3 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Octubre</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Noviembre -->
+                    <!-- Noviembre (1=Lunes) -> 6 blue, 30 días, 1 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Noviembre</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Diciembre -->
+                    <!-- Diciembre (1=Miércoles) -> 1 blue, 31 días, 5 blue -->
                     <tr>
                         <td rowspan="2" class="month-col">Diciembre</td>
                         <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                 </table>
 
@@ -496,7 +372,7 @@
                         <div class="sig-line">SUBJEFE DE ENFERMERAS</div>
                     </div>
                     <div class="sig-block">
-                        <span id="val-nombre-firma"></span> <!-- AQUÍ SE INYECTA EL NOMBRE -->
+                        <span id="val-nombre-firma"></span>
                         <div class="sig-line">INTERESADA(O)</div>
                     </div>
                 </div>
@@ -505,24 +381,18 @@
     </main>
 </div>
 
-<!-- BOTÓN REGRESAR APP -->
-<a href="index.html" id="btnRegresar" class="btn-back">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-    </svg>
-    Regresar APP
+<!-- BOTONES -->
+<a href="index.html" class="btn-back">
+    <i data-lucide="arrow-left"></i> Regresar APP
 </a>
 
-<!-- BOTÓN DE DESCARGA -->
 <button id="btnDescargar" class="btn-download">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-    </svg>
-    Descargar
+    <i data-lucide="download"></i> Descargar
 </button>
 
 <script>
+    lucide.createIcons();
+
     // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBlrkgm8k0veEjLaQeiAUHMiU6TPln9HKs",
@@ -536,49 +406,31 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     
-    let loadedData = {}; // Variable global para guardar la información cargada
-
-    const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
-    document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
+    let loadedData = {};
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Cargar Menú Loreto
-        fetch('menu.html').then(res => res.text()).then(html => {
-            document.getElementById('sidebar').innerHTML = html;
-            lucide.createIcons();
-            const linkKardex = document.getElementById('link-kardex'); 
-            if(linkKardex) linkKardex.classList.add('active');
-        });
-
-        // Toggle menu móvil
-        document.getElementById('toggle-menu').addEventListener('click', () => { 
-            document.getElementById('sidebar').classList.toggle('open'); 
-        });
-
-        // Obtener datos de Firebase
+        // Cargar datos
         db.collection('kardex').doc('datosTrabajador').get().then(doc => {
             if(doc.exists) {
                 applyData(doc.data());
             } else {
-                // Si no existe en Firebase, intentar cargar de localStorage como respaldo
-                const storedData = localStorage.getItem('kardexDatos');
-                if (storedData) applyData(JSON.parse(storedData));
+                const stored = localStorage.getItem('kardexDatos');
+                if (stored) applyData(JSON.parse(stored));
             }
-        }).catch(error => {
-            console.error("Error obteniendo datos de Firebase:", error);
-            const storedData = localStorage.getItem('kardexDatos');
-            if (storedData) applyData(JSON.parse(storedData));
+        }).catch(err => {
+            console.error("Error al cargar Firebase, usando localStorage:", err);
+            const stored = localStorage.getItem('kardexDatos');
+            if (stored) applyData(JSON.parse(stored));
         });
 
         function applyData(data) {
-            loadedData = data; // Guardar para uso posterior (ej. PDF)
+            loadedData = data;
             
-            const setText = (id, value) => {
+            const setText = (id, val) => {
                 const el = document.getElementById(id);
-                if (el) el.innerText = value || '';
+                if (el) el.innerText = val || '';
             };
 
-            // Llenar datos generales
             setText('val-delegacion', data.delegacion);
             setText('val-unidad', data.unidad);
             setText('val-nombre', data.nombre);
@@ -586,39 +438,32 @@
             setText('val-categoria', data.categoria);
             setText('val-matricula', data.matricula);
             setText('val-cc', data.cc);
-            setText('val-descansos', data.descansos); 
+            setText('val-descansos', data.descansos);
             setText('val-curp', data.curp);
             setText('val-servicio1', data.servicio1);
-            setText('val-servicio2', data.servicio2);
+            setText('val-servicio2', data.servicio2 || '-');
             setText('val-fingreso', data.fingreso);
             setText('val-antiguedad', data.antiguedad);
-            setText('val-contratacion', data.contratacion);
+            setText('val-contratacion', data.contratacion || 'BASE');
             setText('val-plaza', data.plaza);
-            setText('val-ano', data.ano);
-            
-            // --- LÓGICA DE COLORES SEGÚN EL TURNO ---
-            let shiftColor = '#00B0F0'; // Matutino (Azul)
-            
-            if (data.turno === 'VESPERTINO') {
+            setText('val-ano', data.ano || '2027');
+
+            // COLOR SEGÚN TURNO
+            let shiftColor = '#00a2e8'; // Matutino (Azul)
+            const t = (data.turno || '').toUpperCase();
+            if (t.includes('VESPERTINO')) {
                 shiftColor = '#00B050'; // Verde
-            } else if (data.turno === 'NOCTURNO') {
+            } else if (t.includes('NOCTURNO')) {
                 shiftColor = '#FF0000'; // Rojo
             }
 
-            // Aplicar el color a todas las celdas sólidas (días no laborables)
-            document.querySelectorAll('.solid-blue').forEach(cell => {
-                cell.style.backgroundColor = shiftColor;
+            // Pintar celdas completas
+            document.querySelectorAll('.solid-blue').forEach(c => {
+                c.style.backgroundColor = shiftColor;
             });
 
-            // --- LÓGICA PARA COLOCAR LOS TRIÁNGULOS SEGÚN EL DÍA DE DESCANSO ---
-            
-            // 1. Limpiar todos los triángulos anteriores del calendario
-            document.querySelectorAll('.cal-table .split-cell').forEach(cell => {
-                cell.classList.remove('split-cell');
-                cell.innerHTML = '';
-            });
-
-            // 2. Mapeo de días a las columnas del calendario
+            // MAPEO DE COLUMNAS PARA EL CALENDARIO 2027
+            // (Col 1 = Martes, Col 2 = Miércoles, ..., Col 7 = Lunes)
             const dayToCol = {
                 "MARTES": [1, 8, 15, 22, 29, 36],
                 "MIERCOLES": [2, 9, 16, 23, 30, 37],
@@ -629,36 +474,56 @@
                 "LUNES": [7, 14, 21, 28, 35]
             };
 
-            // Convertir respuesta en índices de columnas
-            let selectedDays = [];
-            if (data.descansos && data.descansos.includes('-')) {
-                const parts = data.descansos.split('-');
-                const abbrToFull = {
-                    "LUN": "LUNES", "MAR": "MARTES", "MIE": "MIERCOLES",
-                    "JUE": "JUEVES", "VIE": "VIERNES", "SAB": "SABADO",
-                    "DOM": "DOMINGO"
-                };
-                if (abbrToFull[parts[0]]) selectedDays.push(abbrToFull[parts[0]]);
-                if (abbrToFull[parts[1]]) selectedDays.push(abbrToFull[parts[1]]);
-            } else if (data.descansos) {
-                selectedDays.push(data.descansos);
-            }
+            const abbrMap = {
+                "MAR": "MARTES", "MIE": "MIERCOLES", "JUE": "JUEVES",
+                "VIE": "VIERNES", "SAB": "SABADO", "DOM": "DOMINGO", "LUN": "LUNES"
+            };
 
-            let targetCols = new Set();
-            selectedDays.forEach(day => {
-                if(dayToCol[day]) {
-                    dayToCol[day].forEach(col => targetCols.add(col));
+            let selectedDays = [];
+            let strDesc = (data.descansos || 'SABADO-DOMINGO').toUpperCase();
+
+            // Detectar días seleccionados
+            Object.keys(dayToCol).forEach(day => {
+                if (strDesc.includes(day)) selectedDays.push(day);
+            });
+            Object.keys(abbrMap).forEach(abbr => {
+                if (strDesc.includes(abbr) && !selectedDays.includes(abbrMap[abbr])) {
+                    selectedDays.push(abbrMap[abbr]);
                 }
             });
 
-            // 3. Pintar los triángulos inyectando un SVG inline directamente compatible con html2canvas
-            const rows = document.querySelector('.cal-table').querySelectorAll('tr');
-            for (let i = 2; i < rows.length; i += 2) {
-                const row = rows[i];
+            let targetCols = new Set();
+            selectedDays.forEach(day => {
+                if (dayToCol[day]) {
+                    dayToCol[day].forEach(c => targetCols.add(c));
+                }
+            });
+
+            // PINTAR LOS TRIÁNGULOS EN TODOS LOS 12 MESES
+            const tableRows = document.querySelectorAll('#cal-table tr');
+            
+            // Iterar sobre las filas de celdas libres (filas 2, 4, 6, 8... correspondientes a cada mes)
+            for (let i = 2; i < tableRows.length; i += 2) {
+                const row = tableRows[i];
+                const topRow = tableRows[i - 1]; // Fila superior del mismo mes
+
                 for (let c = 0; c < row.cells.length; c++) {
-                    const colIndex = c + 1;
                     const cell = row.cells[c];
-                    if (targetCols.has(colIndex) && !cell.classList.contains('solid-blue')) {
+                    // Se suma +1 en topRow para compensar la columna del nombre del mes (month-col)
+                    const topCell = topRow ? topRow.cells[c + 1] : null;
+                    const colNum = c + 1; // Columna de 1 a 37
+
+                    // Limpieza previa
+                    cell.classList.remove('split-cell');
+                    cell.innerHTML = '';
+
+                    // Comprobar que NI la celda actual NI la celda superior sean de relleno azul (solid-blue)
+                    const isSolidBlue = cell.classList.contains('solid-blue') || 
+                                        cell.style.backgroundColor || 
+                                        (topCell && (topCell.classList.contains('solid-blue') || topCell.style.backgroundColor));
+
+                    // Si es un día de descanso y la celda es un día válido
+                    if (targetCols.has(colNum) && !isSolidBlue) {
                         cell.classList.add('split-cell');
                         cell.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"><polygon points="0,0 0,100 100,100" fill="${shiftColor}"/></svg>`;
                     }
@@ -667,23 +532,20 @@
         }
     });
 
-    // --- LÓGICA DE DESCARGA PDF ---
+    // DESCARGA DE PDF
     document.getElementById('btnDescargar').addEventListener('click', function() {
         const button = this;
         const originalText = button.innerHTML;
-        
-        button.innerText = 'Generando PDF...';
+        button.innerText = 'Generando...';
         button.disabled = true;
 
-        const element = document.querySelector('.container');
+        const element = document.getElementById('kardex-document');
 
-        const options = {
+        html2canvas(element, {
             scale: 2,
             useCORS: true,
             backgroundColor: '#ffffff'
-        };
-
-        html2canvas(element, options).then(canvas => {
+        }).then(canvas => {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('l', 'pt', 'letter');
 
@@ -697,27 +559,20 @@
             const imgX = (pdfWidth - imgWidth * ratio) / 2;
             const imgY = (pdfHeight - imgHeight * ratio) / 2;
 
-            const imgData = canvas.toDataURL('image/png');
-            
-            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-            
-            // --- GENERAR NOMBRE DEL ARCHIVO DINÁMICAMENTE ---
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+
             let filename = 'Kardex_Vacacional_2027.pdf';
-            if (loadedData) {
-                const turno = loadedData.turno || 'SIN_TURNO';
-                const categoria = loadedData.categoria || 'SIN_CATEGORIA';
-                const nombre = loadedData.nombre || 'SIN_NOMBRE';
-                const matricula = loadedData.matricula || 'SIN_MATRICULA';
-                
-                filename = `${turno} - ${categoria} - ${nombre} - ${matricula}.pdf`;
+            if (loadedData && loadedData.nombre) {
+                filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
             }
+
             pdf.save(filename);
 
             button.innerHTML = originalText;
             button.disabled = false;
         }).catch(err => {
-            console.error("Error al generar el PDF:", err);
-            alert("Hubo un error al generar el PDF.");
+            console.error(err);
+            alert("Error al generar PDF");
             button.innerHTML = originalText;
             button.disabled = false;
         });

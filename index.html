@@ -164,14 +164,10 @@
                         </div>
                     </div>
 
-                    <div class="grid-3">
+                    <div class="grid-2">
                         <div class="form-group">
                             <label class="form-label">F. Ingreso</label>
                             <input type="date" class="form-input" id="fingreso" name="fingreso">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Antigüedad</label>
-                            <input type="text" class="form-input" id="antiguedad" name="antiguedad" placeholder="Ej: 10 años">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Contratación</label>
@@ -179,25 +175,19 @@
                         </div>
                     </div>
 
-                    <div class="grid-3">
-                        <div class="form-group">
-                            <label class="form-label">Plaza</label>
-                            <input type="text" class="form-input" id="plaza" name="plaza">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Año</label>
-                            <input type="number" class="form-input" id="ano" name="ano" value="2027">
+                    <!-- CAMPO DE ANTIGÜEDAD MODIFICADO -->
+                    <div class="form-group">
+                        <label class="form-label">Antigüedad (Años - Quincenas - Días)</label>
+                        <div class="grid-3" style="gap: 10px;">
+                            <select class="form-select" id="ant_anios"></select>
+                            <select class="form-select" id="ant_quincenas"></select>
+                            <select class="form-select" id="ant_dias"></select>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Unidad de Servicios Médicos</label>
-                        <input type="text" class="form-input" id="unidad" name="unidad" value='U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."'>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Delegación</label>
-                        <input type="text" class="form-input" id="delegacion" name="delegacion" value="CDMX. NORTE">
+                        <label class="form-label">Plaza</label>
+                        <input type="text" class="form-input" id="plaza" name="plaza">
                     </div>
 
                     <div class="action-buttons">
@@ -226,7 +216,25 @@
         const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
         document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
 
+        // Llenar dinámicamente las listas desplegables de Antigüedad
+        function populateSelect(id, max) {
+            const sel = document.getElementById(id);
+            for(let i=0; i<=max; i++) {
+                const val = i < 10 ? '0' + i : i; // Formato 01, 02...
+                let text = i;
+                if(id === 'ant_anios') text = `${i} Años`;
+                if(id === 'ant_quincenas') text = `${i} Quincenas`;
+                if(id === 'ant_dias') text = `${i} Días`;
+                sel.innerHTML += `<option value="${val}">${text}</option>`;
+            }
+            sel.value = '00';
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            populateSelect('ant_anios', 50);
+            populateSelect('ant_quincenas', 24);
+            populateSelect('ant_dias', 31);
+
             fetch('menu.html').then(res => res.text()).then(html => {
                 document.getElementById('sidebar').innerHTML = html;
                 lucide.createIcons();
@@ -247,6 +255,12 @@
                 btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando...';
                 lucide.createIcons();
 
+                // Formatear antigüedad: "34 - 23 - 09"
+                const ant_anios = document.getElementById('ant_anios').value;
+                const ant_quincenas = document.getElementById('ant_quincenas').value;
+                const ant_dias = document.getElementById('ant_dias').value;
+                const antiguedadFormateada = `${ant_anios} - ${ant_quincenas} - ${ant_dias}`;
+
                 const datos = {
                     nombre: document.getElementById('nombre').value.toUpperCase(),
                     categoria: document.getElementById('categoria').value.toUpperCase(),
@@ -258,12 +272,9 @@
                     servicio1: document.getElementById('servicio1').value.toUpperCase(),
                     servicio2: document.getElementById('servicio2').value.toUpperCase(),
                     fingreso: document.getElementById('fingreso').value,
-                    antiguedad: document.getElementById('antiguedad').value.toUpperCase(),
+                    antiguedad: antiguedadFormateada, // Se envía el string unido
                     contratacion: document.getElementById('contratacion').value.toUpperCase(),
-                    plaza: document.getElementById('plaza').value.toUpperCase(),
-                    unidad: document.getElementById('unidad').value.toUpperCase(),
-                    delegacion: document.getElementById('delegacion').value.toUpperCase(),
-                    ano: document.getElementById('ano').value
+                    plaza: document.getElementById('plaza').value.toUpperCase()
                 };
 
                 // Guardar en localStorage como respaldo
@@ -289,9 +300,9 @@
         function limpiarFormulario() {
             document.getElementById('capturaForm').reset();
             document.getElementById('contratacion').value = "BASE";
-            document.getElementById('ano').value = "2027";
-            document.getElementById('unidad').value = 'U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."';
-            document.getElementById('delegacion').value = "CDMX. NORTE";
+            document.getElementById('ant_anios').value = "00";
+            document.getElementById('ant_quincenas').value = "00";
+            document.getElementById('ant_dias').value = "00";
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>

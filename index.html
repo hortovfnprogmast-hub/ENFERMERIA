@@ -58,7 +58,8 @@
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-        @media (max-width: 640px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; }
+        @media (max-width: 640px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
 
         .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
         .btn-guardar { background: var(--primary-blue); color: white; border: none; padding: 16px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
@@ -94,7 +95,7 @@
                 <form id="capturaForm" class="form-card">
                     <input type="hidden" id="edit-log-id">
                     
-                    <h3 class="section-title"><i data-lucide="user"></i> Datos Personales</h3>
+                    <h3 class="section-title"><i data-lucide="user"></i> Datos para kardex</h3>
                     
                     <div class="form-group">
                         <label class="form-label">Nombre Completo</label>
@@ -106,9 +107,15 @@
                             <label class="form-label">Categoría</label>
                             <input type="text" class="form-input" id="categoria" name="categoria">
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Matrícula</label>
-                            <input type="text" class="form-input" id="matricula" name="matricula">
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 15px;">
+                            <div>
+                                <label class="form-label">Matrícula</label>
+                                <input type="text" class="form-input" id="matricula" name="matricula">
+                            </div>
+                            <div>
+                                <label class="form-label">Plaza</label>
+                                <input type="text" class="form-input" id="plaza" name="plaza">
+                            </div>
                         </div>
                     </div>
 
@@ -151,8 +158,6 @@
                         <input type="text" class="form-input" id="curp" name="curp">
                     </div>
 
-                    <h3 class="section-title" style="margin-top: 20px;"><i data-lucide="briefcase"></i> Datos Laborales</h3>
-                    
                     <div class="grid-2">
                         <div class="form-group">
                             <label class="form-label">Servicio 1</label>
@@ -175,7 +180,6 @@
                         </div>
                     </div>
 
-                    <!-- CAMPO DE ANTIGÜEDAD MODIFICADO -->
                     <div class="form-group">
                         <label class="form-label">Antigüedad (Años - Quincenas - Días)</label>
                         <div class="grid-3" style="gap: 10px;">
@@ -185,9 +189,45 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Plaza</label>
-                        <input type="text" class="form-input" id="plaza" name="plaza">
+                    <!-- NUEVA SECCIÓN ROL / MARCA -->
+                    <h3 class="section-title" style="margin-top: 20px;"><i data-lucide="clipboard-list"></i> Rol / Marca</h3>
+                    
+                    <div class="grid-4">
+                        <div class="form-group">
+                            <label class="form-label">Rol 1</label>
+                            <select class="form-select" id="rol1"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rol 2</label>
+                            <select class="form-select" id="rol2"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rol 3</label>
+                            <select class="form-select" id="rol3"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rol 4</label>
+                            <select class="form-select" id="rol4"></select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-4">
+                        <div class="form-group">
+                            <label class="form-label">Marca 1</label>
+                            <select class="form-select" id="marca1"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Marca 2</label>
+                            <select class="form-select" id="marca2"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Marca 3</label>
+                            <select class="form-select" id="marca3"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Marca 4</label>
+                            <select class="form-select" id="marca4"></select>
+                        </div>
                     </div>
 
                     <div class="action-buttons">
@@ -216,11 +256,11 @@
         const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
         document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
 
-        // Llenar dinámicamente las listas desplegables de Antigüedad
-        function populateSelect(id, max) {
+        // Llenar dinámicamente las listas desplegables
+        function populateAntiguedad(id, max) {
             const sel = document.getElementById(id);
             for(let i=0; i<=max; i++) {
-                const val = i < 10 ? '0' + i : i; // Formato 01, 02...
+                const val = i < 10 ? '0' + i : i;
                 let text = i;
                 if(id === 'ant_anios') text = `${i} Años`;
                 if(id === 'ant_quincenas') text = `${i} Quincenas`;
@@ -230,10 +270,31 @@
             sel.value = '00';
         }
 
+        function populateRoles() {
+            for(let i=1; i<=24; i++) {
+                ['rol1', 'rol2', 'rol3', 'rol4'].forEach(id => {
+                    document.getElementById(id).innerHTML += `<option value="${i}">${i}</option>`;
+                });
+            }
+        }
+
+        function populateMarcas() {
+            const marcaFracs = ["0/7", "1/7", "2/7", "3/7", "4/7", "5/7", "6/7", "7/7", "8/7", "9/7"];
+            ['marca1', 'marca2', 'marca3', 'marca4'].forEach(id => {
+                const sel = document.getElementById(id);
+                for(let i=0; i<=9; i++) {
+                    sel.innerHTML += `<option value="${i}">${i}</option>`;
+                }
+                marcaFracs.forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            populateSelect('ant_anios', 50);
-            populateSelect('ant_quincenas', 24);
-            populateSelect('ant_dias', 31);
+            populateAntiguedad('ant_anios', 50);
+            populateAntiguedad('ant_quincenas', 24);
+            populateAntiguedad('ant_dias', 31);
+            populateRoles();
+            populateMarcas();
 
             fetch('menu.html').then(res => res.text()).then(html => {
                 document.getElementById('sidebar').innerHTML = html;
@@ -255,11 +316,8 @@
                 btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando...';
                 lucide.createIcons();
 
-                // Formatear antigüedad: "34 - 23 - 09"
-                const ant_anios = document.getElementById('ant_anios').value;
-                const ant_quincenas = document.getElementById('ant_quincenas').value;
-                const ant_dias = document.getElementById('ant_dias').value;
-                const antiguedadFormateada = `${ant_anios} - ${ant_quincenas} - ${ant_dias}`;
+                // Formatear antigüedad
+                const antiguedadFormateada = `${document.getElementById('ant_anios').value} - ${document.getElementById('ant_quincenas').value} - ${document.getElementById('ant_dias').value}`;
 
                 const datos = {
                     nombre: document.getElementById('nombre').value.toUpperCase(),
@@ -272,15 +330,21 @@
                     servicio1: document.getElementById('servicio1').value.toUpperCase(),
                     servicio2: document.getElementById('servicio2').value.toUpperCase(),
                     fingreso: document.getElementById('fingreso').value,
-                    antiguedad: antiguedadFormateada, // Se envía el string unido
+                    antiguedad: antiguedadFormateada,
                     contratacion: document.getElementById('contratacion').value.toUpperCase(),
-                    plaza: document.getElementById('plaza').value.toUpperCase()
+                    plaza: document.getElementById('plaza').value.toUpperCase(),
+                    rol1: document.getElementById('rol1').value,
+                    rol2: document.getElementById('rol2').value,
+                    rol3: document.getElementById('rol3').value,
+                    rol4: document.getElementById('rol4').value,
+                    marca1: document.getElementById('marca1').value,
+                    marca2: document.getElementById('marca2').value,
+                    marca3: document.getElementById('marca3').value,
+                    marca4: document.getElementById('marca4').value
                 };
 
-                // Guardar en localStorage como respaldo
                 localStorage.setItem('kardexDatos', JSON.stringify(datos));
                 
-                // Guardar en Firebase Firestore
                 db.collection('kardex').doc('datosTrabajador').set(datos)
                 .then(() => {
                     setTimeout(() => {

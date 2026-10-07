@@ -142,15 +142,7 @@
 </header>
 
 <div class="main-layout">
-    <aside class="sidebar" id="sidebar">
-        <nav class="sidebar-nav">
-            <div class="sidebar-section">
-                <span class="section-title">Navegación</span>
-                <a href="index.html" class="nav-item"><i data-lucide="home"></i> Inicio</a>
-                <a href="kardex.html" class="nav-item active" id="link-kardex"><i data-lucide="file-text"></i> Kardex</a>
-            </div>
-        </nav>
-    </aside>
+    <aside class="sidebar" id="sidebar"></aside>
 
     <main class="content">
         <div class="page-header">
@@ -190,7 +182,7 @@
                     </div>
                 </div>
 
-                <!-- TABLA 1: DATOS PERSONALES -->
+                <!-- TABLA 1: DATOS PERSONALES (CORREGIDA) -->
                 <table class="data-table">
                     <colgroup>
                         <col style="width: 37.5%;">
@@ -201,12 +193,12 @@
                         <col style="width: 22%;">
                     </colgroup>
                     <tr style="height: 35px;">
-                        <td style="text-align: center; vertical-align: top; letter-spacing: 2px; padding-top: 4px;">N O M B R E : <span class="data-text" id="val-nombre"></span></td>
+                        <td style="text-align: center; vertical-align: top; padding-top: 4px;"><span style="letter-spacing: 2px;">N O M B R E :</span> <span class="data-text" id="val-nombre"></span></td>
                         <td style="text-align: center; vertical-align: top; padding-top: 4px;">CATEGORIA: <span class="data-text" id="val-categoria"></span></td>
                         <td style="padding: 0;">
                             <table style="width: 100%; height: 100%; border-collapse: collapse; border: none;">
                                 <tr><td style="border: none; padding: 4px 4px 2px 4px; vertical-align: top; text-align: center; font-size: 10px;">MATRICULA:</td></tr>
-                                <tr><td class="bg-yellow" style="border: none; height: 16px; padding: 0; text-align: center; font-weight: bold;" id="val-matricula"></td></tr>
+                                <tr><td class="bg-yellow" style="border: none; height: 16px; padding: 0; text-align: center; font-weight: bold; font-size: 11px;" id="val-matricula"></td></tr>
                             </table>
                         </td>
                         <td style="text-align: center; vertical-align: top; padding-top: 4px;">C.C.: <span class="data-text" id="val-cc"></span></td>
@@ -330,7 +322,7 @@
                         <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr>
-                        <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
                     <!-- Octubre (1=Viernes) -> 3 blue, 31 días, 3 blue -->
@@ -409,6 +401,17 @@
     let loadedData = {};
 
     document.addEventListener('DOMContentLoaded', function() {
+        fetch('menu.html').then(res => res.text()).then(html => {
+            document.getElementById('sidebar').innerHTML = html;
+            lucide.createIcons();
+            const link = document.getElementById('link-kardex'); 
+            if(link) link.classList.add('active');
+        });
+
+        document.getElementById('toggle-menu').addEventListener('click', () => { 
+            document.getElementById('sidebar').classList.toggle('open'); 
+        });
+
         // Cargar datos
         db.collection('kardex').doc('datosTrabajador').get().then(doc => {
             if(doc.exists) {

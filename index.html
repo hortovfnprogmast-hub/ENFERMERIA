@@ -59,7 +59,12 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
         .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; }
-        @media (max-width: 640px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+        /* Nueva cuadrícula para campo grande y campo pequeño (50% de ancho) */
+        .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; }
+        
+        @media (max-width: 640px) { 
+            .grid-2, .grid-3, .grid-4, .grid-2-1 { grid-template-columns: 1fr; } 
+        }
 
         .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
         .btn-guardar { background: var(--primary-blue); color: white; border: none; padding: 16px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
@@ -97,25 +102,27 @@
                     
                     <h3 class="section-title"><i data-lucide="user"></i> Datos para kardex</h3>
                     
-                    <div class="form-group">
-                        <label class="form-label">Nombre Completo</label>
-                        <input type="text" class="form-input" id="nombre" name="nombre" required>
+                    <!-- NOMBRE Y MATRÍCULA (EN EL MISMO RENGLÓN) -->
+                    <div class="grid-2-1">
+                        <div class="form-group">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-input" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Matrícula</label>
+                            <input type="text" class="form-input" id="matricula" name="matricula">
+                        </div>
                     </div>
 
-                    <div class="grid-2">
+                    <!-- CATEGORÍA Y PLAZA (EN EL MISMO RENGLÓN) -->
+                    <div class="grid-2-1">
                         <div class="form-group">
                             <label class="form-label">Categoría</label>
                             <input type="text" class="form-input" id="categoria" name="categoria">
                         </div>
-                        <div class="form-group" style="display: flex; flex-direction: column; gap: 15px;">
-                            <div>
-                                <label class="form-label">Matrícula</label>
-                                <input type="text" class="form-input" id="matricula" name="matricula">
-                            </div>
-                            <div>
-                                <label class="form-label">Plaza</label>
-                                <input type="text" class="form-input" id="plaza" name="plaza">
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Plaza</label>
+                            <input type="text" class="form-input" id="plaza" name="plaza">
                         </div>
                     </div>
 
@@ -192,41 +199,53 @@
                     <!-- NUEVA SECCIÓN ROL / MARCA -->
                     <h3 class="section-title" style="margin-top: 20px;"><i data-lucide="clipboard-list"></i> Rol / Marca</h3>
                     
-                    <div class="grid-4">
-                        <div class="form-group">
-                            <label class="form-label">Rol 1</label>
-                            <select class="form-select" id="rol1"></select>
+                    <div class="grid-2" style="gap: 20px;">
+                        <!-- LADO IZQUIERDO: ROL 1 Y 2 -->
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <div class="grid-2" style="gap: 10px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Rol 1</label>
+                                    <select class="form-select" id="rol1"></select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Marca 1</label>
+                                    <select class="form-select" id="marca1"></select>
+                                </div>
+                            </div>
+                            <div class="grid-2" style="gap: 10px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Rol 2</label>
+                                    <select class="form-select" id="rol2"></select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Marca 2</label>
+                                    <select class="form-select" id="marca2"></select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Rol 2</label>
-                            <select class="form-select" id="rol2"></select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Rol 3</label>
-                            <select class="form-select" id="rol3"></select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Rol 4</label>
-                            <select class="form-select" id="rol4"></select>
-                        </div>
-                    </div>
-                    
-                    <div class="grid-4">
-                        <div class="form-group">
-                            <label class="form-label">Marca 1</label>
-                            <select class="form-select" id="marca1"></select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Marca 2</label>
-                            <select class="form-select" id="marca2"></select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Marca 3</label>
-                            <select class="form-select" id="marca3"></select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Marca 4</label>
-                            <select class="form-select" id="marca4"></select>
+
+                        <!-- LADO DERECHO: ROL 3 Y 4 -->
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <div class="grid-2" style="gap: 10px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Rol 3</label>
+                                    <select class="form-select" id="rol3"></select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Marca 3</label>
+                                    <select class="form-select" id="marca3"></select>
+                                </div>
+                            </div>
+                            <div class="grid-2" style="gap: 10px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Rol 4</label>
+                                    <select class="form-select" id="rol4"></select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Marca 4</label>
+                                    <select class="form-select" id="marca4"></select>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -321,8 +340,9 @@
 
                 const datos = {
                     nombre: document.getElementById('nombre').value.toUpperCase(),
-                    categoria: document.getElementById('categoria').value.toUpperCase(),
                     matricula: document.getElementById('matricula').value.toUpperCase(),
+                    categoria: document.getElementById('categoria').value.toUpperCase(),
+                    plaza: document.getElementById('plaza').value.toUpperCase(),
                     cc: document.getElementById('cc').value.toUpperCase(),
                     turno: document.getElementById('turno').value.toUpperCase(),
                     descansos: document.getElementById('descansos').value.toUpperCase(),
@@ -332,7 +352,6 @@
                     fingreso: document.getElementById('fingreso').value,
                     antiguedad: antiguedadFormateada,
                     contratacion: document.getElementById('contratacion').value.toUpperCase(),
-                    plaza: document.getElementById('plaza').value.toUpperCase(),
                     rol1: document.getElementById('rol1').value,
                     rol2: document.getElementById('rol2').value,
                     rol3: document.getElementById('rol3').value,
@@ -348,7 +367,7 @@
                 db.collection('kardex').doc('datosTrabajador').set(datos)
                 .then(() => {
                     setTimeout(() => {
-                        window.location.href = 'formato_kardex.html';
+                        window.location.href = 'formato_kardex.html'; // <-- REDIRECCIÓN ACTUALIZADA
                     }, 500);
                 })
                 .catch(error => {

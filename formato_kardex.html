@@ -152,7 +152,7 @@
 
         <div class="kardex-wrapper">
             <div class="container" id="kardex-document">
-                <!-- CABECERA INSTITUCIONAL -->
+                <!-- CABECERA INSTITUCIONAL DINÁMICA -->
                 <div class="header">
                     <div class="header-left">
                         <h2 style="color:#800020; margin:0; font-size: 18px; text-align: left; display:flex; align-items:center; gap: 5px;">
@@ -161,8 +161,8 @@
                         </h2>
                     </div>
                     <div class="header-center">
-                        DIRECCIÓN DE PRESTACIONES MÉDICAS<br>
-                        COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD
+                        <span id="val-encabezado1">DIRECCIÓN DE PRESTACIONES MÉDICAS</span><br>
+                        <span id="val-encabezado2">COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD</span>
                     </div>
                     <div class="header-right">
                         <h2 style="color:#005c3a; margin:0; font-size: 24px; text-align: right; display:flex; flex-direction:column; align-items:center;">
@@ -172,17 +172,17 @@
                     </div>
                 </div>
 
-                <!-- DATOS DE UNIDAD -->
+                <!-- DATOS DE UNIDAD DINÁMICOS -->
                 <div class="form-info">
                     <div>
-                        Delegación: <span class="underline" style="width: 250px;" id="val-delegacion">CDMX. NORTE</span>
+                        Delegación: <span class="underline" style="width: 250px;" id="val-delegacion"></span>
                     </div>
                     <div>
-                        Unidad de Servicios Médicos: <span class="underline" style="width: 350px;" id="val-unidad">U.M.A.E. HOSPITAL DE TRAUMATOLOGIA "DR. V.F.N."</span>
+                        Unidad de Servicios Médicos: <span class="underline" style="width: 350px;" id="val-unidad"></span>
                     </div>
                 </div>
 
-                <!-- TABLA 1: DATOS PERSONALES (CORREGIDA) -->
+                <!-- TABLA 1: DATOS PERSONALES -->
                 <table class="data-table">
                     <colgroup>
                         <col style="width: 37.5%;">
@@ -353,14 +353,15 @@
                     </tr>
                 </table>
 
-                <!-- FIRMAS -->
+</div>
+                <!-- FIRMAS DINÁMICAS -->
                 <div class="signatures">
                     <div class="sig-block">
-                        <span>MTRA. JUDITH SILVA CORTÉS</span>
+                        <span id="val-jefe-enfermeras"></span>
                         <div class="sig-line">JEFA DE ENFERMERÍA</div>
                     </div>
                     <div class="sig-block">
-                        <span>LIC. GUILLERMINA PAULETTE HERRERA ALVAREZ</span>
+                        <span id="val-subjefe-enfermeras"></span>
                         <div class="sig-line">SUBJEFE DE ENFERMERAS</div>
                     </div>
                     <div class="sig-block">
@@ -412,59 +413,87 @@
             document.getElementById('sidebar').classList.toggle('open'); 
         });
 
-        // Cargar datos
-        db.collection('kardex').doc('datosTrabajador').get().then(doc => {
-            if(doc.exists) {
-                applyData(doc.data());
+        // Cargar datos del trabajador y datos generales de Firebase simultáneamente
+        Promise.all([
+            db.collection('kardex').doc('datosTrabajador').get(),
+            db.collection('configuracion').doc('datos_generales').get()
+        ]).then(([workerDoc, generalDoc]) => {
+            let workerData = {};
+            if(workerDoc.exists) {
+                workerData = workerDoc.data();
             } else {
                 const stored = localStorage.getItem('kardexDatos');
-                if (stored) applyData(JSON.parse(stored));
+                if (stored) workerData = JSON.parse(stored);
             }
+
+            let generalData = {};
+            if(generalDoc.exists) {
+                generalData = generalDoc.data();
+            }
+
+            applyData(workerData, generalData);
         }).catch(err => {
             console.error("Error al cargar Firebase, usando localStorage:", err);
             const stored = localStorage.getItem('kardexDatos');
-            if (stored) applyData(JSON.parse(stored));
+            if (stored) applyData(JSON.parse(stored), {});
         });
 
-        function applyData(data) {
-            loadedData = data;
+        function applyData(workerData, generalData) {
+            loadedData = { ...workerData, ...generalData }; // Mezclamos por si se usa en el PDF
             
             const setText = (id, val) => {
                 const el = document.getElementById(id);
                 if (el) el.innerText = val || '';
             };
 
-            setText('val-delegacion', data.delegacion);
-            setText('val-unidad', data.unidad);
-            setText('val-nombre', data.nombre);
-            setText('val-nombre-firma', data.nombre);
-            setText('val-categoria', data.categoria);
-            setText('val-matricula', data.matricula);
-            setText('val-cc', data.cc);
-            setText('val-descansos', data.descansos);
-            setText('val-curp', data.curp);
-            setText('val-servicio1', data.servicio1);
-            setText('val-servicio2', data.servicio2 || '-');
-            setText('val-fingreso', data.fingreso);
-            setText('val-antiguedad', data.antiguedad);
-            setText('val-contratacion', data.contratacion || 'BASE');
-            setText('val-plaza', data.plaza);
-            setText('val-ano', data.ano || '2027');
-            setText('val-rol1', data.rol1 || '');
-            setText('val-rol2', data.rol2 || '');
-            setText('val-rol3', data.rol3 || '');
-            setText('val-rol4', data.rol4 || '');
-            setText('val-marca1', data.marca1 || '');
-            setText('val-marca2', data.marca2 || '');
-            setText('val-marca3', data.marca3 || '');
-            setText('val-marca4', data.marca4 || '');
+            // === DATOS GENERALES ===
+            setText('val-encabezado1', generalData.encabezado1);
+            setText('val-encabezado2', generalData.encabezado2);
+            setText('val-delegacion', generalData.delegacion);
+            setText('val-unidad', generalData.unidad);
+            setText('val-jefe-enfermeras', generalData.jefe_enfermeras);
+
+            // LÓGICA PARA SUBJEFE SEGÚN TURNO
+            const turno = (workerData.turno || '').toUpperCase();
+            let subjefeName = '';
+            if (turno.includes('MATUTINO')) {
+                subjefeName = generalData.subjefe_matutino;
+            } else if (turno.includes('VESPERTINO')) {
+                subjefeName = generalData.enfermera_vespertino;
+            } else if (turno.includes('NOCTURNO')) {
+                subjefeName = generalData.enfermera_nocturno;
+            }
+            setText('val-subjefe-enfermeras', subjefeName);
+
+            // === DATOS DEL TRABAJADOR ===
+            setText('val-nombre', workerData.nombre);
+            setText('val-nombre-firma', workerData.nombre);
+            setText('val-categoria', workerData.categoria);
+            setText('val-matricula', workerData.matricula);
+            setText('val-cc', workerData.cc);
+            setText('val-descansos', workerData.descansos);
+            setText('val-curp', workerData.curp);
+            setText('val-servicio1', workerData.servicio1);
+            setText('val-servicio2', workerData.servicio2 || '-');
+            setText('val-fingreso', workerData.fingreso);
+            setText('val-antiguedad', workerData.antiguedad);
+            setText('val-contratacion', workerData.contratacion || 'BASE');
+            setText('val-plaza', workerData.plaza);
+            setText('val-ano', workerData.ano || '2027');
+            setText('val-rol1', workerData.rol1 || '');
+            setText('val-rol2', workerData.rol2 || '');
+            setText('val-rol3', workerData.rol3 || '');
+            setText('val-rol4', workerData.rol4 || '');
+            setText('val-marca1', workerData.marca1 || '');
+            setText('val-marca2', workerData.marca2 || '');
+            setText('val-marca3', workerData.marca3 || '');
+            setText('val-marca4', workerData.marca4 || '');
             
             // COLOR SEGÚN TURNO
             let shiftColor = '#00a2e8'; // Matutino (Azul)
-            const t = (data.turno || '').toUpperCase();
-            if (t.includes('VESPERTINO')) {
+            if (turno.includes('VESPERTINO')) {
                 shiftColor = '#00B050'; // Verde
-            } else if (t.includes('NOCTURNO')) {
+            } else if (turno.includes('NOCTURNO')) {
                 shiftColor = '#FF0000'; // Rojo
             }
 
@@ -474,7 +503,6 @@
             });
 
             // MAPEO DE COLUMNAS PARA EL CALENDARIO 2027
-            // (Col 1 = Martes, Col 2 = Miércoles, ..., Col 7 = Lunes)
             const dayToCol = {
                 "MARTES": [1, 8, 15, 22, 29, 36],
                 "MIERCOLES": [2, 9, 16, 23, 30, 37],
@@ -491,9 +519,8 @@
             };
 
             let selectedDays = [];
-            let strDesc = (data.descansos || 'SABADO-DOMINGO').toUpperCase();
+            let strDesc = (workerData.descansos || 'SABADO-DOMINGO').toUpperCase();
 
-            // Detectar días seleccionados
             Object.keys(dayToCol).forEach(day => {
                 if (strDesc.includes(day)) selectedDays.push(day);
             });
@@ -513,27 +540,22 @@
             // PINTAR LOS TRIÁNGULOS EN TODOS LOS 12 MESES
             const tableRows = document.querySelectorAll('#cal-table tr');
             
-            // Iterar sobre las filas de celdas libres (filas 2, 4, 6, 8... correspondientes a cada mes)
             for (let i = 2; i < tableRows.length; i += 2) {
                 const row = tableRows[i];
-                const topRow = tableRows[i - 1]; // Fila superior del mismo mes
+                const topRow = tableRows[i - 1];
 
                 for (let c = 0; c < row.cells.length; c++) {
                     const cell = row.cells[c];
-                    // Se suma +1 en topRow para compensar la columna del nombre del mes (month-col)
                     const topCell = topRow ? topRow.cells[c + 1] : null;
-                    const colNum = c + 1; // Columna de 1 a 37
+                    const colNum = c + 1;
 
-                    // Limpieza previa
                     cell.classList.remove('split-cell');
                     cell.innerHTML = '';
 
-                    // Comprobar que NI la celda actual NI la celda superior sean de relleno azul (solid-blue)
                     const isSolidBlue = cell.classList.contains('solid-blue') || 
                                         cell.style.backgroundColor || 
                                         (topCell && (topCell.classList.contains('solid-blue') || topCell.style.backgroundColor));
 
-                    // Si es un día de descanso y la celda es un día válido
                     if (targetCols.has(colNum) && !isSolidBlue) {
                         cell.classList.add('split-cell');
                         cell.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"><polygon points="0,0 0,100 100,100" fill="${shiftColor}"/></svg>`;

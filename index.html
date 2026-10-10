@@ -348,7 +348,7 @@
                 db.collection('kardex').doc('datosTrabajador').set(datos)
                 .then(() => {
                     setTimeout(() => {
-                        window.location.href = 'kardex.html';
+                        window.location.href = 'formato_kardex.html';
                     }, 500);
                 })
                 .catch(error => {

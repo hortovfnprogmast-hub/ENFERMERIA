@@ -629,7 +629,7 @@
         const element = document.getElementById('kardex-document');
 
         html2canvas(element, {
-            scale: 2,
+            scale: 1, /* CAMBIADO DE 2 A 1 PARA EVITAR QUE LAS LÍNEAS DELGADAS SE DUPLIQUEN DE GROSOR EN EL PDF */
             useCORS: true,
             backgroundColor: '#ffffff'
         }).then(canvas => {

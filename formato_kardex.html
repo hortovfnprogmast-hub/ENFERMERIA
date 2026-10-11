@@ -87,10 +87,13 @@
     .bg-cyan { background-color: #00ffff; }
     .bg-pink { background-color: #ff99ff; }
 
-    /* CALENDARIO CON LÍNEAS INTERNAS MUY DELGADAS EN NEGRO Y CONTORNO ORIGINAL */
+    /* CALENDARIO CON LÍNEAS ANTIDUPLICACIÓN (SIN EFECTO GORDO AL IMPRIMIR) */
     .cal-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid black; }
     .cal-table th, .cal-table td { 
-        border: 0.5px solid black; 
+        border-top: none;
+        border-left: none;
+        border-right: 1px solid #333; /* Línea fina anti-duplicación */
+        border-bottom: 1px solid #333; 
         padding: 0; 
         height: 18px; 
         font-size: 10px; 
@@ -629,7 +632,7 @@
         const element = document.getElementById('kardex-document');
 
         html2canvas(element, {
-            scale: 1, /* CAMBIADO DE 2 A 1 PARA EVITAR QUE LAS LÍNEAS DELGADAS SE DUPLIQUEN DE GROSOR EN EL PDF */
+            scale: 1, 
             useCORS: true,
             backgroundColor: '#ffffff'
         }).then(canvas => {

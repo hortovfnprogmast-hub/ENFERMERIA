@@ -87,27 +87,26 @@
     .bg-cyan { background-color: #00ffff; }
     .bg-pink { background-color: #ff99ff; }
 
-    /* CALENDARIO CON CONTORNO EN NEGRITA POR MES Y CUADRÍCULA INTERNA DELGADA */
-    .cal-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black; }
+    /* CALENDARIO CON LÍNEAS INTERNAS MUY DELGADAS EN NEGRO Y CONTORNO ORIGINAL */
+    .cal-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid black; }
     .cal-table th, .cal-table td { 
-        border: 1px solid #777; /* Línea interna delgada */
+        border: 0.5px solid black; 
         padding: 0; 
         height: 18px; 
         font-size: 10px; 
         box-sizing: border-box; 
         text-align: center; 
     }
-    /* Encabezado de los días de la semana sin negrita */
-    .cal-table th { font-weight: normal; background-color: white; border: 1px solid black; border-bottom: 2px solid black; }
+    .cal-table th { font-weight: normal; background-color: white; border: 1px solid black; border-bottom: 1px solid black; }
     
-    /* Mes/Día y meses un 15% más grandes y en negrita */
-    .month-col { width: 7.5%; font-weight: bold; font-size: 11.5px; border-left: 2px solid black !important; border-right: 2px solid black !important; }
+    /* Mes/Día y meses en tamaño original */
+    .month-col { width: 7.5%; font-weight: bold; font-size: 10px; border-left: 1px solid black !important; border-right: 1px solid black !important; }
     .cal-table th.month-col { font-weight: bold; }
     
-    /* Bordes en negrita para el contorno de cada mes */
-    .month-row-start td { border-top: 2px solid black !important; }
-    .month-row-end td { border-bottom: 2px solid black !important; }
-    .cal-table tr td:last-child { border-right: 2px solid black !important; }
+    /* Contorno original para cada mes */
+    .month-row-start td { border-top: 1px solid black !important; }
+    .month-row-end td { border-bottom: 1px solid black !important; }
+    .cal-table tr td:last-child { border-right: 1px solid black !important; }
 
     .solid-blue { background-color: #00a2e8; }
     .split-cell { position: relative; padding: 0 !important; }
@@ -251,7 +250,7 @@
                     </tr>
                 </table>
 
-                <!-- CALENDARIO 2027 COMPLETO CON MARCADO DE CONTORNO POR MES -->
+                <!-- CALENDARIO 2027 COMPLETO -->
                 <table class="cal-table" id="cal-table">
                     <tr>
                         <th class="month-col">Mes \ Día</th>

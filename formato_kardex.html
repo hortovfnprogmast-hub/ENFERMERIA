@@ -518,18 +518,13 @@
             setText('val-marca3', workerData.marca3 || '');
             setText('val-marca4', workerData.marca4 || '');
             
-            // COLOR SEGÚN TURNO
+            // COLOR SEGÚN TURNO (AZUL MATUTINO, VERDE VESPERTINO, ROJO NOCTURNO)
             let shiftColor = '#00a2e8'; // Matutino (Azul)
             if (turno.includes('VESPERTINO')) {
                 shiftColor = '#00B050'; // Verde
             } else if (turno.includes('NOCTURNO')) {
                 shiftColor = '#FF0000'; // Rojo
             }
-
-            // Pintar celdas completas
-            document.querySelectorAll('.solid-blue').forEach(c => {
-                c.style.backgroundColor = shiftColor;
-            });
 
             // MAPEO DE COLUMNAS PARA EL CALENDARIO 2027
             const dayToCol = {
@@ -566,14 +561,13 @@
                 }
             });
 
-            // PINTAR LOS TRIÁNGULOS Y ELIMINAR BORDES INTERNOS (HORIZONTALES Y VERTICALES) EN CELDAS SÓLIDAS
             const tableRows = document.querySelectorAll('#cal-table tr');
             
+            // 1. PINTAR TRIÁNGULOS EN DÍAS DE DESCANSO
             for (let i = 2; i < tableRows.length; i += 2) {
                 const topRow = tableRows[i - 1];
                 const row = tableRows[i];
 
-                // 1. Pintar triángulos en celdas de días normales
                 for (let c = 0; c < row.cells.length; c++) {
                     const cell = row.cells[c];
                     const topCell = topRow ? topRow.cells[c + 1] : null;
@@ -582,51 +576,91 @@
                     cell.classList.remove('split-cell');
                     cell.innerHTML = '';
 
-                    const isSolidBlue = cell.classList.contains('solid-blue') || 
-                                        cell.style.backgroundColor || 
-                                        (topCell && (topCell.classList.contains('solid-blue') || topCell.style.backgroundColor));
+                    const isSolid = cell.classList.contains('solid-blue') || 
+                                    cell.style.backgroundColor || 
+                                    (topCell && (topCell.classList.contains('solid-blue') || topCell.style.backgroundColor));
 
-                    if (targetCols.has(colNum) && !isSolidBlue) {
+                    if (targetCols.has(colNum) && !isSolid) {
                         cell.classList.add('split-cell');
                         cell.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"><polygon points="0,0 0,100 100,100" fill="${shiftColor}"/></svg>`;
                     }
                 }
+            }
 
-                // 2. Limpiar bordes internos (tanto verticales como horizontales) entre celdas sólidas adyacentes
-                const isSolid = (cell) => {
-                    if (!cell) return false;
-                    return cell.classList.contains('solid-blue') || (cell.style.backgroundColor && cell.style.backgroundColor !== '');
-                };
+            // FUNCIÓN AUXILIAR PARA VERIFICAR CELDAS SÓLIDAS
+            const isSolidCell = (m, rowType, d) => {
+                if (d < 0 || d > 36 || m < 1 || m > 12) return false;
+                const trIndex = (m - 1) * 2 + (rowType === 'top' ? 1 : 2);
+                const tr = tableRows[trIndex];
+                if (!tr) return false;
+                const cell = rowType === 'top' ? tr.cells[d + 1] : tr.cells[d];
+                if (!cell) return false;
+                return cell.classList.contains('solid-blue') || (cell.style.backgroundColor && cell.style.backgroundColor !== '');
+            };
+
+            // 2. APLICAR COLOR Y SOMBRA INTERNA (INSET) EXCLUSIVAMENTE EN UNIONES INTERNAS
+            for (let m = 1; m <= 12; m++) {
+                const topRow = tableRows[(m - 1) * 2 + 1];
+                const row = tableRows[(m - 1) * 2 + 2];
 
                 for (let d = 0; d < 37; d++) {
+                    // Fila superior del mes (topRow)
                     const topCell = topRow ? topRow.cells[d + 1] : null;
-                    const bottomCell = row.cells[d];
+                    if (topCell && (topCell.classList.contains('solid-blue') || topCell.style.backgroundColor)) {
+                        const hasTop = m > 1 && isSolidCell(m - 1, 'bottom', d);
+                        const hasBottom = isSolidCell(m, 'bottom', d);
+                        const hasLeft = isSolidCell(m, 'top', d - 1);
+                        const hasRight = isSolidCell(m, 'top', d + 1);
 
-                    const topSolid = isSolid(topCell);
-                    const bottomSolid = isSolid(bottomCell);
+                        let shadows = [];
+                        if (hasTop) shadows.push('inset 0 2px 0 0 ' + shiftColor);
+                        if (hasBottom) shadows.push('inset 0 -2px 0 0 ' + shiftColor);
+                        if (hasLeft) shadows.push('inset 2px 0 0 0 ' + shiftColor);
+                        if (hasRight) shadows.push('inset -2px 0 0 0 ' + shiftColor);
 
-                    // Borde horizontal entre fila superior e inferior del mes
-                    if (topSolid && bottomSolid) {
-                        topCell.style.borderBottom = 'none';
-                        bottomCell.style.borderTop = 'none';
+                        topCell.style.backgroundColor = shiftColor;
+                        topCell.style.boxShadow = shadows.length > 0 ? shadows.join(', ') : 'none';
+                        if (hasBottom) topCell.style.borderBottom = 'none';
                     }
 
-                    // Bordes verticales entre celdas adyacentes en la fila superior (topRow)
-                    if (topSolid && d > 0) {
-                        const leftTopCell = topRow.cells[d]; 
-                        if (isSolid(leftTopCell)) {
-                            topCell.style.borderLeft = 'none';
-                            leftTopCell.style.borderRight = 'none';
-                        }
-                    }
+                    // Fila inferior del mes (row)
+                    const bottomCell = row ? row.cells[d] : null;
+                    if (bottomCell && (bottomCell.classList.contains('solid-blue') || bottomCell.style.backgroundColor)) {
+                        const hasTop = isSolidCell(m, 'top', d);
+                        const hasBottom = m < 12 && isSolidCell(m + 1, 'top', d);
+                        const hasLeft = isSolidCell(m, 'bottom', d - 1);
+                        const hasRight = isSolidCell(m, 'bottom', d + 1);
 
-                    // Bordes verticales entre celdas adyacentes en la fila inferior (row)
-                    if (bottomSolid && d > 0) {
-                        const leftBottomCell = row.cells[d - 1];
-                        if (isSolid(leftBottomCell)) {
-                            bottomCell.style.borderLeft = 'none';
-                            leftBottomCell.style.borderRight = 'none';
-                        }
+                        let shadows = [];
+                        if (hasTop) shadows.push('inset 0 2px 0 0 ' + shiftColor);
+                        if (hasBottom) shadows.push('inset 0 -2px 0 0 ' + shiftColor);
+                        if (hasLeft) shadows.push('inset 2px 0 0 0 ' + shiftColor);
+                        if (hasRight) shadows.push('inset -2px 0 0 0 ' + shiftColor);
+
+                        bottomCell.style.backgroundColor = shiftColor;
+                        bottomCell.style.boxShadow = shadows.length > 0 ? shadows.join(', ') : 'none';
+                        if (hasTop) bottomCell.style.borderTop = 'none';
+                    }
+                }
+            }
+
+            // 3. ELIMINAR BORDES VERTICALES ENTRE CELDAS ADYACENTES SÓLIDAS
+            for (let m = 1; m <= 12; m++) {
+                const topRow = tableRows[(m - 1) * 2 + 1];
+                const row = tableRows[(m - 1) * 2 + 2];
+
+                for (let d = 0; d < 37; d++) {
+                    if (d > 0 && isSolidCell(m, 'top', d) && isSolidCell(m, 'top', d - 1)) {
+                        const c1 = topRow.cells[d];
+                        const c2 = topRow.cells[d + 1];
+                        if (c1) c1.style.borderRight = 'none';
+                        if (c2) c2.style.borderLeft = 'none';
+                    }
+                    if (d > 0 && isSolidCell(m, 'bottom', d) && isSolidCell(m, 'bottom', d - 1)) {
+                        const c1 = row.cells[d - 1];
+                        const c2 = row.cells[d];
+                        if (c1) c1.style.borderRight = 'none';
+                        if (c2) c2.style.borderLeft = 'none';
                     }
                 }
             }

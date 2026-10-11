@@ -87,21 +87,35 @@
     .bg-cyan { background-color: #00ffff; }
     .bg-pink { background-color: #ff99ff; }
 
-    /* CALENDARIO */
-    .cal-table { width: 100%; border-collapse: collapse; border: 2px solid black; table-layout: fixed; }
-    .cal-table th, .cal-table td { border: 1px solid black; padding: 0; height: 18px; font-size: 10px; box-sizing: border-box; text-align: center; }
-    .cal-table th { font-weight: bold; background-color: white; }
-    .month-col { width: 7.5%; font-weight: bold; }
+    /* CALENDARIO CON CONTORNO EN NEGRITA POR MES Y CUADRÍCULA INTERNA DELGADA */
+    .cal-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid black; }
+    .cal-table th, .cal-table td { 
+        border: 1px solid #777; /* Línea interna delgada */
+        padding: 0; 
+        height: 18px; 
+        font-size: 10px; 
+        box-sizing: border-box; 
+        text-align: center; 
+    }
+    /* Encabezado de los días de la semana sin negrita */
+    .cal-table th { font-weight: normal; background-color: white; border: 1px solid black; border-bottom: 2px solid black; }
     
+    /* Mes/Día y meses un 15% más grandes y en negrita */
+    .month-col { width: 7.5%; font-weight: bold; font-size: 11.5px; border-left: 2px solid black !important; border-right: 2px solid black !important; }
+    .cal-table th.month-col { font-weight: bold; }
+    
+    /* Bordes en negrita para el contorno de cada mes */
+    .month-row-start td { border-top: 2px solid black !important; }
+    .month-row-end td { border-bottom: 2px solid black !important; }
+    .cal-table tr td:last-child { border-right: 2px solid black !important; }
+
     .solid-blue { background-color: #00a2e8; }
-    
-    /* REGLA CLAVE: La celda dividida se posiciona relativo para el SVG inline */
     .split-cell { position: relative; padding: 0 !important; }
 
-    /* FIRMAS */
+    /* FIRMAS CON TEXTOS EN NEGRITAS */
     .signatures { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; padding: 0 40px; }
     .sig-block { width: 30%; font-weight: bold; font-size: 11px; display: flex; flex-direction: column; justify-content: flex-end; }
-    .sig-line { border-top: 1px solid black; margin-top: 5px; padding-top: 5px; font-weight: normal; }
+    .sig-line { border-top: 1px solid black; margin-top: 5px; padding-top: 5px; font-weight: bold; }
     .data-text { font-weight: bold; font-size: 11px; display: block; margin-top: 2px; }
 
     /* BOTONES FLOTANTES */
@@ -210,7 +224,7 @@
                 <!-- TABLA 2: SERVICIOS Y ROLES -->
                 <table class="data-table">
                     <colgroup>
-                        <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;"> <col style="width: 9.9%;">   
+                        <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;"> <col style="width: 9.9%;">    
                         <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 4.505%;"> 
                     </colgroup>
                     <tr style="font-size: 10px; font-weight: normal; text-align: center;">
@@ -237,118 +251,118 @@
                     </tr>
                 </table>
 
-                <!-- CALENDARIO 2027 COMPLETO (12 MESES) -->
+                <!-- CALENDARIO 2027 COMPLETO CON MARCADO DE CONTORNO POR MES -->
                 <table class="cal-table" id="cal-table">
                     <tr>
                         <th class="month-col">Mes \ Día</th>
                         <th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th>
                     </tr>
                     
-                    <!-- Enero (1=Viernes) -> 3 blue, 31 días, 3 blue -->
-                    <tr>
+                    <!-- Enero -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Enero</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Febrero (1=Lunes) -> 6 blue, 28 días, 3 blue -->
-                    <tr>
+                    <!-- Febrero -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Febrero</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Marzo (1=Lunes) -> 6 blue, 31 días, 0 blue -->
-                    <tr>
+                    <!-- Marzo -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Marzo</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
 
-                    <!-- Abril (1=Jueves) -> 2 blue, 30 días, 5 blue -->
-                    <tr>
+                    <!-- Abril -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Abril</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Mayo (1=Sábado) -> 4 blue, 31 días, 2 blue -->
-                    <tr>
+                    <!-- Mayo -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Mayo</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Junio (1=Martes) -> 0 blue, 30 días, 7 blue -->
-                    <tr>
+                    <!-- Junio -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Junio</td>
                         <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Julio (1=Jueves) -> 2 blue, 31 días, 4 blue -->
-                    <tr>
+                    <!-- Julio -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Julio</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Agosto (1=Domingo) -> 5 blue, 31 días, 1 blue -->
-                    <tr>
+                    <!-- Agosto -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Agosto</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Septiembre (1=Miércoles) -> 1 blue, 30 días, 6 blue -->
-                    <tr>
+                    <!-- Septiembre -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Septiembre</td>
                         <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Octubre (1=Viernes) -> 3 blue, 31 días, 3 blue -->
-                    <tr>
+                    <!-- Octubre -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Octubre</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Noviembre (1=Lunes) -> 6 blue, 30 días, 1 blue -->
-                    <tr>
+                    <!-- Noviembre -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Noviembre</td>
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
                     </tr>
 
-                    <!-- Diciembre (1=Miércoles) -> 1 blue, 31 días, 5 blue -->
-                    <tr>
+                    <!-- Diciembre -->
+                    <tr class="month-row-start">
                         <td rowspan="2" class="month-col">Diciembre</td>
                         <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
-                    <tr>
+                    <tr class="month-row-end">
                         <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                 </table>
@@ -408,9 +422,12 @@
             if(link) link.classList.add('active');
         });
 
-        document.getElementById('toggle-menu').addEventListener('click', () => { 
-            document.getElementById('sidebar').classList.toggle('open'); 
-        });
+        const toggleBtn = document.getElementById('toggle-menu');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => { 
+                document.getElementById('sidebar').classList.toggle('open'); 
+            });
+        }
 
         // Cargar datos del trabajador y datos generales de Firebase simultáneamente
         Promise.all([
@@ -438,7 +455,7 @@
         });
 
         function applyData(workerData, generalData) {
-            loadedData = { ...workerData, ...generalData }; // Mezclamos por si se usa en el PDF
+            loadedData = { ...workerData, ...generalData }; 
             
             const setText = (id, val) => {
                 const el = document.getElementById(id);
@@ -536,13 +553,14 @@
                 }
             });
 
-            // PINTAR LOS TRIÁNGULOS EN TODOS LOS 12 MESES
+            // PINTAR LOS TRIÁNGULOS Y ELIMINAR BORDES INTERNOS (HORIZONTALES Y VERTICALES) EN CELDAS SÓLIDAS
             const tableRows = document.querySelectorAll('#cal-table tr');
             
             for (let i = 2; i < tableRows.length; i += 2) {
-                const row = tableRows[i];
                 const topRow = tableRows[i - 1];
+                const row = tableRows[i];
 
+                // 1. Pintar triángulos en celdas de días normales
                 for (let c = 0; c < row.cells.length; c++) {
                     const cell = row.cells[c];
                     const topCell = topRow ? topRow.cells[c + 1] : null;
@@ -558,6 +576,44 @@
                     if (targetCols.has(colNum) && !isSolidBlue) {
                         cell.classList.add('split-cell');
                         cell.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"><polygon points="0,0 0,100 100,100" fill="${shiftColor}"/></svg>`;
+                    }
+                }
+
+                // 2. Limpiar bordes internos (tanto verticales como horizontales) entre celdas sólidas adyacentes
+                const isSolid = (cell) => {
+                    if (!cell) return false;
+                    return cell.classList.contains('solid-blue') || (cell.style.backgroundColor && cell.style.backgroundColor !== '');
+                };
+
+                for (let d = 0; d < 37; d++) {
+                    const topCell = topRow ? topRow.cells[d + 1] : null;
+                    const bottomCell = row.cells[d];
+
+                    const topSolid = isSolid(topCell);
+                    const bottomSolid = isSolid(bottomCell);
+
+                    // Borde horizontal entre fila superior e inferior del mes
+                    if (topSolid && bottomSolid) {
+                        topCell.style.borderBottom = 'none';
+                        bottomCell.style.borderTop = 'none';
+                    }
+
+                    // Bordes verticales entre celdas adyacentes en la fila superior (topRow)
+                    if (topSolid && d > 0) {
+                        const leftTopCell = topRow.cells[d]; 
+                        if (isSolid(leftTopCell)) {
+                            topCell.style.borderLeft = 'none';
+                            leftTopCell.style.borderRight = 'none';
+                        }
+                    }
+
+                    // Bordes verticales entre celdas adyacentes en la fila inferior (row)
+                    if (bottomSolid && d > 0) {
+                        const leftBottomCell = row.cells[d - 1];
+                        if (isSolid(leftBottomCell)) {
+                            bottomCell.style.borderLeft = 'none';
+                            leftBottomCell.style.borderRight = 'none';
+                        }
                     }
                 }
             }

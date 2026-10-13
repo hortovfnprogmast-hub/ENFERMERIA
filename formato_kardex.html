@@ -682,41 +682,34 @@
 
         const element = document.getElementById('kardex-document');
         
-        // Guardamos el ancho original para restaurarlo después
+        // Guardamos el ancho original y forzamos el tamaño de computadora por un momento
         const originalWidth = element.style.width;
-        // Forzamos el ancho al tamaño de hoja carta horizontal
         element.style.width = '1150px';
 
         html2canvas(element, {
             scale: 2, 
             useCORS: true,
             backgroundColor: '#ffffff',
-            windowWidth: 1200 // Engañamos a la librería para que renderice como si fuera pantalla grande
+            windowWidth: 1200 // Le hacemos creer que es una pantalla grande
         }).then(canvas => {
-            // Restauramos el ancho original inmediatamente
+            // Restauramos el ancho original inmediatamente para que en celular se vea normal otra vez
             element.style.width = originalWidth;
 
             const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('l', 'pt', 'letter'); // 'l' = landscape, 'pt' = puntos, 'letter' = tamaño carta
+            const pdf = new jsPDF('l', 'pt', 'letter');
 
-            const pdfWidth = pdf.internal.pageSize.getWidth(); // Ancho de la hoja
-            const pdfHeight = pdf.internal.pageSize.getHeight(); // Alto de la hoja
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
 
-            // CALCULAR DIMENSIONES FORZANDO EL ANCHO COMPLETO
-            let finalWidth = pdfWidth;
-            let finalHeight = (canvas.height * pdfWidth) / canvas.width;
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
 
-            // Si por alguna razón la altura excede la hoja, limitamos por altura (caso extremo)
-            if (finalHeight > pdfHeight) {
-                finalHeight = pdfHeight;
-                finalWidth = (canvas.width * pdfHeight) / canvas.height;
-            }
+            // Usamos EXACTAMENTE tus matemáticas originales que te gustaban
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = (pdfHeight - imgHeight * ratio) / 2;
 
-            // Centramos en caso de que sobre un poco de espacio vertical
-            const imgX = (pdfWidth - finalWidth) / 2;
-            const imgY = (pdfHeight - finalHeight) / 2;
-
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, finalWidth, finalHeight);
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
 
             let filename = 'Kardex_Vacacional_2027.pdf';
             if (loadedData && loadedData.nombre) {

@@ -690,31 +690,45 @@ document.getElementById('btnDescargar').addEventListener('click', function() {
     element.style.width = '1150px';
     element.style.maxWidth = 'none';
 
-    html2canvas(element, {
+html2canvas(element, {
         scale: 2, 
         useCORS: true,
         backgroundColor: '#ffffff',
-        windowWidth: 1150 // Forzar el ancho virtual del viewport de renderizado
+        windowWidth: 1150
     }).then(canvas => {
-        // 2. Restaurar estilos originales del elemento en pantalla
+        // Restaurar estilos originales del elemento en pantalla
         element.style.width = originalWidth;
         element.style.maxWidth = originalMaxWidth;
 
         const { jsPDF } = window.jspdf;
-        // Se crea el PDF explícitamente en formato horizontal ('l') tamaño 'letter'
+        // Crear PDF en formato horizontal ('l'), puntos ('pt'), tamaño 'letter'
         const pdf = new jsPDF('l', 'pt', 'letter');
 
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const pdfWidth = pdf.internal.pageSize.getWidth();   // Ancho total de la hoja horizontal (~792 pt)
+        const pdfHeight = pdf.internal.pageSize.getHeight(); // Alto total de la hoja horizontal (~612 pt)
 
         const imgWidth = canvas.width;
         const imgHeight = canvas.height;
 
-        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-        const imgX = (pdfWidth - imgWidth * ratio) / 2;
-        const imgY = (pdfHeight - imgHeight * ratio) / 2;
+        // Ajustar el ancho del PDF con un pequeño margen (ej. 20 pt por lado, total 40 pt)
+        const margin = 20;
+        const availableWidth = pdfWidth - (margin * 2);
+        
+        // Calcular la altura proporcional en base al ancho disponible
+        const renderHeight = (imgHeight * availableWidth) / imgWidth;
 
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+        // Centrar verticalmente si sobra espacio, o posicionar desde el margen superior
+        const renderX = margin;
+        const renderY = (pdfHeight - renderHeight) / 2;
+
+        pdf.addImage(
+            canvas.toDataURL('image/png'), 
+            'PNG', 
+            renderX, 
+            renderY > margin ? renderY : margin, 
+            availableWidth, 
+            renderHeight
+        );
 
         let filename = 'Kardex_Vacacional_2027.pdf';
         if (loadedData && loadedData.nombre) {
@@ -727,7 +741,6 @@ document.getElementById('btnDescargar').addEventListener('click', function() {
         button.disabled = false;
     }).catch(err => {
         console.error(err);
-        // Restaurar estilos en caso de error
         element.style.width = originalWidth;
         element.style.maxWidth = originalMaxWidth;
         

@@ -58,11 +58,11 @@
     .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
     .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
 
-    /* ESTILOS DEL KARDEX CON ANCHO FIJO DE ESCRITORIO */
+    /* ESTILOS DEL KARDEX */
     .kardex-wrapper { display: flex; justify-content: center; padding-bottom: 80px; overflow-x: auto; }
     .container {
-        width: 1150px !important;
-        min-width: 1150px !important;
+        width: 100%;
+        max-width: 1150px;
         background-color: white;
         padding: 20px;
         box-sizing: border-box;
@@ -673,43 +673,73 @@
         }
     });
 
-    // DESCARGA DE PDF DIRECTA Y CONSISTENTE DESDE EL HTML
+    // DESCARGA DE PDF PERFECTA (IGUAL EN CELULAR Y COMPUTADORA)
     document.getElementById('btnDescargar').addEventListener('click', function() {
         const button = this;
         const originalText = button.innerHTML;
         button.innerText = 'Generando...';
         button.disabled = true;
 
-        const element = document.getElementById('kardex-document');
+        const originalElem = document.getElementById('kardex-document');
 
-        const { jsPDF } = window.jspdf;
-        
-        const pdf = new jsPDF({
-            orientation: 'l',
-            unit: 'pt',
-            format: 'letter',
-            compress: true
-        });
+        // 1. Crear un contenedor clonado en background invisible
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'absolute';
+        wrapper.style.top = '-9999px';
+        wrapper.style.left = '-9999px';
+        wrapper.style.width = '1150px';
 
-        pdf.html(element, {
-            callback: function (doc) {
-                let filename = 'Kardex_Vacacional_2027.pdf';
-                if (loadedData && loadedData.nombre) {
-                    filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
-                }
-                doc.save(filename);
+        const clone = originalElem.cloneNode(true);
+        clone.style.width = '1150px';
+        clone.style.minWidth = '1150px';
+        clone.style.maxWidth = '1150px';
 
-                button.innerHTML = originalText;
-                button.disabled = false;
-            },
-            margin: [10, 10, 10, 10],
-            autoPaging: 'text',
-            windowWidth: 1150,
-            html2canvas: {
-                scale: 0.65,
-                useCORS: true,
-                letterRendering: true
+        wrapper.appendChild(clone);
+        document.body.appendChild(wrapper);
+
+        // 2. Capturar con html2canvas asegurando la escala exacta de computadora
+        html2canvas(clone, {
+            scale: 3, 
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            windowWidth: 1150
+        }).then(canvas => {
+            // Eliminar el clon
+            document.body.removeChild(wrapper);
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('l', 'pt', 'letter');
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+
+            // 3. Proporción simétrica para hoja horizontal exacta
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = (pdfHeight - imgHeight * ratio) / 2;
+
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+
+            let filename = 'Kardex_Vacacional_2027.pdf';
+            if (loadedData && loadedData.nombre) {
+                filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
             }
+
+            pdf.save(filename);
+
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }).catch(err => {
+            console.error(err);
+            if (document.body.contains(wrapper)) {
+                document.body.removeChild(wrapper);
+            }
+            alert("Error al generar PDF");
+            button.innerHTML = originalText;
+            button.disabled = false;
         });
     });
 </script>

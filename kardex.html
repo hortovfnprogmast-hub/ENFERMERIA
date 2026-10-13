@@ -29,8 +29,14 @@
         .user-initial { width: 35px; height: 35px; border-radius: 50%; background-color: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
         .main-layout { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 260px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; transition: transform 0.3s ease; display: flex; flex-direction: column; }
-        @media (max-width: 768px) { .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; } .sidebar.open { transform: translateX(0); } .header-title { display: none; } }
+        
+        /* CAMBIO: Añadido flex-shrink: 0 y modificado el media query a 992px con top: 60px */
+        .sidebar { width: 260px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; transition: transform 0.3s ease; display: flex; flex-direction: column; flex-shrink: 0; }
+        @media (max-width: 992px) { 
+            .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; top: 60px; } 
+            .sidebar.open { transform: translateX(0); } 
+            .header-title { display: none; } 
+        }
 
         .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .container { max-width: 1050px; margin: 0 auto; padding-bottom: 50px; }
@@ -55,7 +61,8 @@
         .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; }
         .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; }
         
-        @media (max-width: 640px) { 
+        /* CAMBIO: Aumentado el punto de quiebre de 640px a 768px para apilar columnas */
+        @media (max-width: 768px) { 
             .grid-2, .grid-3, .grid-4, .grid-2-1 { grid-template-columns: 1fr; } 
         }
 
@@ -334,6 +341,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // CAMBIO: Se agrega aquí para que el ícono del botón menú cargue instantáneamente
+            lucide.createIcons();
+
             populateAntiguedad('ant_anios', 50);
             populateAntiguedad('ant_quincenas', 24);
             populateAntiguedad('ant_dias', 31);

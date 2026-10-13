@@ -673,7 +673,7 @@
         }
     });
 
-// DESCARGA DE PDF DIRECTA
+// DESCARGA DE PDF CON CALIDAD VISUAL EXACTA (HTML2CANVAS + JSPD)
 document.getElementById('btnDescargar').addEventListener('click', function() {
     const button = this;
     const originalText = button.innerHTML;
@@ -682,27 +682,57 @@ document.getElementById('btnDescargar').addEventListener('click', function() {
 
     const element = document.getElementById('kardex-document');
 
-    const { jsPDF } = window.jspdf;
+    // 1. Forzar el ancho exacto de escritorio en el DOM para que el celular renderice igual a la PC
+    const originalWidth = element.style.width;
+    const originalMaxWidth = element.style.maxWidth;
     
-    // Crear instancia en formato horizontal ('l'), puntos ('pt'), tamaño carta ('letter')
-    const pdf = new jsPDF('l', 'pt', 'letter');
+    element.style.width = '1150px';
+    element.style.maxWidth = 'none';
 
-    // Usar el motor nativo de jsPDF para exportar el HTML directamente
-    pdf.html(element, {
-        callback: function (doc) {
-            let filename = 'Kardex_Vacacional_2027.pdf';
-            if (loadedData && loadedData.nombre) {
-                filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
-            }
-            doc.save(filename);
-            
-            button.innerHTML = originalText;
-            button.disabled = false;
-        },
-        x: 15,         // Margen izquierdo en el PDF
-        y: 15,         // Margen superior en el PDF
-        width: 762,    // Ancho útil calculado para hoja carta horizontal (~792pt - márgenes)
-        windowWidth: 1150 // Fuerza al celular a renderizar como si fuera una PC de escritorio
+    html2canvas(element, {
+        scale: 2, 
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        windowWidth: 1150
+    }).then(canvas => {
+        // 2. Restaurar los estilos originales en la pantalla del usuario inmediatamente
+        element.style.width = originalWidth;
+        element.style.maxWidth = originalMaxWidth;
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('l', 'pt', 'letter');
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+
+        // 3. Aplicar la proporción simétrica exacta de la Imagen 2
+        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+        const imgX = (pdfWidth - imgWidth * ratio) / 2;
+        const imgY = (pdfHeight - imgHeight * ratio) / 2;
+
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+
+        let filename = 'Kardex_Vacacional_2027.pdf';
+        if (loadedData && loadedData.nombre) {
+            filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
+        }
+
+        pdf.save(filename);
+
+        button.innerHTML = originalText;
+        button.disabled = false;
+    }).catch(err => {
+        console.error(err);
+        // Restaurar estilos en caso de error
+        element.style.width = originalWidth;
+        element.style.maxWidth = originalMaxWidth;
+        
+        alert("Error al generar PDF");
+        button.innerHTML = originalText;
+        button.disabled = false;
     });
 });
 </script>

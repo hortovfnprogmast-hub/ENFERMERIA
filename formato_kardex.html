@@ -673,51 +673,69 @@
         }
     });
 
-    // DESCARGA DE PDF
-    document.getElementById('btnDescargar').addEventListener('click', function() {
-        const button = this;
-        const originalText = button.innerHTML;
-        button.innerText = 'Generando...';
-        button.disabled = true;
+// DESCARGA DE PDF
+document.getElementById('btnDescargar').addEventListener('click', function() {
+    const button = this;
+    const originalText = button.innerHTML;
+    button.innerText = 'Generando...';
+    button.disabled = true;
 
-        const element = document.getElementById('kardex-document');
+    const element = document.getElementById('kardex-document');
 
-        html2canvas(element, {
-            scale: 2, 
-            useCORS: true,
-            backgroundColor: '#ffffff'
-        }).then(canvas => {
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('l', 'pt', 'letter');
+    // 1. Guardar estilos originales para móvil y forzar ancho de escritorio
+    const originalWidth = element.style.width;
+    const originalMaxWidth = element.style.maxWidth;
+    const originalTransform = element.style.transform;
+    
+    element.style.width = '1150px';
+    element.style.maxWidth = 'none';
 
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+    html2canvas(element, {
+        scale: 2, 
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        windowWidth: 1150 // Forzar el ancho virtual del viewport de renderizado
+    }).then(canvas => {
+        // 2. Restaurar estilos originales del elemento en pantalla
+        element.style.width = originalWidth;
+        element.style.maxWidth = originalMaxWidth;
 
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
+        const { jsPDF } = window.jspdf;
+        // Se crea el PDF explícitamente en formato horizontal ('l') tamaño 'letter'
+        const pdf = new jsPDF('l', 'pt', 'letter');
 
-            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-            const imgX = (pdfWidth - imgWidth * ratio) / 2;
-            const imgY = (pdfHeight - imgHeight * ratio) / 2;
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
 
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
 
-            let filename = 'Kardex_Vacacional_2027.pdf';
-            if (loadedData && loadedData.nombre) {
-                filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
-            }
+        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+        const imgX = (pdfWidth - imgWidth * ratio) / 2;
+        const imgY = (pdfHeight - imgHeight * ratio) / 2;
 
-            pdf.save(filename);
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
 
-            button.innerHTML = originalText;
-            button.disabled = false;
-        }).catch(err => {
-            console.error(err);
-            alert("Error al generar PDF");
-            button.innerHTML = originalText;
-            button.disabled = false;
-        });
+        let filename = 'Kardex_Vacacional_2027.pdf';
+        if (loadedData && loadedData.nombre) {
+            filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
+        }
+
+        pdf.save(filename);
+
+        button.innerHTML = originalText;
+        button.disabled = false;
+    }).catch(err => {
+        console.error(err);
+        // Restaurar estilos en caso de error
+        element.style.width = originalWidth;
+        element.style.maxWidth = originalMaxWidth;
+        
+        alert("Error al generar PDF");
+        button.innerHTML = originalText;
+        button.disabled = false;
     });
+});
 </script>
 
 </body>

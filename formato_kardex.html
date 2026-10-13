@@ -699,17 +699,24 @@
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('l', 'pt', 'letter'); // 'l' = landscape, 'pt' = puntos, 'letter' = tamaño carta
 
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const pdfWidth = pdf.internal.pageSize.getWidth(); // Ancho de la hoja
+            const pdfHeight = pdf.internal.pageSize.getHeight(); // Alto de la hoja
 
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
+            // CALCULAR DIMENSIONES FORZANDO EL ANCHO COMPLETO
+            let finalWidth = pdfWidth;
+            let finalHeight = (canvas.height * pdfWidth) / canvas.width;
 
-            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-            const imgX = (pdfWidth - imgWidth * ratio) / 2;
-            const imgY = (pdfHeight - imgHeight * ratio) / 2;
+            // Si por alguna razón la altura excede la hoja, limitamos por altura (caso extremo)
+            if (finalHeight > pdfHeight) {
+                finalHeight = pdfHeight;
+                finalWidth = (canvas.width * pdfHeight) / canvas.height;
+            }
 
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+            // Centramos en caso de que sobre un poco de espacio vertical
+            const imgX = (pdfWidth - finalWidth) / 2;
+            const imgY = (pdfHeight - finalHeight) / 2;
+
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, finalWidth, finalHeight);
 
             let filename = 'Kardex_Vacacional_2027.pdf';
             if (loadedData && loadedData.nombre) {

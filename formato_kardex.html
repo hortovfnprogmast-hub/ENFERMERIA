@@ -682,18 +682,26 @@
 
         const element = document.getElementById('kardex-document');
         
-        // Guardamos el ancho original y forzamos el tamaño de computadora por un momento
+        // 1. Guardamos los estilos originales
         const originalWidth = element.style.width;
+        const originalMaxWidth = element.style.maxWidth;
+        
+        // 2. Forzamos el ancho de computadora y quitamos límites
+        element.style.maxWidth = 'none';
         element.style.width = '1150px';
+        
+        // 3. TRUCO: Forzamos al navegador a recalcular el diseño inmediatamente
+        void element.offsetWidth;
 
         html2canvas(element, {
             scale: 2, 
             useCORS: true,
             backgroundColor: '#ffffff',
-            windowWidth: 1200 // Le hacemos creer que es una pantalla grande
+            windowWidth: 1200
         }).then(canvas => {
-            // Restauramos el ancho original inmediatamente para que en celular se vea normal otra vez
+            // Restauramos los estilos originales inmediatamente
             element.style.width = originalWidth;
+            element.style.maxWidth = originalMaxWidth;
 
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('l', 'pt', 'letter');
@@ -704,7 +712,7 @@
             const imgWidth = canvas.width;
             const imgHeight = canvas.height;
 
-            // Usamos EXACTAMENTE tus matemáticas originales que te gustaban
+            // Las matemáticas EXACTAS que te gustaban
             const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
             const imgX = (pdfWidth - imgWidth * ratio) / 2;
             const imgY = (pdfHeight - imgHeight * ratio) / 2;
@@ -724,6 +732,7 @@
             console.error(err);
             // Aseguramos restaurar el ancho aunque haya error
             element.style.width = originalWidth;
+            element.style.maxWidth = originalMaxWidth;
             alert("Error al generar PDF");
             button.innerHTML = originalText;
             button.disabled = false;

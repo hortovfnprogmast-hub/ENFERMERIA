@@ -55,6 +55,9 @@
         .form-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
         .form-input, .form-select { width: 100%; padding: 12px 15px; background-color: var(--bg-color); border: 1px solid transparent; border-radius: 10px; font-size: 14px; color: var(--text-main); box-sizing: border-box; outline: none; transition: all 0.2s; font-family: inherit; }
         .form-input:focus, .form-select:focus { background-color: white; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(38,63,164,0.1); }
+        
+        /* ESTILO PARA CAMPOS DESHABILITADOS */
+        .form-input:disabled, .form-select:disabled { background-color: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
@@ -275,7 +278,7 @@
         const nombreUsuario = localStorage.getItem('nombre') || 'Trabajador';
         document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
 
-        // Llenar dinámicamente las listas desplegables
+        // Llenar dinámicamente las listas desplegables con "-" al inicio
         function populateAntiguedad(id, max) {
             const sel = document.getElementById(id);
             for(let i=0; i<=max; i++) {
@@ -290,22 +293,59 @@
         }
 
         function populateRoles() {
-            for(let i=1; i<=24; i++) {
-                ['rol1', 'rol2', 'rol3', 'rol4'].forEach(id => {
-                    document.getElementById(id).innerHTML += `<option value="${i}">${i}</option>`;
-                });
-            }
+            ['rol1', 'rol2', 'rol3', 'rol4'].forEach(id => {
+                let sel = document.getElementById(id);
+                // Agregamos el guion por defecto
+                sel.innerHTML = '<option value="-">-</option>';
+                for(let i=1; i<=24; i++) {
+                    sel.innerHTML += `<option value="${i}">${i}</option>`;
+                }
+                sel.value = '-'; // Seleccionamos el guion
+            });
         }
 
         function populateMarcas() {
             const marcaFracs = ["0/7", "1/7", "2/7", "3/7", "4/7", "5/7", "6/7", "7/7", "8/7", "9/7"];
             ['marca1', 'marca2', 'marca3', 'marca4'].forEach(id => {
                 const sel = document.getElementById(id);
+                // Agregamos el guion por defecto
+                sel.innerHTML = '<option value="-">-</option>';
                 for(let i=0; i<=9; i++) {
                     sel.innerHTML += `<option value="${i}">${i}</option>`;
                 }
                 marcaFracs.forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`);
+                sel.value = '-'; // Seleccionamos el guion
             });
+        }
+
+        // FUNCIÓN PARA VALIDAR Y HABILITAR/DESHABILITAR EN CASCADA
+        function validarCascadaRolesMarcas() {
+            const rol1 = document.getElementById('rol1');
+            const marca1 = document.getElementById('marca1');
+            const rol2 = document.getElementById('rol2');
+            const marca2 = document.getElementById('marca2');
+            const rol3 = document.getElementById('rol3');
+            const marca3 = document.getElementById('marca3');
+            const rol4 = document.getElementById('rol4');
+            const marca4 = document.getElementById('marca4');
+
+            // Nivel 1 -> Nivel 2
+            const lvl2Disabled = (rol1.value === '-' || marca1.value === '-');
+            rol2.disabled = lvl2Disabled;
+            marca2.disabled = lvl2Disabled;
+            if (lvl2Disabled) { rol2.value = '-'; marca2.value = '-'; }
+
+            // Nivel 2 -> Nivel 3
+            const lvl3Disabled = (lvl2Disabled || rol2.value === '-' || marca2.value === '-');
+            rol3.disabled = lvl3Disabled;
+            marca3.disabled = lvl3Disabled;
+            if (lvl3Disabled) { rol3.value = '-'; marca3.value = '-'; }
+
+            // Nivel 3 -> Nivel 4
+            const lvl4Disabled = (lvl3Disabled || rol3.value === '-' || marca3.value === '-');
+            rol4.disabled = lvl4Disabled;
+            marca4.disabled = lvl4Disabled;
+            if (lvl4Disabled) { rol4.value = '-'; marca4.value = '-'; }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -314,6 +354,14 @@
             populateAntiguedad('ant_dias', 31);
             populateRoles();
             populateMarcas();
+
+            // Asignar evento change para validar en cascada
+            ['rol1', 'marca1', 'rol2', 'marca2', 'rol3', 'marca3', 'rol4', 'marca4'].forEach(id => {
+                document.getElementById(id).addEventListener('change', validarCascadaRolesMarcas);
+            });
+
+            // Ejecutar la validación al cargar la página (deshabilita 2, 3 y 4 por defecto)
+            validarCascadaRolesMarcas();
 
             fetch('menu.html').then(res => res.text()).then(html => {
                 document.getElementById('sidebar').innerHTML = html;
@@ -367,7 +415,7 @@
                 db.collection('kardex').doc('datosTrabajador').set(datos)
                 .then(() => {
                     setTimeout(() => {
-                        window.location.href = 'formato_kardex.html'; // <-- REDIRECCIÓN ACTUALIZADA
+                        window.location.href = 'formato_kardex.html'; 
                     }, 500);
                 })
                 .catch(error => {
@@ -386,6 +434,15 @@
             document.getElementById('ant_anios').value = "00";
             document.getElementById('ant_quincenas').value = "00";
             document.getElementById('ant_dias').value = "00";
+            
+            // Restaurar los roles y marcas a "-" al limpiar
+            ['rol1', 'rol2', 'rol3', 'rol4', 'marca1', 'marca2', 'marca3', 'marca4'].forEach(id => {
+                document.getElementById(id).value = '-';
+            });
+            
+            // Volver a aplicar las reglas de validación
+            validarCascadaRolesMarcas();
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>

@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Formato de Rol Vacacional | Enfermería</title>
 
-<!-- FUENTES E ICONOS -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- FUENTE ROBOTO E ICONOS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
 <!-- LIBRERÍAS PARA GENERAR PDF -->
@@ -25,7 +27,7 @@
 
     body {
         margin: 0;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Roboto', sans-serif;
         background-color: var(--bg-color);
         display: flex;
         flex-direction: column;
@@ -58,7 +60,7 @@
     .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
     .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
 
-    /* ESTILOS DEL KARDEX */
+    /* ESTILOS DEL KARDEX CON ROBOTO */
     .kardex-wrapper { display: flex; justify-content: center; padding-bottom: 80px; overflow-x: auto; }
     .container {
         width: 100%;
@@ -66,7 +68,7 @@
         background-color: white;
         padding: 20px;
         box-sizing: border-box;
-        font-family: Arial, sans-serif;
+        font-family: 'Roboto', sans-serif !important;
         font-size: 11px;
     }
     
@@ -673,7 +675,7 @@
         }
     });
 
-    // DESCARGA DE PDF PERFECTA (IGUAL EN CELULAR Y COMPUTADORA)
+    // DESCARGA DE PDF IDÉNTICA EN CELULAR Y COMPUTADORA
     document.getElementById('btnDescargar').addEventListener('click', function() {
         const button = this;
         const originalText = button.innerHTML;
@@ -682,7 +684,7 @@
 
         const originalElem = document.getElementById('kardex-document');
 
-        // 1. Crear un contenedor clonado en background invisible
+        // Contenedor clonado en background invisible con ancho fijo de escritorio
         const wrapper = document.createElement('div');
         wrapper.style.position = 'absolute';
         wrapper.style.top = '-9999px';
@@ -697,14 +699,12 @@
         wrapper.appendChild(clone);
         document.body.appendChild(wrapper);
 
-        // 2. Capturar con html2canvas asegurando la escala exacta de computadora
         html2canvas(clone, {
             scale: 3, 
             useCORS: true,
             backgroundColor: '#ffffff',
             windowWidth: 1150
         }).then(canvas => {
-            // Eliminar el clon
             document.body.removeChild(wrapper);
 
             const { jsPDF } = window.jspdf;
@@ -716,7 +716,6 @@
             const imgWidth = canvas.width;
             const imgHeight = canvas.height;
 
-            // 3. Proporción simétrica para hoja horizontal exacta
             const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
             const imgX = (pdfWidth - imgWidth * ratio) / 2;
             const imgY = (pdfHeight - imgHeight * ratio) / 2;

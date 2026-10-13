@@ -319,7 +319,7 @@
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr class="month-row-end">
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
                     <!-- Junio -->
@@ -407,7 +407,7 @@
 </div>
 
 <!-- BOTONES -->
-<a href="kardex.html" class="btn-back">
+<a href="index.html" class="btn-back">
     <i data-lucide="arrow-left"></i> Regresar APP
 </a>
 
@@ -681,28 +681,12 @@
         button.disabled = true;
 
         const element = document.getElementById('kardex-document');
-        
-        // 1. Guardamos los estilos originales
-        const originalWidth = element.style.width;
-        const originalMaxWidth = element.style.maxWidth;
-        
-        // 2. Forzamos el ancho de computadora y quitamos límites
-        element.style.maxWidth = 'none';
-        element.style.width = '1150px';
-        
-        // 3. TRUCO: Forzamos al navegador a recalcular el diseño inmediatamente
-        void element.offsetWidth;
 
         html2canvas(element, {
             scale: 2, 
             useCORS: true,
-            backgroundColor: '#ffffff',
-            windowWidth: 1200
+            backgroundColor: '#ffffff'
         }).then(canvas => {
-            // Restauramos los estilos originales inmediatamente
-            element.style.width = originalWidth;
-            element.style.maxWidth = originalMaxWidth;
-
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('l', 'pt', 'letter');
 
@@ -712,7 +696,6 @@
             const imgWidth = canvas.width;
             const imgHeight = canvas.height;
 
-            // Las matemáticas EXACTAS que te gustaban
             const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
             const imgX = (pdfWidth - imgWidth * ratio) / 2;
             const imgY = (pdfHeight - imgHeight * ratio) / 2;
@@ -730,9 +713,6 @@
             button.disabled = false;
         }).catch(err => {
             console.error(err);
-            // Aseguramos restaurar el ancho aunque haya error
-            element.style.width = originalWidth;
-            element.style.maxWidth = originalMaxWidth;
             alert("Error al generar PDF");
             button.innerHTML = originalText;
             button.disabled = false;

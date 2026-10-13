@@ -673,7 +673,7 @@
         }
     });
 
-// DESCARGA DE PDF
+// DESCARGA DE PDF DIRECTA
 document.getElementById('btnDescargar').addEventListener('click', function() {
     const button = this;
     const originalText = button.innerHTML;
@@ -682,71 +682,27 @@ document.getElementById('btnDescargar').addEventListener('click', function() {
 
     const element = document.getElementById('kardex-document');
 
-    // 1. Guardar estilos originales para móvil y forzar ancho de escritorio
-    const originalWidth = element.style.width;
-    const originalMaxWidth = element.style.maxWidth;
-    const originalTransform = element.style.transform;
+    const { jsPDF } = window.jspdf;
     
-    element.style.width = '1150px';
-    element.style.maxWidth = 'none';
+    // Crear instancia en formato horizontal ('l'), puntos ('pt'), tamaño carta ('letter')
+    const pdf = new jsPDF('l', 'pt', 'letter');
 
-html2canvas(element, {
-        scale: 2, 
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        windowWidth: 1150
-    }).then(canvas => {
-        // Restaurar estilos originales del elemento en pantalla
-        element.style.width = originalWidth;
-        element.style.maxWidth = originalMaxWidth;
-
-        const { jsPDF } = window.jspdf;
-        // Crear PDF en formato horizontal ('l'), puntos ('pt'), tamaño 'letter'
-        const pdf = new jsPDF('l', 'pt', 'letter');
-
-        const pdfWidth = pdf.internal.pageSize.getWidth();   // Ancho total de la hoja horizontal (~792 pt)
-        const pdfHeight = pdf.internal.pageSize.getHeight(); // Alto total de la hoja horizontal (~612 pt)
-
-        const imgWidth = canvas.width;
-        const imgHeight = canvas.height;
-
-        // Ajustar el ancho del PDF con un pequeño margen (ej. 20 pt por lado, total 40 pt)
-        const margin = 20;
-        const availableWidth = pdfWidth - (margin * 2);
-        
-        // Calcular la altura proporcional en base al ancho disponible
-        const renderHeight = (imgHeight * availableWidth) / imgWidth;
-
-        // Centrar verticalmente si sobra espacio, o posicionar desde el margen superior
-        const renderX = margin;
-        const renderY = (pdfHeight - renderHeight) / 2;
-
-        pdf.addImage(
-            canvas.toDataURL('image/png'), 
-            'PNG', 
-            renderX, 
-            renderY > margin ? renderY : margin, 
-            availableWidth, 
-            renderHeight
-        );
-
-        let filename = 'Kardex_Vacacional_2027.pdf';
-        if (loadedData && loadedData.nombre) {
-            filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
-        }
-
-        pdf.save(filename);
-
-        button.innerHTML = originalText;
-        button.disabled = false;
-    }).catch(err => {
-        console.error(err);
-        element.style.width = originalWidth;
-        element.style.maxWidth = originalMaxWidth;
-        
-        alert("Error al generar PDF");
-        button.innerHTML = originalText;
-        button.disabled = false;
+    // Usar el motor nativo de jsPDF para exportar el HTML directamente
+    pdf.html(element, {
+        callback: function (doc) {
+            let filename = 'Kardex_Vacacional_2027.pdf';
+            if (loadedData && loadedData.nombre) {
+                filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
+            }
+            doc.save(filename);
+            
+            button.innerHTML = originalText;
+            button.disabled = false;
+        },
+        x: 15,         // Margen izquierdo en el PDF
+        y: 15,         // Margen superior en el PDF
+        width: 762,    // Ancho útil calculado para hoja carta horizontal (~792pt - márgenes)
+        windowWidth: 1150 // Fuerza al celular a renderizar como si fuera una PC de escritorio
     });
 });
 </script>

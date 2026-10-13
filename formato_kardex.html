@@ -58,11 +58,11 @@
     .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
     .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
 
-    /* ESTILOS DEL KARDEX */
-    .kardex-wrapper { display: flex; justify-content: center; padding-bottom: 80px; }
+    /* ESTILOS DEL KARDEX CON ANCHO FIJO DE ESCRITORIO */
+    .kardex-wrapper { display: flex; justify-content: center; padding-bottom: 80px; overflow-x: auto; }
     .container {
-        width: 100%;
-        max-width: 1150px;
+        width: 1150px !important;
+        min-width: 1150px !important;
         background-color: white;
         padding: 20px;
         box-sizing: border-box;
@@ -230,41 +230,41 @@
                     </tr>
                 </table>
 
-<!-- TABLA 2: SERVICIOS Y ROLES -->
-<table class="data-table">
-    <colgroup>
-        <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;"> <col style="width: 9.9%;">    
-        <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 4.505%;"> 
-    </colgroup>
-    <tr style="font-size: 10px; font-weight: normal; text-align: center;">
-        <td class="no-bottom-line">SERVICIO 1:</td>
-        <td class="no-bottom-line">SERVICIO 2:</td>
-        <td class="no-bottom-line">F. INGRESO:</td>
-        <td class="no-bottom-line">ANTIGÜEDAD:</td>
-        <td class="no-bottom-line">CONTRATACIÓN:</td>
-        <td class="no-bottom-line">PLAZA</td>
-        <td colspan="4">ROL VACACIONAL:</td>
-        <td colspan="4">MARCA DE INCLUSIÓN:</td>
-        <td class="no-bottom-line" style="padding: 2px 0; font-size: 9px;">AÑO:</td>
-    </tr>
-    <tr style="font-size: 11px; font-weight: bold; text-align: center; height: 18px;">
-        <td class="no-top-line" id="val-servicio1"></td>
-        <td class="no-top-line" id="val-servicio2">-</td>
-        <td class="no-top-line" id="val-fingreso"></td>
-        <td class="no-top-line" id="val-antiguedad"></td>
-        <td class="no-top-line" id="val-contratacion">BASE</td>
-        <td class="no-top-line" id="val-plaza"></td>
-        <td id="val-rol1" style="background-color: #C4A7FF;"></td>
-        <td id="val-rol2" style="background-color: #7DFFE6;"></td>
-        <td id="val-rol3" style="background-color: #FF99FF;"></td>
-        <td id="val-rol4" style="background-color: #A3E7FF;"></td>
-        <td id="val-marca1" style="background-color: #C4A7FF;"></td>
-        <td id="val-marca2" style="background-color: #7DFFE6;"></td>
-        <td id="val-marca3" style="background-color: #FF99FF;"></td>
-        <td id="val-marca4" style="background-color: #A3E7FF;"></td>
-        <td class="no-top-line" style="padding: 2px 0; font-size: 10px;" id="val-ano">2027</td>
-    </tr>
-</table>
+                <!-- TABLA 2: SERVICIOS Y ROLES -->
+                <table class="data-table">
+                    <colgroup>
+                        <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;"> <col style="width: 9.9%;">    
+                        <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 4.505%;"> 
+                    </colgroup>
+                    <tr style="font-size: 10px; font-weight: normal; text-align: center;">
+                        <td class="no-bottom-line">SERVICIO 1:</td>
+                        <td class="no-bottom-line">SERVICIO 2:</td>
+                        <td class="no-bottom-line">F. INGRESO:</td>
+                        <td class="no-bottom-line">ANTIGÜEDAD:</td>
+                        <td class="no-bottom-line">CONTRATACIÓN:</td>
+                        <td class="no-bottom-line">PLAZA</td>
+                        <td colspan="4">ROL VACACIONAL:</td>
+                        <td colspan="4">MARCA DE INCLUSIÓN:</td>
+                        <td class="no-bottom-line" style="padding: 2px 0; font-size: 9px;">AÑO:</td>
+                    </tr>
+                    <tr style="font-size: 11px; font-weight: bold; text-align: center; height: 18px;">
+                        <td class="no-top-line" id="val-servicio1"></td>
+                        <td class="no-top-line" id="val-servicio2">-</td>
+                        <td class="no-top-line" id="val-fingreso"></td>
+                        <td class="no-top-line" id="val-antiguedad"></td>
+                        <td class="no-top-line" id="val-contratacion">BASE</td>
+                        <td class="no-top-line" id="val-plaza"></td>
+                        <td id="val-rol1" style="background-color: #C4A7FF;"></td>
+                        <td id="val-rol2" style="background-color: #7DFFE6;"></td>
+                        <td id="val-rol3" style="background-color: #FF99FF;"></td>
+                        <td id="val-rol4" style="background-color: #A3E7FF;"></td>
+                        <td id="val-marca1" style="background-color: #C4A7FF;"></td>
+                        <td id="val-marca2" style="background-color: #7DFFE6;"></td>
+                        <td id="val-marca3" style="background-color: #FF99FF;"></td>
+                        <td id="val-marca4" style="background-color: #A3E7FF;"></td>
+                        <td class="no-top-line" style="padding: 2px 0; font-size: 10px;" id="val-ano">2027</td>
+                    </tr>
+                </table>
 
                 <!-- CALENDARIO 2027 -->
                 <table class="cal-table" id="cal-table">
@@ -673,7 +673,7 @@
         }
     });
 
-    // DESCARGA DE PDF
+    // DESCARGA DE PDF DIRECTA Y CONSISTENTE DESDE EL HTML
     document.getElementById('btnDescargar').addEventListener('click', function() {
         const button = this;
         const originalText = button.innerHTML;
@@ -682,40 +682,34 @@
 
         const element = document.getElementById('kardex-document');
 
-        html2canvas(element, {
-            scale: 2, 
-            useCORS: true,
-            backgroundColor: '#ffffff'
-        }).then(canvas => {
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('l', 'pt', 'letter');
+        const { jsPDF } = window.jspdf;
+        
+        const pdf = new jsPDF({
+            orientation: 'l',
+            unit: 'pt',
+            format: 'letter',
+            compress: true
+        });
 
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+        pdf.html(element, {
+            callback: function (doc) {
+                let filename = 'Kardex_Vacacional_2027.pdf';
+                if (loadedData && loadedData.nombre) {
+                    filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
+                }
+                doc.save(filename);
 
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
-
-            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-            const imgX = (pdfWidth - imgWidth * ratio) / 2;
-            const imgY = (pdfHeight - imgHeight * ratio) / 2;
-
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-
-            let filename = 'Kardex_Vacacional_2027.pdf';
-            if (loadedData && loadedData.nombre) {
-                filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
+                button.innerHTML = originalText;
+                button.disabled = false;
+            },
+            margin: [10, 10, 10, 10],
+            autoPaging: 'text',
+            windowWidth: 1150,
+            html2canvas: {
+                scale: 0.65,
+                useCORS: true,
+                letterRendering: true
             }
-
-            pdf.save(filename);
-
-            button.innerHTML = originalText;
-            button.disabled = false;
-        }).catch(err => {
-            console.error(err);
-            alert("Error al generar PDF");
-            button.innerHTML = originalText;
-            button.disabled = false;
         });
     });
 </script>

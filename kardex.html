@@ -1,438 +1,971 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kardex | Enfermería</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Formato de Rol Vacacional | Enfermería</title>
+
+<!-- FUENTE ROBOTO E ICONOS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<!-- LIBRERÍAS PARA GENERAR PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- LIBRERÍAS DE FIREBASE (Compat/V8) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<style>
+    :root {
+        --primary-blue: #112A49; --light-blue: #eef2ff; --bg-color: #f8fafc;
+        --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        background-color: var(--bg-color);
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    /* LORETO LAYOUT */
+    .loreto-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
+    .loreto-left { display: flex; align-items: center; gap: 15px; }
+    .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-main); }
+    .loreto-title { margin: 0; font-size: 15px; font-weight: 700; color: var(--primary-blue); }
+    .loreto-right { display: flex; align-items: center; gap: 12px; }
+    .user-initial { width: 35px; height: 35px; border-radius: 50%; background-color: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+    .main-layout { display: flex; flex: 1; overflow: hidden; }
+    .sidebar { width: 260px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; transition: transform 0.3s ease; display: flex; flex-direction: column; }
+    @media (max-width: 768px) { .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; } .sidebar.open { transform: translateX(0); } .loreto-title { display: none; } }
+
+    .sidebar-nav { padding: 15px 10px; }
+    .sidebar-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+    .sidebar-section:last-child { border-bottom: none; }
+    .sidebar .section-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 10px 15px; padding-bottom: 0; display: block; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin-bottom: 2px; transition: all 0.2s; }
+    .nav-item:hover { background-color: var(--bg-color); }
+    .nav-item.active { background-color: var(--light-blue); color: var(--primary-blue); font-weight: 700; border-left: 4px solid var(--primary-blue); }
+
+    .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .page-header { margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; max-width: 1150px; margin-left: auto; margin-right: auto; }
+    .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
+    .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
+
+    /* ESTILOS DEL KARDEX CON ROBOTO */
+    .kardex-wrapper { display: flex; justify-content: center; padding-bottom: 80px; overflow-x: auto; }
+    .container {
+        width: 100%;
+        max-width: 1150px;
+        background-color: white;
+        padding: 20px;
+        box-sizing: border-box;
+        font-family: 'Roboto', sans-serif !important;
+        font-size: 11px;
+    }
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    .container .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .container .header-left, .container .header-right { width: 200px; text-align: center; }
+    .container .header-center { text-align: center; font-weight: bold; font-size: 13px; flex-grow: 1; }
     
-    <!-- LIBRERÍAS DE FIREBASE -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    .form-info { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 10px; font-size: 12px; }
+    .underline { border-bottom: 2px solid black; font-weight: bold; display: inline-block; text-align: center; }
 
-    <style>
-        :root {
-            --primary-blue: #112A49; --light-blue: #eef2ff; --bg-color: #f8fafc;
-            --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
-            --danger: #dc2626; --success: #10b981; --warning: #f59e0b;
-        }
+    table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; table-layout: fixed; border: 2px solid black; }
+    table.data-table td { border: 1px solid black; padding: 2px 4px; box-sizing: border-box; font-size: 10px; overflow: hidden; white-space: nowrap; }
+    table.data-table td.no-bottom-line { border-bottom: none; }
+    table.data-table td.no-top-line { border-top: none; }
 
-        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-color); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    .bg-yellow { background-color: #ffff99; }
+    .bg-purple { background-color: #b4a7d6; }
+    .bg-cyan { background-color: #00ffff; }
+    .bg-pink { background-color: #ff99ff; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: white; border-bottom: 1px solid var(--border-color); z-index: 50; }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-main); }
-        .header-title { margin: 0; font-size: 15px; font-weight: 700; color: var(--primary-blue); }
-        .header-right { display: flex; align-items: center; gap: 12px; }
-        .user-initial { width: 35px; height: 35px; border-radius: 50%; background-color: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    /* CALENDARIO CON ALTURA UNIFORME Y LÍNEAS NÍTIDAS EN NEGRO */
+    .cal-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid black; }
+    .cal-table th, .cal-table td { 
+        border-top: none;
+        border-left: none;
+        border-right: 1px solid black; 
+        border-bottom: 1px solid black; 
+        padding: 0; 
+        height: 21px; 
+        font-size: 10px; 
+        box-sizing: border-box; 
+        text-align: center; 
+        vertical-align: middle;
+    }
+    .cal-table th { font-weight: normal; background-color: white; border: 1px solid black; border-bottom: 1px solid black; height: 21px; }
+    
+    /* TAMAÑO DE LETRA EXACTO DE 13PX PARA MES \ DÍAS Y ENERO A DICIEMBRE */
+    .cal-table th.month-col, 
+    .cal-table td.month-col { 
+        font-weight: bold; 
+        font-size: 13px !important; 
+        line-height: 1;
+        border-left: 1px solid black !important; 
+        border-right: 1px solid black !important; 
+    }
+    
+    /* Contorno original para cada mes */
+    .month-row-start td { border-top: 1px solid black !important; }
+    .month-row-end td { border-bottom: 1px solid black !important; }
+    .cal-table tr td:last-child { border-right: 1px solid black !important; }
 
-        .main-layout { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 260px; background: white; border-right: 1px solid var(--border-color); overflow-y: auto; transition: transform 0.3s ease; display: flex; flex-direction: column; }
-        @media (max-width: 768px) { .sidebar { position: fixed; height: calc(100vh - 60px); transform: translateX(-100%); z-index: 40; } .sidebar.open { transform: translateX(0); } .header-title { display: none; } }
+    .solid-blue { background-color: #00a2e8; }
+    .split-cell { position: relative; padding: 0 !important; height: 21px; }
 
-        .sidebar-nav { padding: 15px 10px; }
-        .sidebar-section { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-        .sidebar-section:last-child { border-bottom: none; }
-        .sidebar .section-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 10px 15px; padding-bottom: 0; display: block; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin-bottom: 2px; transition: all 0.2s; }
-        .nav-item:hover { background-color: var(--bg-color); }
-        .nav-item.active { background-color: var(--light-blue); color: var(--primary-blue); font-weight: 700; border-left: 4px solid var(--primary-blue); }
-        .nav-item.active i { color: var(--primary-blue); }
+    /* FIRMAS CON TEXTOS EN NEGRITAS */
+    .signatures { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; padding: 0 40px; }
+    .sig-block { width: 30%; font-weight: bold; font-size: 11px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .sig-line { border-top: 1px solid black; margin-top: 5px; padding-top: 5px; font-weight: bold; }
+    .data-text { font-weight: bold; font-size: 11px; display: block; margin-top: 2px; }
 
-        .content { flex: 1; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        .container { max-width: 1050px; margin: 0 auto; padding-bottom: 50px; }
-        
-        .page-header { margin-bottom: 30px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
-        .page-header h1 { font-size: 24px; color: var(--primary-blue); margin: 0 0 5px 0; font-weight: 800; }
-        .page-header p { color: var(--text-muted); margin: 0; font-size: 14px; }
+    /* BOTONES FLOTANTES */
+    .btn-back {
+        position: fixed; bottom: 30px; left: 30px;
+        background-color: var(--primary-blue); color: white; border: none;
+        padding: 12px 20px; font-size: 16px; font-weight: bold;
+        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
+        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s; z-index: 1000; text-decoration: none;
+    }
+    .btn-back:hover { background-color: #1a2a6e; }
 
-        .form-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid var(--border-color); margin-bottom: 25px; }
-        .section-title { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--primary-blue); margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid var(--bg-color); }
-        
-        .form-group { margin-bottom: 15px; }
-        .form-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
-        .form-input, .form-select { width: 100%; padding: 12px 15px; background-color: var(--bg-color); border: 1px solid transparent; border-radius: 10px; font-size: 14px; color: var(--text-main); box-sizing: border-box; outline: none; transition: all 0.2s; font-family: inherit; }
-        .form-input:focus, .form-select:focus { background-color: white; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(38,63,164,0.1); }
-        
-        /* ESTILO PARA CAMPOS DESHABILITADOS */
-        .form-input:disabled, .form-select:disabled { background-color: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
-
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; }
-        .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; }
-        
-        @media (max-width: 640px) { 
-            .grid-2, .grid-3, .grid-4, .grid-2-1 { grid-template-columns: 1fr; } 
-        }
-
-        .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
-        .btn-guardar { background: var(--primary-blue); color: white; border: none; padding: 16px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .btn-guardar:hover { background: #1a2a6e; }
-        .btn-cancelar { background: white; color: var(--text-main); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .btn-cancelar:hover { background: var(--bg-color); }
-    </style>
+    .btn-download {
+        position: fixed; bottom: 30px; right: 30px;
+        background-color: #FF0000; color: white; border: none;
+        padding: 12px 20px; font-size: 16px; font-weight: bold;
+        border-radius: 8px; cursor: pointer; display: flex; align-items: center;
+        gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s; z-index: 1000;
+    }
+    .btn-download:hover { background-color: #cc0000; }
+    .btn-download:disabled { background-color: #aa3333; cursor: not-allowed; }
+</style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="header-left">
-            <button class="menu-btn" id="toggle-menu"><i data-lucide="menu"></i></button>
-            <img src="https://i.ibb.co/m5RgjgLq/LOGOTIPO2.png" alt="Logo" style="height: 35px; object-fit: contain;">
-            <h1 class="header-title">KARDEX</h1>
-        </div>
-        <div class="header-right">
-            <div class="user-initial" id="user-initial">U</div>
-            <img src="https://i.ibb.co/KcRX1LNZ/LOGOTIPO1.png" alt="User" height="35" style="border-radius:4px;">
-        </div>
-    </header>
+<header class="loreto-header">
+    <div class="loreto-left">
+        <button class="menu-btn" id="toggle-menu"><i data-lucide="menu"></i></button>
+        <img src="https://i.ibb.co/m5RgjgLq/LOGOTIPO2.png" alt="Logo" style="height: 35px; object-fit: contain;">
+        <h1 class="loreto-title">Formato Kardex</h1>
+    </div>
+    <div class="loreto-right">
+        <div class="user-initial" id="user-initial">U</div>
+        <img src="https://i.ibb.co/KcRX1LNZ/LOGOTIPO1.png" alt="User" height="35" style="border-radius:4px;">
+    </div>
+</header>
 
-    <div class="main-layout">
-        <aside class="sidebar" id="sidebar"></aside>
+<div class="main-layout">
+    <aside class="sidebar" id="sidebar"></aside>
 
-        <main class="content">
-            <div class="container">
-                <div class="page-header">
-                    <h1>Ingreso de Datos</h1>
-                    <p>Ingresa tu información personal y laboral para generar tu formato de kardex.</p>
+    <main class="content">
+        <div class="page-header">
+            <h1>Vista Previa del Kardex</h1>
+            <p>Revisa tu información. Si necesitas hacer un cambio, da clic en "Regresar APP".</p>
+        </div>
+
+        <div class="kardex-wrapper">
+            <div class="container" id="kardex-document">
+                <!-- CABECERA INSTITUCIONAL DINÁMICA -->
+                <div class="header">
+                    <div class="header-left">
+                        <h2 style="color:#800020; margin:0; font-size: 18px; text-align: left; display:flex; align-items:center; gap: 5px;">
+                            <span style="font-size:30px;">&#x1F985;</span>
+                            <div style="line-height: 1.1;">GOBIERNO DE<br>MÉXICO</div>
+                        </h2>
+                    </div>
+                    <div class="header-center">
+                        <span id="val-encabezado1">DIRECCIÓN DE PRESTACIONES MÉDICAS</span><br>
+                        <span id="val-encabezado2">COORDINACION DE UNIDADES MÉDICAS DE ALTA ESPECIALIDAD</span>
+                    </div>
+                    <div class="header-right">
+                        <h2 style="color:#005c3a; margin:0; font-size: 24px; text-align: right; display:flex; flex-direction:column; align-items:center;">
+                            <span style="font-size:35px; line-height:0.8;">&#x1F6A8;</span>
+                            IMSS
+                        </h2>
+                    </div>
                 </div>
 
-                <form id="capturaForm" class="form-card">
-                    <input type="hidden" id="edit-log-id">
+                <!-- DATOS DE UNIDAD DINÁMICOS -->
+                <div class="form-info">
+                    <div>
+                        Delegación: <span class="underline" style="width: 250px;" id="val-delegacion"></span>
+                    </div>
+                    <div>
+                        Unidad de Servicios Médicos: <span class="underline" style="width: 350px;" id="val-unidad"></span>
+                    </div>
+                </div>
+
+                <!-- TABLA 1: DATOS PERSONALES -->
+                <table class="data-table">
+                    <colgroup>
+                        <col style="width: 37.5%;">
+                        <col style="width: 13.125%;">
+                        <col style="width: 12.25%;">
+                        <col style="width: 6.125%;">
+                        <col style="width: 9%;">
+                        <col style="width: 22%;">
+                    </colgroup>
+                    <tr style="height: 35px;">
+                        <td style="text-align: center; vertical-align: top; padding-top: 4px;"><span style="letter-spacing: 2px;">N O M B R E :</span> <span class="data-text" id="val-nombre"></span></td>
+                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">CATEGORIA: <span class="data-text" id="val-categoria"></span></td>
+                        <td style="padding: 0;">
+                            <table style="width: 100%; height: 100%; border-collapse: collapse; border: none;">
+                                <tr><td style="border: none; padding: 4px 4px 2px 4px; vertical-align: top; text-align: center; font-size: 10px;">MATRICULA:</td></tr>
+                                <tr><td class="bg-yellow" style="border: none; height: 16px; padding: 0; text-align: center; font-weight: bold; font-size: 11px;" id="val-matricula"></td></tr>
+                            </table>
+                        </td>
+                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">C.C.: <span class="data-text" id="val-cc"></span></td>
+                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">DESCANSOS: <span class="data-text" id="val-descansos"></span></td>
+                        <td style="text-align: center; vertical-align: top; padding-top: 4px;">CURP: <span class="data-text" id="val-curp"></span></td>
+                    </tr>
+                </table>
+
+                <!-- TABLA 2: SERVICIOS Y ROLES -->
+                <table class="data-table">
+                    <colgroup>
+                        <col style="width: 10.7%;">  <col style="width: 10.7%;">  <col style="width: 11.7%;">  <col style="width: 11.7%;">  <col style="width: 10.795%;"> <col style="width: 9.9%;">    
+                        <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 3.75%;">   <col style="width: 4.505%;"> 
+                    </colgroup>
+                    <tr style="font-size: 10px; font-weight: normal; text-align: center;">
+                        <td class="no-bottom-line">SERVICIO 1:</td>
+                        <td class="no-bottom-line">SERVICIO 2:</td>
+                        <td class="no-bottom-line">F. INGRESO:</td>
+                        <td class="no-bottom-line">ANTIGÜEDAD:</td>
+                        <td class="no-bottom-line">CONTRATACIÓN:</td>
+                        <td class="no-bottom-line">PLAZA</td>
+                        <td colspan="4">ROL VACACIONAL:</td>
+                        <td colspan="4">MARCA DE INCLUSIÓN:</td>
+                        <td class="no-bottom-line" style="padding: 2px 0; font-size: 9px;">AÑO:</td>
+                    </tr>
+                    <tr style="font-size: 11px; font-weight: bold; text-align: center; height: 18px;">
+                        <td class="no-top-line" id="val-servicio1"></td>
+                        <td class="no-top-line" id="val-servicio2">-</td>
+                        <td class="no-top-line" id="val-fingreso"></td>
+                        <td class="no-top-line" id="val-antiguedad"></td>
+                        <td class="no-top-line" id="val-contratacion">BASE</td>
+                        <td class="no-top-line" id="val-plaza"></td>
+                        <td id="val-rol1" style="background-color: #C4A7FF;"></td>
+                        <td id="val-rol2" style="background-color: #7DFFE6;"></td>
+                        <td id="val-rol3" style="background-color: #FF99FF;"></td>
+                        <td id="val-rol4" style="background-color: #A3E7FF;"></td>
+                        <td id="val-marca1" style="background-color: #C4A7FF;"></td>
+                        <td id="val-marca2" style="background-color: #7DFFE6;"></td>
+                        <td id="val-marca3" style="background-color: #FF99FF;"></td>
+                        <td id="val-marca4" style="background-color: #A3E7FF;"></td>
+                        <td class="no-top-line" style="padding: 2px 0; font-size: 10px;" id="val-ano">2027</td>
+                    </tr>
+                </table>
+
+                <!-- CALENDARIO 2027 -->
+                <table class="cal-table" id="cal-table">
+                    <colgroup>
+                        <col style="width: 10.7%;">
+                        <col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;"><col style="width: 2.4135%;">
+                    </colgroup>
+                    <tr>
+                        <th class="month-col">Mes \ Día</th>
+                        <th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th><th>L</th><th>M</th><th>M</th>
+                    </tr>
                     
-                    <h3 class="section-title"><i data-lucide="user"></i> Datos para kardex</h3>
-                    
-                    <div class="grid-2-1">
-                        <div class="form-group">
-                            <label class="form-label">Nombre Completo</label>
-                            <input type="text" class="form-input" id="nombre" name="nombre" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Matrícula</label>
-                            <input type="text" class="form-input" id="matricula" name="matricula">
-                        </div>
-                    </div>
+                    <!-- Enero -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Enero</td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
 
-                    <div class="grid-2-1">
-                        <div class="form-group">
-                            <label class="form-label">Categoría</label>
-                            <input type="text" class="form-input" id="categoria" name="categoria">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Plaza</label>
-                            <input type="text" class="form-input" id="plaza" name="plaza">
-                        </div>
-                    </div>
+                    <!-- Febrero -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Febrero</td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
 
-                    <div class="grid-3">
-                        <div class="form-group">
-                            <label class="form-label">C.C. (Cuota Cotización)</label>
-                            <input type="text" class="form-input" id="cc" name="cc">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Turno</label>
-                            <select class="form-select" id="turno" name="turno">
-                                <option value="MATUTINO">MATUTINO</option>
-                                <option value="VESPERTINO">VESPERTINO</option>
-                                <option value="NOCTURNO">NOCTURNO</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Descansos</label>
-                            <select class="form-select" id="descansos" name="descansos">
-                                <option value="LUN-MAR">LUN-MAR</option>
-                                <option value="MAR-MIE">MAR-MIE</option>
-                                <option value="MIE-JUE">MIE-JUE</option>
-                                <option value="JUE-VIE">JUE-VIE</option>
-                                <option value="VIE-SAB">VIE-SAB</option>
-                                <option value="SAB-DOM">SAB-DOM</option>
-                                <option value="DOM-LUN">DOM-LUN</option>
-                                <option value="LUNES">LUNES</option>
-                                <option value="MARTES">MARTES</option>
-                                <option value="MIERCOLES">MIERCOLES</option>
-                                <option value="JUEVES">JUEVES</option>
-                                <option value="VIERNES">VIERNES</option>
-                                <option value="SABADO">SABADO</option>
-                                <option value="DOMINGO">DOMINGO</option>
-                            </select>
-                        </div>
-                    </div>
+                    <!-- Marzo -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Marzo</td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
 
-                    <div class="form-group">
-                        <label class="form-label">CURP</label>
-                        <input type="text" class="form-input" id="curp" name="curp">
-                    </div>
+                    <!-- Abril -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Abril</td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
 
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label class="form-label">Servicio 1</label>
-                            <input type="text" class="form-input" id="servicio1" name="servicio1">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Servicio 2</label>
-                            <input type="text" class="form-input" id="servicio2" name="servicio2">
-                        </div>
-                    </div>
+                    <!-- Mayo -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Mayo</td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
 
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label class="form-label">F. Ingreso</label>
-                            <input type="date" class="form-input" id="fingreso" name="fingreso">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Contratación</label>
-                            <input type="text" class="form-input" id="contratacion" name="contratacion" value="BASE">
-                        </div>
-                    </div>
+                    <!-- Junio -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Junio</td>
+                        <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
 
-                    <div class="form-group">
-                        <label class="form-label">Antigüedad (Años - Quincenas - Días)</label>
-                        <div class="grid-3" style="gap: 10px;">
-                            <select class="form-select" id="ant_anios"></select>
-                            <select class="form-select" id="ant_quincenas"></select>
-                            <select class="form-select" id="ant_dias"></select>
-                        </div>
-                    </div>
+                    <!-- Julio -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Julio</td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
 
-                    <h3 class="section-title" style="margin-top: 20px;"><i data-lucide="clipboard-list"></i> Rol / Marca</h3>
-                    
-                    <div class="grid-2" style="gap: 20px;">
-                        <div style="display: flex; flex-direction: column; gap: 15px;">
-                            <div class="grid-2" style="gap: 10px;">
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Rol 1</label>
-                                    <select class="form-select" id="rol1"></select>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Marca 1</label>
-                                    <select class="form-select" id="marca1"></select>
-                                </div>
-                            </div>
-                            <div class="grid-2" style="gap: 10px;">
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Rol 2</label>
-                                    <select class="form-select" id="rol2"></select>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Marca 2</label>
-                                    <select class="form-select" id="marca2"></select>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Agosto -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Agosto</td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
+                    </tr>
 
-                        <div style="display: flex; flex-direction: column; gap: 15px;">
-                            <div class="grid-2" style="gap: 10px;">
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Rol 3</label>
-                                    <select class="form-select" id="rol3"></select>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Marca 3</label>
-                                    <select class="form-select" id="marca3"></select>
-                                </div>
-                            </div>
-                            <div class="grid-2" style="gap: 10px;">
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Rol 4</label>
-                                    <select class="form-select" id="rol4"></select>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Marca 4</label>
-                                    <select class="form-select" id="marca4"></select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Septiembre -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Septiembre</td>
+                        <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
 
-                    <div class="action-buttons">
-                        <button type="button" class="btn-cancelar" onclick="limpiarFormulario()"><i data-lucide="x"></i> Cancelar</button>
-                        <button type="submit" class="btn-guardar" id="btn-guardar"><i data-lucide="save"></i> Enviar al Kardex</button>
+                    <!-- Octubre -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Octubre</td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+
+                    <!-- Noviembre -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Noviembre</td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td>
+                    </tr>
+
+                    <!-- Diciembre -->
+                    <tr class="month-row-start">
+                        <td rowspan="2" class="month-col">Diciembre</td>
+                        <td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                    <tr class="month-row-end">
+                        <td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                    </tr>
+                </table>
+
+                <!-- FIRMAS DINÁMICAS -->
+                <div class="signatures">
+                    <div class="sig-block">
+                        <span id="val-jefe-enfermeras"></span>
+                        <div class="sig-line">JEFA DE ENFERMERÍA</div>
                     </div>
-                </form>
+                    <div class="sig-block">
+                        <span id="val-subjefe-enfermeras"></span>
+                        <div class="sig-line">SUBJEFE DE ENFERMERAS</div>
+                    </div>
+                    <div class="sig-block">
+                        <span id="val-nombre-firma"></span>
+                        <div class="sig-line">INTERESADA(O)</div>
+                    </div>
+                </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
+</div>
 
-    <script>
-        // VALIDACIÓN DE SESIÓN ACTIVA
-        if (!localStorage.getItem('usuario')) {
-            window.location.href = 'index.html'; // Si no hay sesión, manda al login
-        }
+<!-- BOTONES -->
+<a href="index.html" class="btn-back">
+    <i data-lucide="arrow-left"></i> Regresar APP
+</a>
 
-        // Configuración de Firebase
-        const firebaseConfig = {
-          apiKey: "AIzaSyBlrkgm8k0veEjLaQeiAUHMiU6TPln9HKs",
-          authDomain: "enfermeria-7e72e.firebaseapp.com",
-          projectId: "enfermeria-7e72e",
-          storageBucket: "enfermeria-7e72e.firebasestorage.app",
-          messagingSenderId: "835871995478",
-          appId: "1:835871995478:web:9f9d9bbf253a5ff047edf7",
-          measurementId: "G-0KXWK8L79Z"
+<button id="btnDescargar" class="btn-download">
+    <i data-lucide="download"></i> Descargar
+</button>
+
+<script>
+    lucide.createIcons();
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlrkgm8k0veEjLaQeiAUHMiU6TPln9HKs",
+      authDomain: "enfermeria-7e72e.firebaseapp.com",
+      projectId: "enfermeria-7e72e",
+      storageBucket: "enfermeria-7e72e.firebasestorage.app",
+      messagingSenderId: "835871995478",
+      appId: "1:835871995478:web:9f9d9bbf253a5ff047edf7",
+      measurementId: "G-0KXWK8L79Z"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    
+    let loadedData = {};
+
+    // === FUNCIONES AUXILIARES PARA PINTAR VACACIONES ===
+
+    // Normaliza texto: mayúsculas y sin acentos
+    function normalizeText(s) {
+        return (s || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    // Convierte "LUN-MAR" o "LUNES" a arreglo de días en mayúsculas sin acentos
+    function parseDescansos(str) {
+        const normalized = normalizeText(str);
+        const fullDays = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO'];
+        const abbrMap = {
+            'LUN': 'LUNES', 'MAR': 'MARTES', 'MIE': 'MIERCOLES', 'JUE': 'JUEVES',
+            'VIE': 'VIERNES', 'SAB': 'SABADO', 'DOM': 'DOMINGO'
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const result = [];
+        fullDays.forEach(d => { if (normalized.includes(d)) result.push(d); });
+        Object.keys(abbrMap).forEach(a => {
+            if (normalized.includes(a) && !result.includes(abbrMap[a])) result.push(abbrMap[a]);
+        });
+        return result;
+    }
 
-        const nombreUsuario = localStorage.getItem('nombre') || 'Usuario';
-        document.getElementById('user-initial').innerText = nombreUsuario.charAt(0).toUpperCase();
-
-        // Llenar dinámicamente las listas desplegables con "-" al inicio
-        function populateAntiguedad(id, max) {
-            const sel = document.getElementById(id);
-            for(let i=0; i<=max; i++) {
-                const val = i < 10 ? '0' + i : i;
-                let text = i;
-                if(id === 'ant_anios') text = `${i} Años`;
-                if(id === 'ant_quincenas') text = `${i} Quincenas`;
-                if(id === 'ant_dias') text = `${i} Días`;
-                sel.innerHTML += `<option value="${val}">${text}</option>`;
+    // Obtiene días de velada según descanso, usando la tabla de veladas de Firebase
+    function getVeladaDays(descansoStr, veladasData) {
+        const normalized = normalizeText(descansoStr);
+        if (!veladasData || !Array.isArray(veladasData.datos)) return [];
+        // Coincidencia exacta
+        for (const e of veladasData.datos) {
+            if (normalizeText(e.descanso) === normalized) {
+                return [normalizeText(e.v1), normalizeText(e.v2), normalizeText(e.v3)];
             }
-            sel.value = '00';
         }
-
-        function populateRoles() {
-            ['rol1', 'rol2', 'rol3', 'rol4'].forEach(id => {
-                let sel = document.getElementById(id);
-                sel.innerHTML = '<option value="-">-</option>';
-                for(let i=1; i<=24; i++) {
-                    sel.innerHTML += `<option value="${i}">${i}</option>`;
+        // Por inclusión
+        for (const e of veladasData.datos) {
+            const eNorm = normalizeText(e.descanso);
+            if (normalized.includes(eNorm) || eNorm.includes(normalized)) {
+                return [normalizeText(e.v1), normalizeText(e.v2), normalizeText(e.v3)];
+            }
+        }
+        // Si el descanso es un rango (ej. "LUN-MAR"), usar la primera parte
+        const parts = normalized.split('-');
+        if (parts.length > 0 && parts[0]) {
+            for (const e of veladasData.datos) {
+                if (normalizeText(e.descanso).includes(parts[0])) {
+                    return [normalizeText(e.v1), normalizeText(e.v2), normalizeText(e.v3)];
                 }
-                sel.value = '-';
-            });
+            }
         }
+        return [];
+    }
 
-        function populateMarcas() {
-            const marcaFracs = ["0/7", "1/7", "2/7", "3/7", "4/7", "5/7", "6/7", "7/7", "8/7", "9/7"];
-            ['marca1', 'marca2', 'marca3', 'marca4'].forEach(id => {
-                const sel = document.getElementById(id);
-                sel.innerHTML = '<option value="-">-</option>';
-                for(let i=0; i<=9; i++) {
-                    sel.innerHTML += `<option value="${i}">${i}</option>`;
-                }
-                marcaFracs.forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`);
-                sel.value = '-';
-            });
+    // Formatea fecha como "DD/MM/YYYY"
+    function formatDmy(date) {
+        const d = String(date.getDate()).padStart(2, '0');
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const y = date.getFullYear();
+        return d + '/' + m + '/' + y;
+    }
+
+    // Obtiene nombre del día de la semana en español (mayúsculas, sin acentos)
+    function getDayName(date) {
+        const days = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
+        return days[date.getDay()];
+    }
+
+    // Pinta la celda (mes, día) en el calendario con el color indicado
+    function paintCalendarCell(month, day, color) {
+        const rows = document.querySelectorAll('#cal-table tr');
+        const topRow = rows[(month - 1) * 2 + 1];
+        const bottomRow = rows[(month - 1) * 2 + 2];
+        if (!topRow || !bottomRow) return;
+        // Localiza la celda por el número de día en la fila superior
+        let idx = -1;
+        for (let c = 1; c < topRow.cells.length; c++) {
+            const t = (topRow.cells[c].textContent || '').trim();
+            if (t === String(day)) { idx = c; break; }
         }
-
-        // FUNCIÓN PARA VALIDAR Y HABILITAR/DESHABILITAR EN CASCADA
-        function validarCascadaRolesMarcas() {
-            const rol1 = document.getElementById('rol1');
-            const marca1 = document.getElementById('marca1');
-            const rol2 = document.getElementById('rol2');
-            const marca2 = document.getElementById('marca2');
-            const rol3 = document.getElementById('rol3');
-            const marca3 = document.getElementById('marca3');
-            const rol4 = document.getElementById('rol4');
-            const marca4 = document.getElementById('marca4');
-
-            const lvl2Disabled = (rol1.value === '-' || marca1.value === '-');
-            rol2.disabled = lvl2Disabled;
-            marca2.disabled = lvl2Disabled;
-            if (lvl2Disabled) { rol2.value = '-'; marca2.value = '-'; }
-
-            const lvl3Disabled = (lvl2Disabled || rol2.value === '-' || marca2.value === '-');
-            rol3.disabled = lvl3Disabled;
-            marca3.disabled = lvl3Disabled;
-            if (lvl3Disabled) { rol3.value = '-'; marca3.value = '-'; }
-
-            const lvl4Disabled = (lvl3Disabled || rol3.value === '-' || marca3.value === '-');
-            rol4.disabled = lvl4Disabled;
-            marca4.disabled = lvl4Disabled;
-            if (lvl4Disabled) { rol4.value = '-'; marca4.value = '-'; }
+        if (idx === -1) return;
+        // Fila superior (preserva el número del día)
+        const topCell = topRow.cells[idx];
+        if (topCell && !topCell.classList.contains('solid-blue')) {
+            topCell.style.backgroundColor = color;
         }
+        // Fila inferior (índice = idx - 1 porque no tiene celda de mes)
+        const bottomCell = bottomRow.cells[idx - 1];
+        if (bottomCell && !bottomCell.classList.contains('solid-blue')) {
+            bottomCell.style.backgroundColor = color;
+            bottomCell.classList.remove('split-cell');
+            bottomCell.innerHTML = '';
+        }
+    }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            populateAntiguedad('ant_anios', 50);
-            populateAntiguedad('ant_quincenas', 24);
-            populateAntiguedad('ant_dias', 31);
-            populateRoles();
-            populateMarcas();
+    // Pinta periodo en días (turno matutino/vespertino): días consecutivos saltando descansos y festivos
+    function paintDiasPeriod(startDate, count, descansoDays, holidays, color) {
+        let painted = 0;
+        let safety = 0;
+        const cur = new Date(startDate.getTime());
+        while (painted < count && safety < 500) {
+            const dayName = getDayName(cur);
+            const dateStr = formatDmy(cur);
+            // Saltar descansos
+            if (descansoDays.includes(dayName)) {
+                cur.setDate(cur.getDate() + 1);
+                safety++;
+                continue;
+            }
+            // Saltar festivos
+            if (holidays.includes(dateStr)) {
+                cur.setDate(cur.getDate() + 1);
+                safety++;
+                continue;
+            }
+            // Pintar
+            paintCalendarCell(cur.getMonth() + 1, cur.getDate(), color);
+            painted++;
+            cur.setDate(cur.getDate() + 1);
+            safety++;
+        }
+    }
 
-            ['rol1', 'marca1', 'rol2', 'marca2', 'rol3', 'marca3', 'rol4', 'marca4'].forEach(id => {
-                document.getElementById(id).addEventListener('change', validarCascadaRolesMarcas);
-            });
+    // Pinta periodo en veladas (turno nocturno): solo en días de velada, saltando festivos
+    function paintVeladasPeriod(startDate, count, veladaDays, holidays, color) {
+        let painted = 0;
+        let safety = 0;
+        const cur = new Date(startDate.getTime());
+        while (painted < count && safety < 500) {
+            const dayName = getDayName(cur);
+            const dateStr = formatDmy(cur);
+            if (veladaDays.includes(dayName) && !holidays.includes(dateStr)) {
+                paintCalendarCell(cur.getMonth() + 1, cur.getDate(), color);
+                painted++;
+            }
+            cur.setDate(cur.getDate() + 1);
+            safety++;
+        }
+    }
 
-            validarCascadaRolesMarcas();
+    // Función principal: pinta vacaciones según rol/marca/turno/descansos/festivos
+    function paintVacations(workerData, config) {
+        if (!config) return;
+        const turno = normalizeText(workerData.turno || '');
+        // Color según turno
+        let color;
+        if (turno.includes('MATUTINO')) color = '#87CEEB';
+        else if (turno.includes('VESPERTINO')) color = '#BFFCC6';
+        else if (turno.includes('NOCTURNO')) color = '#FFB3B3';
+        else return;
 
-            fetch('menu.html').then(res => res.text()).then(html => {
-                document.getElementById('sidebar').innerHTML = html;
-                lucide.createIcons();
-                const linkKardex = document.getElementById('link-kardex'); 
-                if(linkKardex) linkKardex.classList.add('active');
-            });
-
-            document.getElementById('toggle-menu').addEventListener('click', () => { 
-                document.getElementById('sidebar').classList.toggle('open'); 
-            });
-
-            document.getElementById('capturaForm').addEventListener('submit', function(e) {
-                e.preventDefault(); 
-                
-                const btn = document.getElementById('btn-guardar');
-                const oldTxt = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando...';
-                lucide.createIcons();
-
-                const antiguedadFormateada = `${document.getElementById('ant_anios').value} - ${document.getElementById('ant_quincenas').value} - ${document.getElementById('ant_dias').value}`;
-
-                const datos = {
-                    nombre: document.getElementById('nombre').value.toUpperCase(),
-                    matricula: document.getElementById('matricula').value.toUpperCase(),
-                    categoria: document.getElementById('categoria').value.toUpperCase(),
-                    plaza: document.getElementById('plaza').value.toUpperCase(),
-                    cc: document.getElementById('cc').value.toUpperCase(),
-                    turno: document.getElementById('turno').value.toUpperCase(),
-                    descansos: document.getElementById('descansos').value.toUpperCase(),
-                    curp: document.getElementById('curp').value.toUpperCase(),
-                    servicio1: document.getElementById('servicio1').value.toUpperCase(),
-                    servicio2: document.getElementById('servicio2').value.toUpperCase(),
-                    fingreso: document.getElementById('fingreso').value,
-                    antiguedad: antiguedadFormateada,
-                    contratacion: document.getElementById('contratacion').value.toUpperCase(),
-                    rol1: document.getElementById('rol1').value,
-                    rol2: document.getElementById('rol2').value,
-                    rol3: document.getElementById('rol3').value,
-                    rol4: document.getElementById('rol4').value,
-                    marca1: document.getElementById('marca1').value,
-                    marca2: document.getElementById('marca2').value,
-                    marca3: document.getElementById('marca3').value,
-                    marca4: document.getElementById('marca4').value
-                };
-
-                localStorage.setItem('kardexDatos', JSON.stringify(datos));
-                
-                db.collection('kardex').doc('datosTrabajador').set(datos)
-                .then(() => {
-                    setTimeout(() => {
-                        window.location.href = 'formato_kardex.html'; 
-                    }, 500);
-                })
-                .catch(error => {
-                    console.error("Error guardando en Firebase:", error);
-                    alert("Ocurrió un error al guardar en la base de datos.");
-                    btn.disabled = false;
-                    btn.innerHTML = oldTxt;
-                    lucide.createIcons();
+        const descansoDays = parseDescansos(workerData.descansos);
+        // Festivos en formato "DD/MM/YYYY"
+        let holidays = [];
+        if (config.festivos && Array.isArray(config.festivos.fechas)) {
+            holidays = config.festivos.fechas
+                .filter(f => f && f !== 'Sin asignar')
+                .map(f => {
+                    const parts = String(f).split('/');
+                    if (parts.length === 3) {
+                        return parts[0].padStart(2, '0') + '/' + parts[1].padStart(2, '0') + '/' + parts[2];
+                    }
+                    return String(f);
                 });
-            });
+        }
+        // Para cada par (rol, marca)
+        for (let i = 1; i <= 4; i++) {
+            const rolVal = workerData['rol' + i];
+            const marcaVal = workerData['marca' + i];
+            if (!rolVal || rolVal === '-' || !marcaVal || marcaVal === '-') continue;
+            // Fecha de inicio del rol
+            if (!config.rol || !Array.isArray(config.rol.fechas)) continue;
+            const rolIndex = parseInt(rolVal) - 1;
+            if (isNaN(rolIndex) || rolIndex < 0 || rolIndex >= config.rol.fechas.length) continue;
+            const rolDateStr = config.rol.fechas[rolIndex];
+            if (!rolDateStr) continue;
+            let rolDate;
+            if (rolDateStr.includes('-') && rolDateStr.indexOf('-') === 4) {
+                // Formato "YYYY-MM-DD"
+                rolDate = new Date(rolDateStr + 'T00:00:00');
+            } else if (rolDateStr.includes('/')) {
+                // Formato "DD/MM/YYYY"
+                const parts = rolDateStr.split('/').map(Number);
+                rolDate = new Date(parts[2], parts[1] - 1, parts[0]);
+            } else {
+                continue;
+            }
+            if (isNaN(rolDate.getTime())) continue;
+            // Datos de marca
+            if (!config.marca || !Array.isArray(config.marca.datos)) continue;
+            const marcaData = config.marca.datos.find(m => normalizeText(m.marca) === normalizeText(marcaVal));
+            if (!marcaData) continue;
+
+            if (turno.includes('NOCTURNO')) {
+                const veladaCount = parseInt(marcaData.veladas);
+                if (isNaN(veladaCount) || veladaCount <= 0) continue;
+                const veladaDays = getVeladaDays(workerData.descansos, config.veladas);
+                if (veladaDays.length === 0) continue;
+                paintVeladasPeriod(rolDate, veladaCount, veladaDays, holidays, color);
+            } else {
+                const diasCount = parseInt(marcaData.dias);
+                if (isNaN(diasCount) || diasCount <= 0) continue;
+                paintDiasPeriod(rolDate, diasCount, descansoDays, holidays, color);
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('menu.html').then(res => res.text()).then(html => {
+            document.getElementById('sidebar').innerHTML = html;
+            lucide.createIcons();
+            const link = document.getElementById('link-kardex'); 
+            if(link) link.classList.add('active');
         });
 
-        function limpiarFormulario() {
-            document.getElementById('capturaForm').reset();
-            document.getElementById('contratacion').value = "BASE";
-            document.getElementById('ant_anios').value = "00";
-            document.getElementById('ant_quincenas').value = "00";
-            document.getElementById('ant_dias').value = "00";
-            
-            ['rol1', 'rol2', 'rol3', 'rol4', 'marca1', 'marca2', 'marca3', 'marca4'].forEach(id => {
-                document.getElementById(id).value = '-';
+        const toggleBtn = document.getElementById('toggle-menu');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => { 
+                document.getElementById('sidebar').classList.toggle('open'); 
             });
-            
-            validarCascadaRolesMarcas();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    </script>
+
+        // Cargar datos del trabajador, datos generales y configuraciones adicionales de Firebase
+        Promise.all([
+            db.collection('kardex').doc('datosTrabajador').get(),
+            db.collection('configuracion').doc('datos_generales').get(),
+            db.collection('configuracion').doc('marca').get(),
+            db.collection('configuracion').doc('veladas').get(),
+            db.collection('configuracion').doc('dias_festivos').get(),
+            db.collection('configuracion').doc('rol').get()
+        ]).then(([workerDoc, generalDoc, marcaDoc, veladasDoc, festivosDoc, rolDoc]) => {
+            let workerData = {};
+            if(workerDoc.exists) {
+                workerData = workerDoc.data();
+            } else {
+                const stored = localStorage.getItem('kardexDatos');
+                if (stored) workerData = JSON.parse(stored);
+            }
+
+            let generalData = {};
+            if(generalDoc.exists) {
+                generalData = generalDoc.data();
+            }
+
+            const configData = {
+                marca: marcaDoc.exists ? marcaDoc.data() : null,
+                veladas: veladasDoc.exists ? veladasDoc.data() : null,
+                festivos: festivosDoc.exists ? festivosDoc.data() : null,
+                rol: rolDoc.exists ? rolDoc.data() : null
+            };
+
+            applyData(workerData, generalData, configData);
+        }).catch(err => {
+            console.error("Error al cargar Firebase, usando localStorage:", err);
+            const stored = localStorage.getItem('kardexDatos');
+            if (stored) applyData(JSON.parse(stored), {}, {});
+        });
+
+        function applyData(workerData, generalData, configData) {
+            configData = configData || {};
+            loadedData = { ...workerData, ...generalData }; 
+            
+            const setText = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = val || '';
+            };
+
+            // === DATOS GENERALES ===
+            setText('val-encabezado1', generalData.encabezado1);
+            setText('val-encabezado2', generalData.encabezado2);
+            setText('val-delegacion', generalData.delegacion);
+            setText('val-unidad', generalData.unidad);
+            setText('val-jefe-enfermeras', generalData.jefe_enfermeras);
+
+            // LÓGICA PARA SUBJEFE SEGÚN TURNO
+            const turno = (workerData.turno || '').toUpperCase();
+            let subjefeName = '';
+            if (turno.includes('MATUTINO')) {
+                subjefeName = generalData.subjefe_matutino;
+            } else if (turno.includes('VESPERTINO')) {
+                subjefeName = generalData.enfermera_vespertino;
+            } else if (turno.includes('NOCTURNO')) {
+                subjefeName = generalData.enfermera_nocturno;
+            }
+            setText('val-subjefe-enfermeras', subjefeName);
+
+            // === DATOS DEL TRABAJADOR ===
+            setText('val-nombre', workerData.nombre);
+            setText('val-nombre-firma', workerData.nombre);
+            setText('val-categoria', workerData.categoria);
+            setText('val-matricula', workerData.matricula);
+            setText('val-cc', workerData.cc);
+            setText('val-descansos', workerData.descansos);
+            setText('val-curp', workerData.curp);
+            setText('val-servicio1', workerData.servicio1);
+            setText('val-servicio2', workerData.servicio2 || '-');
+            setText('val-fingreso', workerData.fingreso);
+            setText('val-antiguedad', workerData.antiguedad);
+            setText('val-contratacion', workerData.contratacion || 'BASE');
+            setText('val-plaza', workerData.plaza);
+            setText('val-ano', workerData.ano || '2027');
+            setText('val-rol1', workerData.rol1 || '');
+            setText('val-rol2', workerData.rol2 || '');
+            setText('val-rol3', workerData.rol3 || '');
+            setText('val-rol4', workerData.rol4 || '');
+            setText('val-marca1', workerData.marca1 || '');
+            setText('val-marca2', workerData.marca2 || '');
+            setText('val-marca3', workerData.marca3 || '');
+            setText('val-marca4', workerData.marca4 || '');
+            
+            // COLOR SEGÚN TURNO (COLORES ORIGINALES PARA TRIÁNGULOS Y CELDAS SÓLIDAS)
+            let shiftColor = '#00a2e8'; // Matutino (Azul)
+            if (turno.includes('VESPERTINO')) {
+                shiftColor = '#00B050'; // Verde
+            } else if (turno.includes('NOCTURNO')) {
+                shiftColor = '#FF0000'; // Rojo
+            }
+
+            // MAPEO DE COLUMNAS PARA EL CALENDARIO 2027
+            const dayToCol = {
+                "MARTES": [1, 8, 15, 22, 29, 36],
+                "MIERCOLES": [2, 9, 16, 23, 30, 37],
+                "JUEVES": [3, 10, 17, 24, 31],
+                "VIERNES": [4, 11, 18, 25, 32],
+                "SABADO": [5, 12, 19, 26, 33],
+                "DOMINGO": [6, 13, 20, 27, 34],
+                "LUNES": [7, 14, 21, 28, 35]
+            };
+
+            const abbrMap = {
+                "MAR": "MARTES", "MIE": "MIERCOLES", "JUE": "JUEVES",
+                "VIE": "VIERNES", "SAB": "SABADO", "DOM": "DOMINGO", "LUN": "LUNES"
+            };
+
+            let selectedDays = [];
+            let strDesc = (workerData.descansos || 'SABADO-DOMINGO').toUpperCase();
+
+            Object.keys(dayToCol).forEach(day => {
+                if (strDesc.includes(day)) selectedDays.push(day);
+            });
+            Object.keys(abbrMap).forEach(abbr => {
+                if (strDesc.includes(abbr) && !selectedDays.includes(abbrMap[abbr])) {
+                    selectedDays.push(abbrMap[abbr]);
+                }
+            });
+
+            let targetCols = new Set();
+            selectedDays.forEach(day => {
+                if (dayToCol[day]) {
+                    dayToCol[day].forEach(c => targetCols.add(c));
+                }
+            });
+
+            const tableRows = document.querySelectorAll('#cal-table tr');
+            
+            // 1. PINTAR TRIÁNGULOS EN DÍAS DE DESCANSO
+            for (let i = 2; i < tableRows.length; i += 2) {
+                const topRow = tableRows[i - 1];
+                const row = tableRows[i];
+
+                for (let c = 0; c < row.cells.length; c++) {
+                    const cell = row.cells[c];
+                    const topCell = topRow ? topRow.cells[c + 1] : null;
+                    const colNum = c + 1;
+
+                    cell.classList.remove('split-cell');
+                    cell.innerHTML = '';
+
+                    const isSolid = cell.classList.contains('solid-blue') || 
+                                    cell.style.backgroundColor || 
+                                    (topCell && (topCell.classList.contains('solid-blue') || topCell.style.backgroundColor));
+
+                    if (targetCols.has(colNum) && !isSolid) {
+                        cell.classList.add('split-cell');
+                        cell.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"><polygon points="0,0 0,100 100,100" fill="${shiftColor}"/></svg>`;
+                    }
+                }
+            }
+
+            // FUNCIÓN AUXILIAR PARA VERIFICAR CELDAS SÓLIDAS
+            const isSolidCell = (m, rowType, d) => {
+                if (d < 0 || d > 36 || m < 1 || m > 12) return false;
+                const trIndex = (m - 1) * 2 + (rowType === 'top' ? 1 : 2);
+                const tr = tableRows[trIndex];
+                if (!tr) return false;
+                const cell = rowType === 'top' ? tr.cells[d + 1] : tr.cells[d];
+                if (!cell) return false;
+                return cell.classList.contains('solid-blue') || (cell.style.backgroundColor && cell.style.backgroundColor !== '');
+            };
+
+            // 2. APLICAR COLOR Y SOMBRA INTERNA (INSET) EXCLUSIVAMENTE EN UNIONES INTERNAS
+            for (let m = 1; m <= 12; m++) {
+                const topRow = tableRows[(m - 1) * 2 + 1];
+                const row = tableRows[(m - 1) * 2 + 2];
+
+                for (let d = 0; d < 37; d++) {
+                    // Fila superior del mes (topRow)
+                    const topCell = topRow ? topRow.cells[d + 1] : null;
+                    if (topCell && (topCell.classList.contains('solid-blue') || topCell.style.backgroundColor)) {
+                        const hasTop = m > 1 && isSolidCell(m - 1, 'bottom', d);
+                        const hasBottom = isSolidCell(m, 'bottom', d);
+                        const hasLeft = isSolidCell(m, 'top', d - 1);
+                        const hasRight = isSolidCell(m, 'top', d + 1);
+
+                        let shadows = [];
+                        if (hasTop) shadows.push('inset 0 2px 0 0 ' + shiftColor);
+                        if (hasBottom) shadows.push('inset 0 -2px 0 0 ' + shiftColor);
+                        if (hasLeft) shadows.push('inset 2px 0 0 0 ' + shiftColor);
+                        if (hasRight) shadows.push('inset -2px 0 0 0 ' + shiftColor);
+
+                        topCell.style.backgroundColor = shiftColor;
+                        topCell.style.boxShadow = shadows.length > 0 ? shadows.join(', ') : 'none';
+                        if (hasBottom) topCell.style.borderBottom = 'none';
+                    }
+
+                    // Fila inferior del mes (row)
+                    const bottomCell = row ? row.cells[d] : null;
+                    if (bottomCell && (bottomCell.classList.contains('solid-blue') || bottomCell.style.backgroundColor)) {
+                        const hasTop = isSolidCell(m, 'top', d);
+                        const hasBottom = m < 12 && isSolidCell(m + 1, 'top', d);
+                        const hasLeft = isSolidCell(m, 'bottom', d - 1);
+                        const hasRight = isSolidCell(m, 'bottom', d + 1);
+
+                        let shadows = [];
+                        if (hasTop) shadows.push('inset 0 2px 0 0 ' + shiftColor);
+                        if (hasBottom) shadows.push('inset 0 -2px 0 0 ' + shiftColor);
+                        if (hasLeft) shadows.push('inset 2px 0 0 0 ' + shiftColor);
+                        if (hasRight) shadows.push('inset -2px 0 0 0 ' + shiftColor);
+
+                        bottomCell.style.backgroundColor = shiftColor;
+                        bottomCell.style.boxShadow = shadows.length > 0 ? shadows.join(', ') : 'none';
+                        if (hasTop) bottomCell.style.borderTop = 'none';
+                    }
+                }
+            }
+
+            // 3. ELIMINAR BORDES VERTICALES ENTRE CELDAS ADYACENTES SÓLIDAS
+            for (let m = 1; m <= 12; m++) {
+                const topRow = tableRows[(m - 1) * 2 + 1];
+                const row = tableRows[(m - 1) * 2 + 2];
+
+                for (let d = 0; d < 37; d++) {
+                    if (d > 0 && isSolidCell(m, 'top', d) && isSolidCell(m, 'top', d - 1)) {
+                        const c1 = topRow.cells[d];
+                        const c2 = topRow.cells[d + 1];
+                        if (c1) c1.style.borderRight = 'none';
+                        if (c2) c2.style.borderLeft = 'none';
+                    }
+                    if (d > 0 && isSolidCell(m, 'bottom', d) && isSolidCell(m, 'bottom', d - 1)) {
+                        const c1 = row.cells[d - 1];
+                        const c2 = row.cells[d];
+                        if (c1) c1.style.borderRight = 'none';
+                        if (c2) c2.style.borderLeft = 'none';
+                    }
+                }
+            }
+
+            // 4. PINTAR VACACIONES BASADAS EN ROL Y MARCA
+            try {
+                paintVacations(workerData, configData);
+            } catch (e) {
+                console.error('Error al pintar vacaciones:', e);
+            }
+        }
+    });
+
+    // DESCARGA DE PDF IDÉNTICA EN CELULAR Y COMPUTADORA
+    document.getElementById('btnDescargar').addEventListener('click', function() {
+        const button = this;
+        const originalText = button.innerHTML;
+        button.innerText = 'Generando...';
+        button.disabled = true;
+
+        const originalElem = document.getElementById('kardex-document');
+
+        // Contenedor clonado en background invisible con ancho fijo de escritorio
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'absolute';
+        wrapper.style.top = '-9999px';
+        wrapper.style.left = '-9999px';
+        wrapper.style.width = '1150px';
+
+        const clone = originalElem.cloneNode(true);
+        clone.style.width = '1150px';
+        clone.style.minWidth = '1150px';
+        clone.style.maxWidth = '1150px';
+
+        wrapper.appendChild(clone);
+        document.body.appendChild(wrapper);
+
+        html2canvas(clone, {
+            scale: 3, 
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            windowWidth: 1150
+        }).then(canvas => {
+            document.body.removeChild(wrapper);
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('l', 'pt', 'letter');
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = (pdfHeight - imgHeight * ratio) / 2;
+
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+
+            let filename = 'Kardex_Vacacional_2027.pdf';
+            if (loadedData && loadedData.nombre) {
+                filename = `${loadedData.turno || 'TURNO'} - ${loadedData.categoria || 'CAT'} - ${loadedData.nombre} - ${loadedData.matricula || ''}.pdf`;
+            }
+
+            pdf.save(filename);
+
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }).catch(err => {
+            console.error(err);
+            if (document.body.contains(wrapper)) {
+                document.body.removeChild(wrapper);
+            }
+            alert("Error al generar PDF");
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
+    });
+</script>
+
 </body>
 </html>

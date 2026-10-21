@@ -409,7 +409,7 @@
 </div>
 
 <!-- BOTONES -->
-<a href="index.html" class="btn-back">
+<a href="kardex.html" class="btn-back">
     <i data-lucide="arrow-left"></i> Regresar APP
 </a>
 
@@ -501,31 +501,20 @@
         return days[date.getDay()];
     }
 
-    // Pinta la celda (mes, día) en el calendario con el color indicado
+    // Pinta la celda (mes, día) en el calendario con el color indicado (SOLO fila inferior)
     function paintCalendarCell(month, day, color) {
         const rows = document.querySelectorAll('#cal-table tr');
         const topRow = rows[(month - 1) * 2 + 1];
         const bottomRow = rows[(month - 1) * 2 + 2];
-        if (!topRow || !bottomRow) {
-            console.warn(`paintCalendarCell: filas no encontradas para mes ${month}`);
-            return;
-        }
+        if (!topRow || !bottomRow) return;
         // Localiza la celda por el número de día en la fila superior
         let idx = -1;
         for (let c = 1; c < topRow.cells.length; c++) {
             const t = (topRow.cells[c].textContent || '').trim();
             if (t === String(day)) { idx = c; break; }
         }
-        if (idx === -1) {
-            console.warn(`paintCalendarCell: no se encontró celda para día ${day} del mes ${month}`);
-            return;
-        }
-        // Fila superior (preserva el número del día)
-        const topCell = topRow.cells[idx];
-        if (topCell && !topCell.classList.contains('solid-blue')) {
-            topCell.style.backgroundColor = color;
-        }
-        // Fila inferior (índice = idx - 1 porque no tiene celda de mes)
+        if (idx === -1) return;
+        // SOLO pinta la fila inferior (segunda fila de cada mes) — preserva la fila superior con números
         const bottomCell = bottomRow.cells[idx - 1];
         if (bottomCell && !bottomCell.classList.contains('solid-blue')) {
             bottomCell.style.backgroundColor = color;
@@ -534,48 +523,64 @@
         }
     }
 
-    // Pinta periodo en días (turno matutino/vespertino): días consecutivos saltando descansos y festivos
+    // Pinta periodo en días (turno matutino/vespertino):
+    // Cuenta N días de vacaciones saltando descansos y festivos, luego pinta TODO el rango (incluyendo descansos y festivos) para línea seguida
     function paintDiasPeriod(startDate, count, descansoDays, holidays, color) {
         let painted = 0;
         let safety = 0;
         const cur = new Date(startDate.getTime());
+        let endDate = null;
+        // Fase 1: encontrar la fecha final contando días de vacaciones (saltando descansos y festivos)
         while (painted < count && safety < 500) {
             const dayName = getDayName(cur);
             const dateStr = formatDmy(cur);
-            // Saltar descansos
-            if (descansoDays.includes(dayName)) {
+            if (descansoDays.includes(dayName) || holidays.includes(dateStr)) {
                 cur.setDate(cur.getDate() + 1);
                 safety++;
                 continue;
             }
-            // Saltar festivos
-            if (holidays.includes(dateStr)) {
-                cur.setDate(cur.getDate() + 1);
-                safety++;
-                continue;
-            }
-            // Pintar
-            paintCalendarCell(cur.getMonth() + 1, cur.getDate(), color);
             painted++;
+            endDate = new Date(cur.getTime());
             cur.setDate(cur.getDate() + 1);
             safety++;
         }
+        if (!endDate) {
+            console.warn('paintDiasPeriod: no se calculó endDate');
+            return;
+        }
+        console.log(`paintDiasPeriod: inicio=${startDate.toDateString()} fin=${endDate.toDateString()} (${painted} días de vacaciones, pintando rango completo)`);
+        // Fase 2: pintar TODOS los días desde startDate hasta endDate (incluyendo descansos y festivos)
+        const cur2 = new Date(startDate.getTime());
+        while (cur2 <= endDate) {
+            paintCalendarCell(cur2.getMonth() + 1, cur2.getDate(), color);
+            cur2.setDate(cur2.getDate() + 1);
+        }
     }
 
-    // Pinta periodo en veladas (turno nocturno): solo en días de velada, saltando festivos
+    // Pinta periodo en veladas (turno nocturno):
+    // Cuenta N veladas (saltando festivos), luego pinta TODO el rango desde inicio hasta última velada (línea seguida)
     function paintVeladasPeriod(startDate, count, veladaDays, holidays, color) {
         let painted = 0;
         let safety = 0;
         const cur = new Date(startDate.getTime());
+        let endDate = null;
+        // Fase 1: encontrar la fecha final contando veladas (saltando festivos)
         while (painted < count && safety < 500) {
             const dayName = getDayName(cur);
             const dateStr = formatDmy(cur);
             if (veladaDays.includes(dayName) && !holidays.includes(dateStr)) {
-                paintCalendarCell(cur.getMonth() + 1, cur.getDate(), color);
                 painted++;
+                endDate = new Date(cur.getTime());
             }
             cur.setDate(cur.getDate() + 1);
             safety++;
+        }
+        if (!endDate) return;
+        // Fase 2: pintar TODOS los días desde startDate hasta endDate (incluyendo descansos y festivos)
+        const cur2 = new Date(startDate.getTime());
+        while (cur2 <= endDate) {
+            paintCalendarCell(cur2.getMonth() + 1, cur2.getDate(), color);
+            cur2.setDate(cur2.getDate() + 1);
         }
     }
 

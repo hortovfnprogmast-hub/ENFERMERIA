@@ -285,7 +285,7 @@
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
                     <tr class="month-row-end">
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td>
                     </tr>
 
                     <!-- Febrero -->
@@ -303,7 +303,7 @@
                         <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
                     </tr>
                     <tr class="month-row-end">
-                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        <td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td class="solid-blue"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                     </tr>
 
                     <!-- Abril -->
@@ -501,26 +501,32 @@
         return days[date.getDay()];
     }
 
-    // Pinta la celda (mes, día) en el calendario con el color indicado (SOLO fila inferior)
+    // Pinta la celda (mes, día) en el calendario con el color indicado (SOLO fila inferior, preserva triángulos)
     function paintCalendarCell(month, day, color) {
         const rows = document.querySelectorAll('#cal-table tr');
         const topRow = rows[(month - 1) * 2 + 1];
         const bottomRow = rows[(month - 1) * 2 + 2];
-        if (!topRow || !bottomRow) return;
+        if (!topRow || !bottomRow) {
+            console.warn('paintCalendarCell: filas no encontradas para mes', month);
+            return;
+        }
         // Localiza la celda por el número de día en la fila superior
         let idx = -1;
         for (let c = 1; c < topRow.cells.length; c++) {
             const t = (topRow.cells[c].textContent || '').trim();
             if (t === String(day)) { idx = c; break; }
         }
-        if (idx === -1) return;
-        // SOLO pinta la fila inferior (segunda fila de cada mes) — preserva la fila superior con números
+        if (idx === -1) {
+            console.warn(`paintCalendarCell: no se encontró celda para día ${day} del mes ${month}`);
+            return;
+        }
+        // SOLO pinta la fila inferior (segunda fila de cada mes) — preserva triángulos existentes
         const bottomCell = bottomRow.cells[idx - 1];
         if (bottomCell && !bottomCell.classList.contains('solid-blue')) {
             bottomCell.style.backgroundColor = color;
-            bottomCell.classList.remove('split-cell');
-            bottomCell.innerHTML = '';
+            // NO quitar la clase split-cell ni el innerHTML para PRESERVAR los triángulos de descansos
         }
+        console.log(`paintCalendarCell: pinté mes=${month} día=${day} (fila inferior, idx=${idx})`);
     }
 
     // Pinta periodo en días (turno matutino/vespertino):

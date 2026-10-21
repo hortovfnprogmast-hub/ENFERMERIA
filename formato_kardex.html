@@ -506,14 +506,20 @@
         const rows = document.querySelectorAll('#cal-table tr');
         const topRow = rows[(month - 1) * 2 + 1];
         const bottomRow = rows[(month - 1) * 2 + 2];
-        if (!topRow || !bottomRow) return;
+        if (!topRow || !bottomRow) {
+            console.warn(`paintCalendarCell: filas no encontradas para mes ${month}`);
+            return;
+        }
         // Localiza la celda por el número de día en la fila superior
         let idx = -1;
         for (let c = 1; c < topRow.cells.length; c++) {
             const t = (topRow.cells[c].textContent || '').trim();
             if (t === String(day)) { idx = c; break; }
         }
-        if (idx === -1) return;
+        if (idx === -1) {
+            console.warn(`paintCalendarCell: no se encontró celda para día ${day} del mes ${month}`);
+            return;
+        }
         // Fila superior (preserva el número del día)
         const topCell = topRow.cells[idx];
         if (topCell && !topCell.classList.contains('solid-blue')) {
@@ -575,16 +581,17 @@
 
     // Función principal: pinta vacaciones según rol/marca/turno/descansos/festivos
     function paintVacations(workerData, config) {
-        if (!config) return;
+        if (!config) { console.warn('paintVacations: config vacío'); return; }
         const turno = normalizeText(workerData.turno || '');
         // Color según turno
         let color;
         if (turno.includes('MATUTINO')) color = '#87CEEB';
         else if (turno.includes('VESPERTINO')) color = '#BFFCC6';
         else if (turno.includes('NOCTURNO')) color = '#FFB3B3';
-        else return;
+        else { console.warn('paintVacations: turno no reconocido:', workerData.turno); return; }
 
         const descansoDays = parseDescansos(workerData.descansos);
+        console.log('paintVacations iniciado:', { turno, color, descansoDays, rol1: workerData.rol1, marca1: workerData.marca1, rolFechas: config.rol ? config.rol.fechas : 'N/A', marcaDatos: config.marca ? config.marca.datos.length + ' registros' : 'N/A' });
         // Festivos en formato "DD/MM/YYYY"
         let holidays = [];
         if (config.festivos && Array.isArray(config.festivos.fechas)) {
@@ -602,13 +609,26 @@
         for (let i = 1; i <= 4; i++) {
             const rolVal = workerData['rol' + i];
             const marcaVal = workerData['marca' + i];
-            if (!rolVal || rolVal === '-' || !marcaVal || marcaVal === '-') continue;
+            console.log(`Procesando par ${i}: rol=${rolVal}, marca=${marcaVal}`);
+            if (!rolVal || rolVal === '-' || !marcaVal || marcaVal === '-') {
+                console.log(`  -> Saltando par ${i} (rol o marca es "-")`);
+                continue;
+            }
             // Fecha de inicio del rol
-            if (!config.rol || !Array.isArray(config.rol.fechas)) continue;
+            if (!config.rol || !Array.isArray(config.rol.fechas)) {
+                console.log('  -> config.rol vacío o sin fechas');
+                continue;
+            }
             const rolIndex = parseInt(rolVal) - 1;
-            if (isNaN(rolIndex) || rolIndex < 0 || rolIndex >= config.rol.fechas.length) continue;
+            if (isNaN(rolIndex) || rolIndex < 0 || rolIndex >= config.rol.fechas.length) {
+                console.log(`  -> rolIndex inválido: ${rolIndex}`);
+                continue;
+            }
             const rolDateStr = config.rol.fechas[rolIndex];
-            if (!rolDateStr) continue;
+            if (!rolDateStr) {
+                console.log(`  -> rolDateStr vacío en index ${rolIndex}`);
+                continue;
+            }
             let rolDate;
             if (rolDateStr.includes('-') && rolDateStr.indexOf('-') === 4) {
                 // Formato "YYYY-MM-DD"
@@ -618,26 +638,51 @@
                 const parts = rolDateStr.split('/').map(Number);
                 rolDate = new Date(parts[2], parts[1] - 1, parts[0]);
             } else {
+                console.log(`  -> Formato de fecha no reconocido: ${rolDateStr}`);
                 continue;
             }
-            if (isNaN(rolDate.getTime())) continue;
+            if (isNaN(rolDate.getTime())) {
+                console.log(`  -> Fecha inválida: ${rolDateStr}`);
+                continue;
+            }
+            console.log(`  -> Rol fecha: ${rolDateStr} = ${rolDate.toDateString()}`);
             // Datos de marca
-            if (!config.marca || !Array.isArray(config.marca.datos)) continue;
+            if (!config.marca || !Array.isArray(config.marca.datos)) {
+                console.log('  -> config.marca vacío o sin datos');
+                continue;
+            }
             const marcaData = config.marca.datos.find(m => normalizeText(m.marca) === normalizeText(marcaVal));
-            if (!marcaData) continue;
+            if (!marcaData) {
+                console.log(`  -> No se encontró marca "${marcaVal}" en config.marca.datos. Disponibles:`, config.marca.datos.map(m => m.marca));
+                continue;
+            }
+            console.log(`  -> Marca "${marcaVal}":`, marcaData);
 
             if (turno.includes('NOCTURNO')) {
                 const veladaCount = parseInt(marcaData.veladas);
-                if (isNaN(veladaCount) || veladaCount <= 0) continue;
+                if (isNaN(veladaCount) || veladaCount <= 0) {
+                    console.log(`  -> veladaCount inválido: ${marcaData.veladas}`);
+                    continue;
+                }
                 const veladaDays = getVeladaDays(workerData.descansos, config.veladas);
-                if (veladaDays.length === 0) continue;
+                if (veladaDays.length === 0) {
+                    console.log(`  -> No se encontraron días de velada para descanso "${workerData.descansos}"`);
+                    continue;
+                }
+                console.log(`  -> Pintando ${veladaCount} veladas en días [${veladaDays.join(', ')}] desde ${rolDate.toDateString()}`);
                 paintVeladasPeriod(rolDate, veladaCount, veladaDays, holidays, color);
             } else {
                 const diasCount = parseInt(marcaData.dias);
-                if (isNaN(diasCount) || diasCount <= 0) continue;
+                if (isNaN(diasCount) || diasCount <= 0) {
+                    console.log(`  -> diasCount inválido: ${marcaData.dias}`);
+                    continue;
+                }
+                console.log(`  -> Pintando ${diasCount} días (saltando ${descansoDays.join(', ')} y ${holidays.length} festivos) desde ${rolDate.toDateString()}`);
                 paintDiasPeriod(rolDate, diasCount, descansoDays, holidays, color);
+                console.log(`  -> Pintado terminado para par ${i}`);
             }
         }
+        console.log('paintVacations finalizado');
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -678,11 +723,41 @@
             }
 
             const configData = {
-                marca: marcaDoc.exists ? marcaDoc.data() : null,
-                veladas: veladasDoc.exists ? veladasDoc.data() : null,
-                festivos: festivosDoc.exists ? festivosDoc.data() : null,
-                rol: rolDoc.exists ? rolDoc.data() : null
+                marca: (marcaDoc.exists && marcaDoc.data() && marcaDoc.data().datos) ? marcaDoc.data() : { datos: [
+                    {marca: '0',   dias: '20', veladas: '12'},
+                    {marca: '1',   dias: '10', veladas: '6'},
+                    {marca: '2',   dias: '20', veladas: '12'},
+                    {marca: '3',   dias: '15', veladas: '9'},
+                    {marca: '4',   dias: '10', veladas: '6'},
+                    {marca: '5',   dias: '15', veladas: '9'},
+                    {marca: '6',   dias: '15', veladas: '9'},
+                    {marca: '9',   dias: '10', veladas: '6'},
+                    {marca: '0/7', dias: '20', veladas: '12'},
+                    {marca: '1/7', dias: '10', veladas: '6'},
+                    {marca: '2/7', dias: '20', veladas: '12'},
+                    {marca: '3/7', dias: '15', veladas: '9'},
+                    {marca: '4/7', dias: '10', veladas: '6'},
+                    {marca: '5/7', dias: '15', veladas: '9'},
+                    {marca: '9/7', dias: '10', veladas: '6'}
+                ]},
+                veladas: (veladasDoc.exists && veladasDoc.data() && veladasDoc.data().datos) ? veladasDoc.data() : { datos: [
+                    {descanso: 'LUNES',     v1: 'MARTES',    v2: 'JUEVES',    v3: 'SÁBADO'},
+                    {descanso: 'MARTES',    v1: 'MIÉRCOLES', v2: 'VIERNES',   v3: 'DOMINGO'},
+                    {descanso: 'MIÉRCOLES', v1: 'LUNES',     v2: 'JUEVES',    v3: 'SÁBADO'},
+                    {descanso: 'JUEVES',    v1: 'MARTES',    v2: 'VIERNES',   v3: 'DOMINGO'},
+                    {descanso: 'VIERNES',   v1: 'LUNES',     v2: 'MIÉRCOLES', v3: 'SÁBADO'},
+                    {descanso: 'SÁBADO',    v1: 'MARTES',    v2: 'JUEVES',    v3: 'DOMINGO'},
+                    {descanso: 'DOMINGO',   v1: 'LUNES',     v2: 'MIÉRCOLES', v3: 'VIERNES'}
+                ]},
+                festivos: (festivosDoc.exists && festivosDoc.data() && festivosDoc.data().fechas) ? festivosDoc.data() : { fechas: [] },
+                rol: (rolDoc.exists && rolDoc.data() && rolDoc.data().fechas) ? rolDoc.data() : { fechas: [
+                    '2027-01-18', '2027-02-02', '2027-02-17', '2027-03-04', '2027-03-19', '2027-04-03',
+                    '2027-04-18', '2027-05-03', '2027-05-18', '2027-06-02', '2027-06-17', '2027-07-02',
+                    '2027-07-17', '2027-08-01', '2027-08-16', '2027-08-31', '2027-09-15', '2027-09-30',
+                    '2027-10-15', '2027-10-30', '2027-11-14', '2027-11-29', '2027-12-14', '2027-12-29'
+                ]}
             };
+            console.log('Kardex config cargada:', { marca: configData.marca.datos.length, veladas: configData.veladas.datos.length, festivos: configData.festivos.fechas.length, rol: configData.rol.fechas.length });
 
             applyData(workerData, generalData, configData);
         }).catch(err => {

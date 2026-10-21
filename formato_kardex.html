@@ -596,9 +596,9 @@
         const turno = normalizeText(workerData.turno || '');
         // Color según turno
         let color;
-        if (turno.includes('MATUTINO')) color = '#87CEEB';
+        if (turno.includes('MATUTINO')) color = '#C6EFCE';
         else if (turno.includes('VESPERTINO')) color = '#BFFCC6';
-        else if (turno.includes('NOCTURNO')) color = '#FFB3B3';
+        else if (turno.includes('NOCTURNO')) color = '#FFC7CE';
         else { console.warn('paintVacations: turno no reconocido:', workerData.turno); return; }
 
         const descansoDays = parseDescansos(workerData.descansos);
